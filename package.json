@@ -1,0 +1,40 @@
+{
+  "name": "songs-of-war-character-builder",
+  "version": "1.0.0",
+  "description": "",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "test": "jest --config jestconfig.json",
+    "build": "tsc",
+    "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
+    "lint": "tslint -p tsconfig.json",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm test && npm run lint",
+    "preversion": "npm run lint",
+    "version": "npm run format && git add -A src",
+    "postversion": "git push && git push --tags"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oldschoolbg/songs-of-war-character-builder.git"
+  },
+  "author": "oldschool.site",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/oldschoolbg/songs-of-war-character-builder/issues"
+  },
+  "homepage": "https://github.com/oldschoolbg/songs-of-war-character-builder#readme",
+  "devDependencies": {
+    "@types/jest": "^25.2.3",
+    "jest": "^26.0.1",
+    "prettier": "^2.0.5",
+    "ts-jest": "^26.1.0",
+    "tslint": "^6.1.2",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^3.9.3"
+  },
+  "files": [
+    "lib/**/*"
+  ]
+}
