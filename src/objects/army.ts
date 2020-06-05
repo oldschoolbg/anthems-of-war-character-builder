@@ -1,9 +1,7 @@
 export class Army {
-  
   Leader: any;
 
-  PointsCost() : number {
+  PointsCost(): number {
     return 0;
   }
 }
-

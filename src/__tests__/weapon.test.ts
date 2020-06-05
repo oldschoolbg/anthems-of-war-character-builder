@@ -1,4 +1,22 @@
-import { Unarmed, Knife, OneHandedHandSwordAxeSpear, Staff, TwoHandedAxeHammerSword, TwoHandedPolearm, Longbow, Shortbow, HandCrossbow, Dagger, Whip, Javelin, Sling, ThrowingKnife, Pike, DoubleSword, WarBanner } from "../objects/weapon";
+import {
+  Unarmed,
+  Knife,
+  OneHandedHandSwordAxeSpear,
+  Staff,
+  TwoHandedAxeHammerSword,
+  TwoHandedPolearm,
+  Longbow,
+  Shortbow,
+  HandCrossbow,
+  Dagger,
+  Whip,
+  Javelin,
+  Sling,
+  ThrowingKnife,
+  Pike,
+  DoubleSword,
+  WarBanner,
+} from '../objects/weapon';
 
 test('Unarmed cost', () => {
   expect(Unarmed.PointsCost()).toBe(0);

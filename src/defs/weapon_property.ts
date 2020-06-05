@@ -40,22 +40,22 @@ export class WeaponProperty {
     this.RemoveEffect = removeEffect;
     return this;
   }
-  setPrerequisite(prop: WeaponProperty) : WeaponProperty {
+  setPrerequisite(prop: WeaponProperty): WeaponProperty {
     if (!this.Prerequisites.find((p: WeaponProperty) => p.Key === prop.Key)) {
       this.Prerequisites.push(prop.clone());
     }
     return this;
   }
-  removePrerequisite(prop: WeaponProperty) : WeaponProperty {
+  removePrerequisite(prop: WeaponProperty): WeaponProperty {
     this.Prerequisites = this.Prerequisites.filter((p: WeaponProperty) => p.Key !== prop.Key);
     return this;
   }
 
-  clone() : WeaponProperty {
-    const result =new WeaponProperty(this.Key, this.Points, this.Description);
+  clone(): WeaponProperty {
+    const result = new WeaponProperty(this.Key, this.Points, this.Description);
     result.MultipleAllowed = this.MultipleAllowed;
     result.AddEffect = this.AddEffect;
-    result.RemoveEffect = this.RemoveEffect
+    result.RemoveEffect = this.RemoveEffect;
     result.Prerequisites = this.Prerequisites.map((pr: WeaponProperty) => pr.clone());
     if (this.Kryptonite) {
       result.Kryptonite = this.Kryptonite.clone();
@@ -119,7 +119,7 @@ export const Melee = new WeaponProperty(
 )
   .setAddEffect((weapon, weaponProperty: WeaponProperty, selectedWeaponStat: WeaponStat[]) => {
     if (!selectedWeaponStat || selectedWeaponStat.length === 0) {
-      throw new Error("No Weapon Stat provided");
+      throw new Error('No Weapon Stat provided');
     }
     let points = selectedWeaponStat[0].PointsCost - 1;
     if (weapon.Properties.find((p: WeaponProperty) => p.Key === 'Low Ammo')) {
@@ -129,7 +129,7 @@ export const Melee = new WeaponProperty(
   })
   .setRemoveEffect((weapon, weaponProperty: WeaponProperty, selectedWeaponStat: WeaponStat[]) => {
     if (!selectedWeaponStat || selectedWeaponStat.length === 0) {
-      throw new Error("No Weapon Stat provided");
+      throw new Error('No Weapon Stat provided');
     }
     let points = selectedWeaponStat[0].PointsCost - 1;
     if (weapon.Properties.find((p: WeaponProperty) => p.Key === 'Low Ammo')) {
@@ -143,12 +143,10 @@ export const SlowToLoad = new WeaponProperty(
   'Slow to Load',
   -2,
   'Once fired the weapon is in an unloaded state. It must be loaded before being fired again. During an order the player can declare they are reloading. Move action speed is cut in half and dodge rolls made during this order take a -2 penalty to the dice roll.',
-)
-.setPrerequisite(Ranged);
+).setPrerequisite(Ranged);
 
 export const OneHanded = new WeaponProperty(
   '1-handed',
   5,
   'This ranged weapon can be used one handed, freeing up the other hand.',
-)
-.setPrerequisite(Ranged);
+).setPrerequisite(Ranged);
