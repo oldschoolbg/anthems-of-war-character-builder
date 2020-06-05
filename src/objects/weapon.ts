@@ -1,5 +1,5 @@
 import { Character } from "./character";
-import { WeaponProperty, Melee, TwoHanded, HighCrit, Reach, Ranged, SlowToLoad, OneHanded } from "../defs/weapon_property";
+import { WeaponProperty, Melee, TwoHanded, HighCrit, Reach, Ranged, SlowToLoad, OneHanded, Light, LowAmmo, MoraleBoosting } from "../defs/weapon_property";
 import { Weapon_matrix, WeaponStat } from "../defs/weapons_stat";
 
 export class Weapon {
@@ -48,18 +48,19 @@ export class Weapon {
           return this;
     }
     if (weapon_property.Prerequisites.some((wp) => !this.Properties.find((p: WeaponProperty) => p.Key === wp.Key))) {
-        throw new Error(`Cannot add ${weapon_property.Key} as Weapon must already have ${weapon_property.Prerequisites.join(', ')}.`);
+        throw new Error(`Cannot add ${weapon_property.Key} as Weapon must already have ${weapon_property.Prerequisites.map((p) => p.Key).join(', ')}.`);
       }
-
-    this.Properties.push(weapon_property);
-    weapon_property.AddEffect(this, weapon_property, props);
+    let new_prop = weapon_property.clone();
+    this.Properties.push(new_prop);
+    weapon_property.AddEffect(this, new_prop, props);
     return this;
   }
 
   RemoveProperty(weapon_property: WeaponProperty, ...props: any[]) : Weapon {
     // TODO: is this a prerequisite for other properties? If so, remove those as well or warn? TBC
     this.Properties = this.Properties.filter((p: WeaponProperty) => p.Key !== weapon_property.Key);
-    weapon_property.RemoveEffect(this, weapon_property, props);
+    let new_prop = weapon_property.clone();
+    weapon_property.RemoveEffect(this, new_prop, props);
     return this;
   }
 }
@@ -74,3 +75,11 @@ export const Longbow = new Weapon("Longbow", 1, 5).AddProperty(Ranged).AddProper
 export const Shortbow = new Weapon("Shortbow", 1, 5).AddProperty(Ranged).AddProperty(Ranged);
 export const Crossbow = new Weapon("Crossbow", 1, 6).AddProperty(Ranged).AddProperty(Ranged).AddProperty(SlowToLoad);
 export const HandCrossbow = new Weapon("Crossbow", 1, 3).AddProperty(Ranged).AddProperty(OneHanded);
+export const Dagger = new Weapon("Dagger", 3, 3).AddProperty(Light);
+export const Whip = new Weapon("Whip", 2, 2).AddProperty(Light).AddProperty(Reach);
+export const Javelin = new Weapon("Javelin", 1, 5).AddProperty(Ranged).AddProperty(OneHanded).AddProperty(LowAmmo, 3).AddProperty(Melee, Weapon_matrix.find((wp) => wp.speed === 2 && wp.strength === 4));
+export const Sling = new Weapon("Sling", 1, 3).AddProperty(Ranged).AddProperty(Ranged).AddProperty(OneHanded);
+export const ThrowingKnife = new Weapon("Throwing Knife", 1, 4).AddProperty(Ranged).AddProperty(OneHanded).AddProperty(LowAmmo, 4);
+export const Pike = new Weapon("Pike", 2, 5).AddProperty(TwoHanded).AddProperty(Reach);
+export const DoubleSword = new Weapon("Double Sword", 3, 5).AddProperty(TwoHanded);
+export const WarBanner = new Weapon("War Banner", 2, 4).AddProperty(MoraleBoosting);
