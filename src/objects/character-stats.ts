@@ -1,4 +1,4 @@
-import { PHY_DEX_MND_pointcost, CON_pointcost } from "../defs/point_costs";
+import { phy_dex_mnd_pointcost, con_pointcost } from "../defs/point_costs";
 
 export interface CharacterStat {
   Key: string;
@@ -31,7 +31,7 @@ export class PHY implements CharacterStat {
       throw new Error("Must be between zero and eight");
     }
     this.Value = to;
-    this.PointsCost = PHY_DEX_MND_pointcost[to];
+    this.PointsCost = phy_dex_mnd_pointcost[to];
   }
   AdjustBy(by: number): void {
     this.Value += by;
@@ -47,7 +47,7 @@ export class DEX implements CharacterStat {
       throw new Error("Must be between zero and eight");
     }
     this.Value = to;
-    this.PointsCost = PHY_DEX_MND_pointcost[to];
+    this.PointsCost = phy_dex_mnd_pointcost[to];
   }
   AdjustBy(by: number): void {
     this.Value += by;
@@ -63,7 +63,7 @@ export class MND implements CharacterStat {
       throw new Error("Must be between zero and eight");
     }
     this.Value = to;
-    this.PointsCost = PHY_DEX_MND_pointcost[to];
+    this.PointsCost = phy_dex_mnd_pointcost[to];
   }
   AdjustBy(by: number): void {
     this.Value += by;
@@ -80,7 +80,7 @@ export class CON implements CharacterStat {
       throw new Error("Must be between one and eight");
     }
     this.Value = to;
-    this.PointsCost = CON_pointcost[to];
+    this.PointsCost = con_pointcost[to];
   }
   AdjustBy(by: number): void {
     this.Value += by;

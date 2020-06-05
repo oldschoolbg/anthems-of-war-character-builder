@@ -52,7 +52,7 @@ export class WeaponProperty {
   }
 
   clone() : WeaponProperty {
-    let result =new WeaponProperty(this.Key, this.Points, this.Description);
+    const result =new WeaponProperty(this.Key, this.Points, this.Description);
     result.MultipleAllowed = this.MultipleAllowed;
     result.AddEffect = this.AddEffect;
     result.RemoveEffect = this.RemoveEffect
@@ -105,11 +105,11 @@ export const LowAmmo = new WeaponProperty(
   0,
   'Only a limited number of attacks can be done with this weapon. This could either be because of the quality of the weapon or that you are carrying less into battle.',
 )
-  .setAddEffect((weapon: Weapon, weapon_property: WeaponProperty, number_of_shots: 1 | 2 | 3 | 4) => {
-    weapon_property.Points += number_of_shots - 5;
+  .setAddEffect((weapon: Weapon, weaponProperty: WeaponProperty, numberOfShots: 1 | 2 | 3 | 4) => {
+    weaponProperty.Points += numberOfShots - 5;
   })
-  .setRemoveEffect((weapon: Weapon, weapon_property: WeaponProperty, number_of_shots: 1 | 2 | 3 | 4) => {
-    weapon_property.Points -= number_of_shots - 5;
+  .setRemoveEffect((weapon: Weapon, weaponProperty: WeaponProperty, numberOfShots: 1 | 2 | 3 | 4) => {
+    weaponProperty.Points -= numberOfShots - 5;
   });
 
 export const Melee = new WeaponProperty(
@@ -117,22 +117,25 @@ export const Melee = new WeaponProperty(
   0,
   'This ranged weapon has some melee capability. Add the melee cost for the strength and speed to the weapon cost -1. This costs 2 points less if the weapon has the low ammo property.',
 )
-  .setAddEffect((weapon, weapon_property: WeaponProperty, selected_weapon_stat: WeaponStat[]) => {
-    if (!selected_weapon_stat || selected_weapon_stat.length === 0) {
+  .setAddEffect((weapon, weaponProperty: WeaponProperty, selectedWeaponStat: WeaponStat[]) => {
+    if (!selectedWeaponStat || selectedWeaponStat.length === 0) {
       throw new Error("No Weapon Stat provided");
     }
-    let points = selected_weapon_stat[0].points_cost - 1;
+    let points = selectedWeaponStat[0].PointsCost - 1;
     if (weapon.Properties.find((p: WeaponProperty) => p.Key === 'Low Ammo')) {
       points = points - 2;
     }
-    weapon_property.Points = weapon_property.Points + points;
+    weaponProperty.Points = weaponProperty.Points + points;
   })
-  .setRemoveEffect((weapon, weapon_property: WeaponProperty, selected_weapon_stat: WeaponStat[]) => {
-    let points = selected_weapon_stat[0].points_cost - 1;
+  .setRemoveEffect((weapon, weaponProperty: WeaponProperty, selectedWeaponStat: WeaponStat[]) => {
+    if (!selectedWeaponStat || selectedWeaponStat.length === 0) {
+      throw new Error("No Weapon Stat provided");
+    }
+    let points = selectedWeaponStat[0].PointsCost - 1;
     if (weapon.Properties.find((p: WeaponProperty) => p.Key === 'Low Ammo')) {
       points = points - 2;
     }
-    weapon_property.Points -= points;
+    weaponProperty.Points -= points;
   })
   .setPrerequisite(Ranged);
 

@@ -1,20 +1,20 @@
 
 export class WeaponStat {
-  constructor(speed: number, strength: number, points_cost: number) {
-    this.speed = speed;
-    this.strength = strength;
-    this.points_cost = points_cost;
+  constructor(speed: number, strength: number, pointsCost: number) {
+    this.Speed = speed;
+    this.Strength = strength;
+    this.PointsCost = pointsCost;
   }
-  strength: number;
-  speed: number;
-  points_cost: number;
+  Strength: number;
+  Speed: number;
+  PointsCost: number;
 
   static null() : WeaponStat {
     return new WeaponStat(0,0,0);
   }
 }
 
-export const Weapon_matrix : WeaponStat[] = [
+export const WeaponMatrix : WeaponStat[] = [
   new WeaponStat(1, 3, -5),
   new WeaponStat(1, 4, -2),
   new WeaponStat(1, 5, 1),
