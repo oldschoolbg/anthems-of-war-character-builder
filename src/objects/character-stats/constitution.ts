@@ -1,5 +1,5 @@
 import { CharacterStat } from "./character-stat";
-import { con_pointcost } from "../../defs/point_costs";
+import { conPointcost } from "../../defs/point_costs";
 
 export class Constitution implements CharacterStat {
   Key: string = "CON";
@@ -10,7 +10,7 @@ export class Constitution implements CharacterStat {
       throw new Error("Must be between one and eight");
     }
     this.Value = to;
-    this.PointsCost = con_pointcost[to];
+    this.PointsCost = conPointcost[to];
   }
   AdjustBy(by: number): void {
     this.Value += by;

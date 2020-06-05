@@ -10,11 +10,11 @@ export class Weapon {
     this.Key = key;
     this.Speed = speed;
     this.Strength = strength;
-    const stat_cost = WeaponMatrix.find((wm: WeaponStat) => wm.Speed === this.Speed && wm.Strength === this.Strength);
-    if (!stat_cost) {
+    const statCost = WeaponMatrix.find((wm: WeaponStat) => wm.Speed === this.Speed && wm.Strength === this.Strength);
+    if (!statCost) {
       throw new Error(`Invalid Weapon ${this.Key} - Speed and Strength provided are not a valid combination: speed: ${this.Speed}. strength: ${this.Strength}`);
     }
-    this.BaseCost = stat_cost.PointsCost;
+    this.BaseCost = statCost.PointsCost;
   };
   readonly Key: string;
   Speed: number;
@@ -50,17 +50,17 @@ export class Weapon {
     if (weaponProperty.Prerequisites.some((wp) => !this.Properties.find((p: WeaponProperty) => p.Key === wp.Key))) {
         throw new Error(`Cannot add ${weaponProperty.Key} as Weapon must already have ${weaponProperty.Prerequisites.map((p) => p.Key).join(', ')}.`);
       }
-    let new_prop = weaponProperty.clone();
-    this.Properties.push(new_prop);
-    weaponProperty.AddEffect(this, new_prop, props);
+    const newProp = weaponProperty.clone();
+    this.Properties.push(newProp);
+    weaponProperty.AddEffect(this, newProp, props);
     return this;
   }
 
   RemoveProperty(weaponProperty: WeaponProperty, ...props: any[]) : Weapon {
     // TODO: is this a prerequisite for other properties? If so, remove those as well or warn? TBC
     this.Properties = this.Properties.filter((p: WeaponProperty) => p.Key !== weaponProperty.Key);
-    let new_prop = weaponProperty.clone();
-    weaponProperty.RemoveEffect(this, new_prop, props);
+    const newProp = weaponProperty.clone();
+    weaponProperty.RemoveEffect(this, newProp, props);
     return this;
   }
 }

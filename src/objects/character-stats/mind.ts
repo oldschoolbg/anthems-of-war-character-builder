@@ -1,5 +1,5 @@
 import { CharacterStat } from "./character-stat";
-import { phy_dex_mnd_pointcost } from "../../defs/point_costs";
+import { phyDexMndPointcost } from "../../defs/point_costs";
 
 
 export class Mind implements CharacterStat {
@@ -11,7 +11,7 @@ export class Mind implements CharacterStat {
       throw new Error("Must be between zero and eight");
     }
     this.Value = to;
-    this.PointsCost = phy_dex_mnd_pointcost[to];
+    this.PointsCost = phyDexMndPointcost[to];
   }
   AdjustBy(by: number): void {
     this.Value += by;
