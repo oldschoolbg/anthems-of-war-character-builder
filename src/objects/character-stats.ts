@@ -1,4 +1,4 @@
-import { PHY_DEX_MND_pointcost, CON_pointcost } from "../rules/point_costs";
+import { PHY_DEX_MND_pointcost, CON_pointcost } from "../defs/point_costs";
 
 export interface CharacterStat {
   Key: string;

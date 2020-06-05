@@ -1,5 +1,5 @@
 import { MOV, PHY, DEX, CON, MND, CharacterStat } from "./character-stats";
-import { Trait, Traits } from "./trait";
+import { Trait, Regular, Instinct } from "../defs/trait";
 
 export class Character {
   MOV: MOV = new MOV();
@@ -9,7 +9,7 @@ export class Character {
   MND: MND = new MND();
 
   Traits: Trait[] = [
-    Traits.Instinct
+    Instinct
   ];
 
   PointsCost() {
@@ -37,10 +37,10 @@ export class Character {
 
   RemoveTrait(trait: Trait) {
     if (trait.Key === 'Instinct') {
-      this.Traits.push(Traits.Regular);
+      this.Traits.push(Regular);
     }
     if (trait.Key === 'Regular') {
-      this.Traits.push(Traits.Instinct);
+      this.Traits.push(Instinct);
     }
     this.Traits = this.Traits.filter(t => t.Key !== trait.Key);
     trait.RemoveEffect(this);
