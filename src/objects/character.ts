@@ -1,12 +1,13 @@
-import { MOV, PHY, DEX, CON, MND, CharacterStat } from "./character-stats";
+
 import { Trait, Regular, Instinct } from "../defs/trait";
+import { Move, Physicality, Dexterity, Constitution, Mind } from "./character-stats";
 
 export class Character {
-  MOV: MOV = new MOV();
-  PHY: PHY = new PHY();
-  DEX: DEX = new DEX();
-  CON: CON = new CON();
-  MND: MND = new MND();
+  MOV: Move = new Move();
+  PHY: Physicality = new Physicality();
+  DEX: Dexterity = new Dexterity();
+  CON: Constitution = new Constitution();
+  MND: Mind = new Mind();
 
   Traits: Trait[] = [
     Instinct
