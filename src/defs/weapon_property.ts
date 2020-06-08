@@ -91,8 +91,8 @@ export const DualWield = new WeaponProperty(
   4,
   'Add +1 to the weapon speed. It is assumed you have two of this weapon or two weapons of a similar damage potential. Can not be used with the two-handed property and can not be used with something else in the off hand.',
 )
-  .setAddEffect((weapon) => (weapon.Speed = weapon.Speed + 1))
-  .setRemoveEffect((weapon) => (weapon.Speed = weapon.Speed - 1));
+  .setAddEffect((weapon) => (weapon.AdjustSpeed(1)))
+  .setRemoveEffect((weapon) => (weapon.AdjustSpeed(-1)));
 
 export const MoraleBoosting = new WeaponProperty(
   'Morale Boosting',
