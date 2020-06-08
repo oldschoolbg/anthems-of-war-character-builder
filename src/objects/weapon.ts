@@ -1,15 +1,5 @@
 import {
   WeaponProperty,
-  Melee,
-  TwoHanded,
-  HighCrit,
-  Reach,
-  Ranged,
-  SlowToLoad,
-  OneHanded,
-  Light,
-  LowAmmo,
-  MoraleBoosting,
 } from '../defs/weapon_property';
 import { WeaponMatrix, WeaponStat } from '../defs/weapons_stat';
 
@@ -68,9 +58,8 @@ export class Weapon {
         ).join(', ')}.`,
       );
     }
-    const newProp = weaponProperty.clone();
-    this._properties.push(newProp);
-    weaponProperty.AddEffect(this, newProp, props);
+    this._properties.push(weaponProperty);
+    weaponProperty.AddEffect(this, weaponProperty, props);
     return this;
   }
 
@@ -78,8 +67,7 @@ export class Weapon {
     // TODO: is this a prerequisite for other properties? If so, remove those as well or warn? TBC
     const index = this._properties.findIndex((p: WeaponProperty) => p.Key === weaponProperty.Key);
     this._properties.splice(index, 1);
-    const newProp = weaponProperty.clone();
-    weaponProperty.RemoveEffect(this, newProp, props);
+    weaponProperty.RemoveEffect(this, weaponProperty, props);
     return this;
   }
 
@@ -97,78 +85,78 @@ export class Weapon {
   }
   static TwoHandedAxeHammerSword() : Weapon {
     return Weapon.create('2 Handed Axe / Hammer / Sword', 1, 7)
-    .AddProperty(TwoHanded)
-    .AddProperty(HighCrit);
+    .AddProperty(WeaponProperty.TwoHanded())
+    .AddProperty(WeaponProperty.HighCrit());
   }
   static TwoHandedPolearm() : Weapon {
     return Weapon.create('Two Handed Polearm', 1, 7)
-    .AddProperty(TwoHanded)
-    .AddProperty(Reach);
+    .AddProperty(WeaponProperty.TwoHanded())
+    .AddProperty(WeaponProperty.Reach());
   }
   static Longbow() : Weapon {
     return Weapon.create('Longbow', 1, 5)
-    .AddProperty(Ranged)
-    .AddProperty(Ranged)
-    .AddProperty(Ranged);
+    .AddProperty(WeaponProperty.Ranged())
+    .AddProperty(WeaponProperty.Ranged())
+    .AddProperty(WeaponProperty.Ranged());
   }
   static Shortbow() : Weapon {
     return Weapon.create('Shortbow', 1, 5)
-    .AddProperty(Ranged)
-    .AddProperty(Ranged);
+    .AddProperty(WeaponProperty.Ranged())
+    .AddProperty(WeaponProperty.Ranged());
   }
   static Crossbow() : Weapon {
     return Weapon.create('Crossbow', 1, 6)
-    .AddProperty(Ranged)
-    .AddProperty(Ranged)
-    .AddProperty(SlowToLoad);
+    .AddProperty(WeaponProperty.Ranged())
+    .AddProperty(WeaponProperty.Ranged())
+    .AddProperty(WeaponProperty.SlowToLoad());
   }
   static HandCrossbow() : Weapon {
     return Weapon.create('Crossbow', 1, 3)
-    .AddProperty(Ranged)
-    .AddProperty(OneHanded);
+    .AddProperty(WeaponProperty.Ranged())
+    .AddProperty(WeaponProperty.OneHanded());
   }
   static Dagger() : Weapon {
     return Weapon.create('Dagger', 3, 3)
-    .AddProperty(Light);
+    .AddProperty(WeaponProperty.Light());
   }
   static Whip() : Weapon {
     return Weapon.create('Whip', 2, 2)
-    .AddProperty(Light)
-    .AddProperty(Reach);
+    .AddProperty(WeaponProperty.Light())
+    .AddProperty(WeaponProperty.Reach());
   }
   static Javelin() : Weapon {
     return Weapon.create('Javelin', 1, 5)
-    .AddProperty(Ranged)
-    .AddProperty(OneHanded)
-    .AddProperty(LowAmmo, 3)
+    .AddProperty(WeaponProperty.Ranged())
+    .AddProperty(WeaponProperty.OneHanded())
+    .AddProperty(WeaponProperty.LowAmmo(), 3)
     .AddProperty(
-      Melee,
+      WeaponProperty.Melee(),
       WeaponMatrix.find((wp) => wp.Speed === 2 && wp.Strength === 4),
     );
   }
   static Sling() : Weapon {
     return Weapon.create('Sling', 1, 3)
-    .AddProperty(Ranged)
-    .AddProperty(Ranged)
-    .AddProperty(OneHanded);
+    .AddProperty(WeaponProperty.Ranged())
+    .AddProperty(WeaponProperty.Ranged())
+    .AddProperty(WeaponProperty.OneHanded());
   }
   static ThrowingKnife() : Weapon {
     return Weapon.create('Throwing Knife', 1, 4)
-    .AddProperty(Ranged)
-    .AddProperty(OneHanded)
-    .AddProperty(LowAmmo, 4);
+    .AddProperty(WeaponProperty.Ranged())
+    .AddProperty(WeaponProperty.OneHanded())
+    .AddProperty(WeaponProperty.LowAmmo(), 4);
   }
   static Pike() : Weapon {
     return Weapon.create('Pike', 2, 5)
-    .AddProperty(TwoHanded)
-    .AddProperty(Reach);
+    .AddProperty(WeaponProperty.TwoHanded())
+    .AddProperty(WeaponProperty.Reach());
   }
   static DoubleSword() : Weapon {
     return Weapon.create('Double Sword', 3, 5)
-    .AddProperty(TwoHanded);
+    .AddProperty(WeaponProperty.TwoHanded());
   }
   static WarBanner() : Weapon {
     return Weapon.create('War Banner', 2, 4)
-    .AddProperty(MoraleBoosting);
+    .AddProperty(WeaponProperty.MoraleBoosting());
   }
 }
