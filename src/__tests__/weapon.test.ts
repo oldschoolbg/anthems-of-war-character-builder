@@ -3,7 +3,7 @@ import {
 } from '../objects/weapon';
 
 test('Unarmed cost', () => {
-  expect(Weapon.Unarmed().PointsCost()).toBe(0);
+  expect(Weapon.Unarmed().PointsCost).toBe(0);
 });
 test('Weapon immutability check', () => {
   const weaponOne = Weapon.Knife();
@@ -12,53 +12,53 @@ test('Weapon immutability check', () => {
   expect(weaponOne.Speed).toBe(weaponTwo.Speed + 1);
 });
 test('Knife cost', () => {
-  expect(Weapon.Knife().PointsCost()).toBe(3);
+  expect(Weapon.Knife().PointsCost).toBe(3);
 });
 test('Sword cost', () => {
-  expect(Weapon.OneHandedHandSwordAxeSpear().PointsCost()).toBe(5);
+  expect(Weapon.OneHandedHandSwordAxeSpear().PointsCost).toBe(5);
 });
 test('Staff cost', () => {
-  expect(Weapon.Staff().PointsCost()).toBe(5);
+  expect(Weapon.Staff().PointsCost).toBe(5);
 });
 test('Two handed weapon cost', () => {
-  expect(Weapon.TwoHandedAxeHammerSword().PointsCost()).toBe(7);
+  expect(Weapon.TwoHandedAxeHammerSword().PointsCost).toBe(7);
 });
 test('Two handed polearm cost', () => {
-  expect(Weapon.TwoHandedPolearm().PointsCost()).toBe(9);
+  expect(Weapon.TwoHandedPolearm().PointsCost).toBe(9);
 });
 test('Longbow cost', () => {
-  expect(Weapon.Longbow().PointsCost()).toBe(7);
+  expect(Weapon.Longbow().PointsCost).toBe(7);
 });
 test('Shortbow cost', () => {
-  expect(Weapon.Shortbow().PointsCost()).toBe(5);
+  expect(Weapon.Shortbow().PointsCost).toBe(5);
 });
 test('Crossbow cost', () => {
-  expect(Weapon.Crossbow().PointsCost()).toBe(6);
+  expect(Weapon.Crossbow().PointsCost).toBe(6);
 });
 test('Hand Crossbow cost', () => {
-  expect(Weapon.HandCrossbow().PointsCost()).toBe(2);
+  expect(Weapon.HandCrossbow().PointsCost).toBe(2);
 });
 test('Dagger cost', () => {
-  expect(Weapon.Dagger().PointsCost()).toBe(5);
+  expect(Weapon.Dagger().PointsCost).toBe(5);
 });
 test('Whip cost', () => {
-  expect(Weapon.Whip().PointsCost()).toBe(2);
+  expect(Weapon.Whip().PointsCost).toBe(2);
 });
 test('Javelin cost', () => {
-  expect(Weapon.Javelin().PointsCost()).toBe(5);
+  expect(Weapon.Javelin().PointsCost).toBe(5);
 });
 test('Sling cost', () => {
-  expect(Weapon.Sling().PointsCost()).toBe(4);
+  expect(Weapon.Sling().PointsCost).toBe(4);
 });
 test('Throwing Knife cost', () => {
-  expect(Weapon.ThrowingKnife().PointsCost()).toBe(4);
+  expect(Weapon.ThrowingKnife().PointsCost).toBe(4);
 });
 test('Pike cost', () => {
-  expect(Weapon.Pike().PointsCost()).toBe(7);
+  expect(Weapon.Pike().PointsCost).toBe(7);
 });
 test('Double Sword cost', () => {
-  expect(Weapon.DoubleSword().PointsCost()).toBe(7);
+  expect(Weapon.DoubleSword().PointsCost).toBe(7);
 });
 test('War Banner cost', () => {
-  expect(Weapon.WarBanner().PointsCost()).toBe(5);
+  expect(Weapon.WarBanner().PointsCost).toBe(5);
 });

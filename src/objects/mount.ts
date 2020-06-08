@@ -1,0 +1,118 @@
+import { 
+  Move,
+  Trait,
+  WeaponStat, 
+  WeaponMatrix,
+  WeaponProperty
+} from '../defs';
+import { Moveable, CanAttack } from '../interfaces';
+
+export class Mount implements Moveable, CanAttack {
+  constructor (key: string, speed: number, strength: number) {
+    this._key = key;
+    this._speed = speed;
+    this._strength = strength;
+    this._mov = new Move();
+    const statCost = WeaponMatrix.find((wm: WeaponStat) => wm.Speed === this._speed && wm.Strength === this._strength);
+    if (!statCost) {
+      throw new Error(
+        `Invalid Mount Attack ${this.Key} - Speed and Strength provided are not a valid combination: speed: ${this.Speed}. strength: ${this.Strength}`,
+      );
+    }
+    const statNormalisedCost = statCost.PointsCost < 0 ? 0 : statCost.PointsCost;
+    this.BaseCost = statNormalisedCost + this.MOV.PointsCost;
+  }
+  private _mov: Move;
+  get MOV(): Move { return this._mov; }
+  private _key: string;
+  get Key(): string { return this._key; }
+  private _speed: number;
+  get Speed(): number { return this._speed; };
+  private _strength: number;
+  get Strength(): number { return this._strength; };
+
+  readonly BaseCost: number = 0;
+  get PointsCost(): number {
+    return this.BaseCost
+    + this._traits.map((p: Trait) => p.PointsCost).reduce((a, b) => a + b, 0)
+    + this._properties.map((p: WeaponProperty) => p.PointsCost).reduce((a, b) => a + b, 0);
+  }
+  private _traits: Trait[] = [];
+  get Traits(): Trait[] { return this._traits; }
+  private _properties: WeaponProperty[] = [];
+  get Properties() : WeaponProperty[] { return this._properties; }
+
+  AdjustSpeed(by: number) {
+    this._speed += by;
+  }
+  AdjustStrength(by: number) {
+    this._strength += by;
+  }
+
+  AddTrait(trait: Trait) : Mount {
+    if (trait.Key === 'Instinct') {
+      if (this._traits.find((t) => t.Key === 'Regular')) {
+        this._traits = this._traits.filter((t) => t.Key !== 'Regular');
+      }
+    }
+    if (trait.Key === 'Regular') {
+      if (this._traits.find((t) => t.Key === 'Instinct')) {
+        this._traits = this._traits.filter((t) => t.Key !== 'Instinct');
+      }
+    }
+    this._traits.push(trait);
+    trait.AddEffect(this);
+    return this;
+  }
+
+  RemoveTrait(trait: Trait) : Mount {
+    if (trait.Key === 'Instinct') {
+      this._traits.push(Trait.Regular());
+    }
+    if (trait.Key === 'Regular') {
+      this._traits.push(Trait.Instinct());
+    }
+    this._traits = this._traits.filter((t) => t.Key !== trait.Key);
+    trait.RemoveEffect(this);
+    return this;
+  }
+  
+  AddProperty(weaponProperty: WeaponProperty, ...props: any[]): Mount {
+    if (!weaponProperty.MultipleAllowed && this._properties.find((p: WeaponProperty) => p.Key === weaponProperty.Key)) {
+      return this;
+    }
+    if (weaponProperty.Prerequisites.some((wp) => !this._properties.find((p: WeaponProperty) => p.Key === wp.Key))) {
+      throw new Error(
+        `Cannot add ${weaponProperty.Key} as Weapon must already have ${weaponProperty.Prerequisites.map(
+          (p) => p.Key,
+        ).join(', ')}.`,
+      );
+    }
+    this._properties.push(weaponProperty);
+    weaponProperty.AddEffect(this, weaponProperty, props);
+    return this;
+  }
+
+  RemoveProperty(weaponProperty: WeaponProperty, ...props: any[]): Mount {
+    // TODO: is this a prerequisite for other properties? If so, remove those as well or warn? TBC
+    const index = this._properties.findIndex((p: WeaponProperty) => p.Key === weaponProperty.Key);
+    this._properties.splice(index, 1);
+    weaponProperty.RemoveEffect(this, weaponProperty, props);
+    return this;
+  }
+
+  static Horse() : Mount {
+    return new Mount('Horse', 2, 4)
+    .AddTrait(Trait.Fast())
+    .AddTrait(Trait.Fast());
+  }
+  static Griffin() : Mount {
+    return new Mount('Griffin', 2, 4)
+    .AddTrait(Trait.Flying())
+    .AddTrait(Trait.Fast())
+  }
+  static Bear() : Mount {
+    return new Mount('Bear', 1, 7)
+    .AddProperty(WeaponProperty.HighCrit());
+  }
+}

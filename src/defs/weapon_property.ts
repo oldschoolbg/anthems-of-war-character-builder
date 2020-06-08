@@ -1,5 +1,6 @@
 import { Weapon } from '../objects/weapon';
 import { WeaponStat } from './weapons_stat';
+import { CanAttack } from '../interfaces/can_attack';
 
 export class WeaponProperty {
   constructor(key: string, points: number, description: string) {
@@ -8,23 +9,23 @@ export class WeaponProperty {
     this._description = description;
   }
   private _points: number;
-  get Points(): number { return this._points; };
+  get PointsCost(): number { return this._points; };
   private _key: string;
   get Key(): string { return this._key; }
   private _description: string;
   get Description(): string { return this._description; }
   private _multipleAllowed: boolean = false;
   get MultipleAllowed(): boolean { return this._multipleAllowed; };
-  private _addEffect: (weapon: Weapon, property: WeaponProperty, ...props: any[]) => void = (
-    weapon: Weapon,
+  private _addEffect: (weapon: CanAttack, property: WeaponProperty, ...props: any[]) => void = (
+    weapon: CanAttack,
     property: WeaponProperty,
     ...props: any[]
   ) => {
     return;
   };
   get AddEffect() { return this._addEffect; }
-  private _removeEffect: (weapon: Weapon, property: WeaponProperty, ...props: any[]) => void = (
-    weapon: Weapon,
+  private _removeEffect: (weapon: CanAttack, property: WeaponProperty, ...props: any[]) => void = (
+    weapon: CanAttack,
     property: WeaponProperty,
     ...props: any[]
   ) => {
@@ -35,18 +36,18 @@ export class WeaponProperty {
   // weapon must have all these properties or you cannot add this property
   get Prerequisites(): WeaponProperty[] { return this._prerequisites; } 
   private _kryptonite?: WeaponProperty
-  // weapon must have only one of these properties
+  // weapon cannot have both self and self.Kryptonite
   get Kryptonite(): WeaponProperty | undefined { return this._kryptonite; }
 
   setMultiple(): WeaponProperty {
     this._multipleAllowed = !this._multipleAllowed;
     return this;
   }
-  setAddEffect(addEffect: (weapon: Weapon, property: WeaponProperty, ...props: any[]) => void): WeaponProperty {
+  setAddEffect(addEffect: (weapon: CanAttack, property: WeaponProperty, ...props: any[]) => void): WeaponProperty {
     this._addEffect = addEffect;
     return this;
   }
-  setRemoveEffect(removeEffect: (weapon: Weapon, property: WeaponProperty, ...props: any[]) => void): WeaponProperty {
+  setRemoveEffect(removeEffect: (weapon: CanAttack, property: WeaponProperty, ...props: any[]) => void): WeaponProperty {
     this._removeEffect = removeEffect;
     return this;
   }
@@ -113,10 +114,10 @@ export class WeaponProperty {
       0,
       'Only a limited number of attacks can be done with this weapon. This could either be because of the quality of the weapon or that you are carrying less into battle.',
     )
-      .setAddEffect((weapon: Weapon, weaponProperty: WeaponProperty, numberOfShots: 1 | 2 | 3 | 4) => {
+      .setAddEffect((weapon: CanAttack, weaponProperty: WeaponProperty, numberOfShots: 1 | 2 | 3 | 4) => {
         weaponProperty.AdjustPoints(numberOfShots - 5);
       })
-      .setRemoveEffect((weapon: Weapon, weaponProperty: WeaponProperty, numberOfShots: 1 | 2 | 3 | 4) => {
+      .setRemoveEffect((weapon: CanAttack, weaponProperty: WeaponProperty, numberOfShots: 1 | 2 | 3 | 4) => {
         weaponProperty.AdjustPoints(-(numberOfShots - 5));
       });
   }
@@ -126,7 +127,7 @@ export class WeaponProperty {
       0,
       'This ranged weapon has some melee capability. Add the melee cost for the strength and speed to the weapon cost -1. This costs 2 points less if the weapon has the low ammo property.',
     )
-      .setAddEffect((weapon, weaponProperty: WeaponProperty, selectedWeaponStat: WeaponStat[]) => {
+      .setAddEffect((weapon: CanAttack, weaponProperty: WeaponProperty, selectedWeaponStat: WeaponStat[]) => {
         if (!selectedWeaponStat || selectedWeaponStat.length === 0) {
           throw new Error('No Weapon Stat provided');
         }
@@ -134,9 +135,9 @@ export class WeaponProperty {
         if (weapon.Properties.find((p: WeaponProperty) => p.Key === 'Low Ammo')) {
           points = points - 2;
         }
-        weaponProperty.AdjustPoints(weaponProperty.Points + points);
+        weaponProperty.AdjustPoints(weaponProperty.PointsCost + points);
       })
-      .setRemoveEffect((weapon, weaponProperty: WeaponProperty, selectedWeaponStat: WeaponStat[]) => {
+      .setRemoveEffect((weapon: CanAttack, weaponProperty: WeaponProperty, selectedWeaponStat: WeaponStat[]) => {
         if (!selectedWeaponStat || selectedWeaponStat.length === 0) {
           throw new Error('No Weapon Stat provided');
         }

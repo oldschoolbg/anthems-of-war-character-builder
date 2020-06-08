@@ -1,8 +1,8 @@
 import { CharacterStat } from './character-stat';
-import { phyDexMndPointcost } from '../../defs/point_costs';
+import { phyDexMndPointcost } from '../point_costs';
 
-export class Dexterity implements CharacterStat {
-  Key: string = 'DEX';
+export class Physicality implements CharacterStat {
+  Key: string = 'PHY';
   Value: number = 0;
   PointsCost: number = 0;
   SetValue(to: number): void {

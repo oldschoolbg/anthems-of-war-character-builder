@@ -1,5 +1,5 @@
 import { CharacterStat } from './character-stat';
-import { conPointcost } from '../../defs/point_costs';
+import { conPointcost } from '../point_costs';
 
 export class Constitution implements CharacterStat {
   Key: string = 'CON';

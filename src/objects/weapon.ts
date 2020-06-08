@@ -1,9 +1,7 @@
-import {
-  WeaponProperty,
-} from '../defs/weapon_property';
-import { WeaponMatrix, WeaponStat } from '../defs/weapons_stat';
+import { WeaponMatrix, WeaponProperty, WeaponStat } from '../defs';
+import { CanAttack } from '../interfaces';
 
-export class Weapon {
+export class Weapon implements CanAttack {
   constructor(key: string, speed: number, strength: number) {
     this._key = key;
     this._speed = speed;
@@ -26,8 +24,8 @@ export class Weapon {
   get Properties(): WeaponProperty[] { return this._properties; };
   
   readonly BaseCost: number = 0;
-  PointsCost(): number {
-    return this.BaseCost + this._properties.map((p: WeaponProperty) => p.Points).reduce((a, b) => a + b, 0);
+  get PointsCost(): number {
+    return this.BaseCost + this._properties.map((p: WeaponProperty) => p.PointsCost).reduce((a, b) => a + b, 0);
   }
 
   AdjustSpeed(by: number) {

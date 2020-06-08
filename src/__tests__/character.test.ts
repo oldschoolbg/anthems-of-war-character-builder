@@ -2,14 +2,14 @@ import { Character } from '../index';
 import { Trait } from '../defs/trait';
 
 test('Default Character', () => {
-  expect(new Character().PointsCost()).toBe(0);
+  expect(new Character().PointsCost).toBe(10);
   expect(new Character().Traits[0].Key).toBe('Instinct');
 });
 
 test('Increase Default PHY', () => {
   const char = new Character();
   char.PHY.SetValue(3);
-  expect(char.PointsCost()).toBe(6);
+  expect(char.PointsCost).toBe(16);
 });
 
 test('Set Character to Regular', () => {

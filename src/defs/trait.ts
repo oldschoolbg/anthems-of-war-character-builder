@@ -1,27 +1,32 @@
-import { Character } from '../objects/character';
+import { Moveable } from "../interfaces";
 
 export class Trait {
-  constructor(key: string, points: number, description: string) {
-    this.Points = points;
-    this.Key = key;
-    this.Description = description;
+  constructor(key: string, pointsCost: number, description: string) {
+    this._pointsCost = pointsCost;
+    this._key = key;
+    this._description = description;
   }
-  Points: number;
-  Key: string;
-  Description: string;
-  AddEffect: (char: Character) => void = (char: Character) => {
+  private _pointsCost: number;
+  get PointsCost(): number { return this._pointsCost; }
+  private _key: string;
+  get Key(): string { return this._key; }
+  private _description: string;
+  get Description(): string { return this._description; }
+  private _addEffect: (char: Moveable) => void = (char: Moveable) => {
     return;
   };
-  RemoveEffect: (char: Character) => void = (char: Character) => {
+  get AddEffect() : (char: Moveable) => void { return this._addEffect; }
+  private _removeEffect: (char: Moveable) => void = (char: Moveable) => {
     return;
   };
+  get RemoveEffect() : (char: Moveable) => void { return this._removeEffect; }
 
-  setAddEffect(addEffect: (char: Character) => void): Trait {
-    this.AddEffect = addEffect;
+  setAddEffect(addEffect: (char: Moveable) => void): Trait {
+    this._addEffect = addEffect;
     return this;
   }
-  setRemoveEffect(removeEffect: (char: Character) => void): Trait {
-    this.RemoveEffect = removeEffect;
+  setRemoveEffect(removeEffect: (char: Moveable) => void): Trait {
+    this._removeEffect = removeEffect;
     return this;
   }
 
@@ -55,19 +60,19 @@ export class Trait {
   }
   static Slow() : Trait {
     return new Trait('Slow', -2, '-1 to character MOV value. Can be applied multiple times')
-    .setAddEffect((char: Character) => {
+    .setAddEffect((char: Moveable) => {
       char.MOV.AdjustBy(-1);
     })
-    .setRemoveEffect((char: Character) => {
+    .setRemoveEffect((char: Moveable) => {
       char.MOV.AdjustBy(1);
     });
   }
   static Fast() : Trait {
     return new Trait('Fast', 2, '+1 to character MOV value. Can be applied multiple times')
-    .setAddEffect((char: Character) => {
+    .setAddEffect((char: Moveable) => {
       char.MOV.AdjustBy(1);
     })
-    .setRemoveEffect((char: Character) => {
+    .setRemoveEffect((char: Moveable) => {
       char.MOV.AdjustBy(-1);
     });
   }
