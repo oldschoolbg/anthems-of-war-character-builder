@@ -1,4 +1,4 @@
-import { Trait, Regular, Instinct } from '../defs/trait';
+import { Trait } from '../defs/trait';
 import { Move, Physicality, Dexterity, Constitution, Mind } from './character-stats';
 
 export class Character {
@@ -8,7 +8,7 @@ export class Character {
   CON: Constitution = new Constitution();
   MND: Mind = new Mind();
 
-  Traits: Trait[] = [Instinct];
+  Traits: Trait[] = [Trait.Instinct()];
 
   PointsCost() {
     return this.MOV.PointsCost + this.PHY.PointsCost + this.DEX.PointsCost + this.CON.PointsCost + this.MND.PointsCost;
@@ -31,10 +31,10 @@ export class Character {
 
   RemoveTrait(trait: Trait) {
     if (trait.Key === 'Instinct') {
-      this.Traits.push(Regular);
+      this.Traits.push(Trait.Regular());
     }
     if (trait.Key === 'Regular') {
-      this.Traits.push(Instinct);
+      this.Traits.push(Trait.Instinct());
     }
     this.Traits = this.Traits.filter((t) => t.Key !== trait.Key);
     trait.RemoveEffect(this);

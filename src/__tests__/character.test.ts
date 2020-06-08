@@ -1,5 +1,5 @@
 import { Character } from '../index';
-import { Regular, Slow, Fast } from '../defs/trait';
+import { Trait } from '../defs/trait';
 
 test('Default Character', () => {
   expect(new Character().PointsCost()).toBe(0);
@@ -14,39 +14,39 @@ test('Increase Default PHY', () => {
 
 test('Set Character to Regular', () => {
   const char = new Character();
-  char.AddTrait(Regular);
+  char.AddTrait(Trait.Regular());
   expect(char.Traits[0].Key).toBe('Regular');
   expect(char.Traits.length).toBe(1);
 });
 
 test('Add Slow to Character', () => {
   const char = new Character();
-  char.AddTrait(Slow);
+  char.AddTrait(Trait.Slow());
   expect(char.Traits.length).toBe(2);
   expect(char.MOV.Value).toBe(3);
 });
 
 test('Add Fast to Character', () => {
   const char = new Character();
-  char.AddTrait(Fast);
+  char.AddTrait(Trait.Fast());
   expect(char.Traits.length).toBe(2);
   expect(char.MOV.Value).toBe(5);
 });
 
 test('Add Slow and Fast to Character', () => {
   const char = new Character();
-  char.AddTrait(Slow);
-  char.AddTrait(Fast);
+  char.AddTrait(Trait.Slow());
+  char.AddTrait(Trait.Fast());
   expect(char.Traits.length).toBe(3);
   expect(char.MOV.Value).toBe(4);
 });
 
 test('Add and remove Fast from Character', () => {
   const char = new Character();
-  char.AddTrait(Fast);
+  char.AddTrait(Trait.Fast());
   expect(char.Traits.length).toBe(2);
   expect(char.MOV.Value).toBe(5);
-  char.RemoveTrait(Fast);
+  char.RemoveTrait(Trait.Fast());
   expect(char.Traits.length).toBe(1);
   expect(char.MOV.Value).toBe(4);
 });
