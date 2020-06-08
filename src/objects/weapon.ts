@@ -1,7 +1,7 @@
 import { WeaponMatrix, WeaponProperty, WeaponStat } from '../defs';
-import { CanAttack } from '../interfaces';
+import { CanAttack, Keyed } from '../interfaces';
 
-export class Weapon implements CanAttack {
+export class Weapon implements CanAttack, Keyed {
   constructor(key: string, speed: number, strength: number) {
     this._key = key;
     this._speed = speed;

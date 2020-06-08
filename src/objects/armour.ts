@@ -1,4 +1,6 @@
-export class Armour  {
+import { Keyed } from "../interfaces";
+
+export class Armour implements Keyed  {
   constructor(key: string, description: string, pointsCost: number) {
     this._key = key;
     this._description = description;

@@ -1,6 +1,7 @@
 import { Move, Physicality, Dexterity, Constitution, Mind, Trait } from '../defs';
 import { Mount } from './mount';
-import { Moveable } from '../interfaces';
+import { Moveable, Keyed } from '../interfaces';
+import { MiscellaneousEquipment } from './miscellaneous_equipment';
 
 export class Character implements Moveable {
   MOV: Move = new Move();
@@ -13,6 +14,8 @@ export class Character implements Moveable {
   get Traits(): Trait[] { return this._traits; };
   private _mount? : Mount;
   get Mount(): Mount | undefined { return this._mount; };
+  private _equipment: MiscellaneousEquipment[] = [];
+  get Equipment(): MiscellaneousEquipment[] { return this._equipment; }
 
   get PointsCost() : number {
     const mountCost : number = this.Mount !== undefined ? this.Mount.PointsCost : 0;
@@ -50,6 +53,23 @@ export class Character implements Moveable {
     }
     this._traits = this._traits.filter((t) => t.Key !== trait.Key);
     trait.RemoveEffect(this);
+    return this;
+  }
+
+  AddEquipment(equipment: MiscellaneousEquipment) : Character {
+    if (equipment.Prerequisites.some((wp) => !this._traits.find((p: Keyed) => p.Key === wp.Key))) {
+      throw new Error(
+        `Cannot add ${equipment.Key} as Character must have ${equipment.Prerequisites.map(
+          (p) => p.Key,
+        ).join(', ')}.`,
+      );
+    }
+    this._equipment.push(equipment);
+    return this;
+  }
+  RemoveEquipment(equipment: MiscellaneousEquipment) : Character {
+    const index = this._equipment.findIndex((e: Keyed) => equipment.Key === e.Key);
+    this._equipment.splice(index, 1);
     return this;
   }
 

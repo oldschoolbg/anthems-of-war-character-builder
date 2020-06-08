@@ -5,9 +5,9 @@ import {
   WeaponMatrix,
   WeaponProperty
 } from '../defs';
-import { Moveable, CanAttack } from '../interfaces';
+import { Moveable, CanAttack, Keyed } from '../interfaces';
 
-export class Mount implements Moveable, CanAttack {
+export class Mount implements Moveable, CanAttack, Keyed {
   constructor (key: string, speed: number, strength: number) {
     this._key = key;
     this._speed = speed;
@@ -31,13 +31,13 @@ export class Mount implements Moveable, CanAttack {
   private _strength: number;
   get Strength(): number { return this._strength; };
 
-  readonly BaseCost: number = 0;
+  readonly BaseCost: number = 2;
   get PointsCost(): number {
     return this.BaseCost
     + this._traits.map((p: Trait) => p.PointsCost).reduce((a, b) => a + b, 0)
     + this._properties.map((p: WeaponProperty) => p.PointsCost).reduce((a, b) => a + b, 0);
   }
-  private _traits: Trait[] = [];
+  private _traits: Trait[] = [Trait.Large()];
   get Traits(): Trait[] { return this._traits; }
   private _properties: WeaponProperty[] = [];
   get Properties() : WeaponProperty[] { return this._properties; }
@@ -50,15 +50,11 @@ export class Mount implements Moveable, CanAttack {
   }
 
   AddTrait(trait: Trait) : Mount {
-    if (trait.Key === 'Instinct') {
-      if (this._traits.find((t) => t.Key === 'Regular')) {
-        this._traits = this._traits.filter((t) => t.Key !== 'Regular');
-      }
+    if (trait.Key === 'Instinct' || trait.Key === 'Regular') {
+      throw new Error(`cannot add ${trait.Key} to a Mount`)
     }
-    if (trait.Key === 'Regular') {
-      if (this._traits.find((t) => t.Key === 'Instinct')) {
-        this._traits = this._traits.filter((t) => t.Key !== 'Instinct');
-      }
+    if (trait.Key === 'Huge') {
+      this._traits = this._traits.filter((t) => t.Key !== 'Large');
     }
     this._traits.push(trait);
     trait.AddEffect(this);
@@ -66,11 +62,11 @@ export class Mount implements Moveable, CanAttack {
   }
 
   RemoveTrait(trait: Trait) : Mount {
-    if (trait.Key === 'Instinct') {
-      this._traits.push(Trait.Regular());
+    if (trait.Key === 'Huge') {
+      this._traits.push(Trait.Large());
     }
-    if (trait.Key === 'Regular') {
-      this._traits.push(Trait.Instinct());
+    if (trait.Key === 'Large') {
+      throw new Error('Cannot remove Large from a mount');
     }
     this._traits = this._traits.filter((t) => t.Key !== trait.Key);
     trait.RemoveEffect(this);
@@ -78,6 +74,9 @@ export class Mount implements Moveable, CanAttack {
   }
   
   AddProperty(weaponProperty: WeaponProperty, ...props: any[]): Mount {
+    if (weaponProperty.Key === 'Ranged') {
+      throw new Error('Cannot add Ranged to a Mount');
+    }
     if (!weaponProperty.MultipleAllowed && this._properties.find((p: WeaponProperty) => p.Key === weaponProperty.Key)) {
       return this;
     }

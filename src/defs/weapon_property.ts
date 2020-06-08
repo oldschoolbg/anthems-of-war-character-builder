@@ -1,6 +1,7 @@
 import { Weapon } from '../objects/weapon';
 import { WeaponStat } from './weapons_stat';
 import { CanAttack } from '../interfaces/can_attack';
+import { Keyed } from '../interfaces';
 
 export class WeaponProperty {
   constructor(key: string, points: number, description: string) {
@@ -32,12 +33,12 @@ export class WeaponProperty {
     return;
   };
   get RemoveEffect() { return this._removeEffect; }
-  private _prerequisites: WeaponProperty[] = []
+  private _prerequisites: Keyed[] = []
   // weapon must have all these properties or you cannot add this property
-  get Prerequisites(): WeaponProperty[] { return this._prerequisites; } 
-  private _kryptonite?: WeaponProperty
+  get Prerequisites(): Keyed[] { return this._prerequisites; } 
+  private _kryptonite?: Keyed
   // weapon cannot have both self and self.Kryptonite
-  get Kryptonite(): WeaponProperty | undefined { return this._kryptonite; }
+  get Kryptonite(): Keyed | undefined { return this._kryptonite; }
 
   setMultiple(): WeaponProperty {
     this._multipleAllowed = !this._multipleAllowed;
@@ -51,14 +52,14 @@ export class WeaponProperty {
     this._removeEffect = removeEffect;
     return this;
   }
-  setPrerequisite(prop: WeaponProperty): WeaponProperty {
-    if (!this._prerequisites.find((p: WeaponProperty) => p.Key === prop.Key)) {
+  setPrerequisite(prop: Keyed): WeaponProperty {
+    if (!this._prerequisites.find((p: Keyed) => p.Key === prop.Key)) {
       this._prerequisites.push(prop);
     }
     return this;
   }
-  removePrerequisite(prop: WeaponProperty): WeaponProperty {
-    this._prerequisites = this._prerequisites.filter((p: WeaponProperty) => p.Key !== prop.Key);
+  removePrerequisite(prop: Keyed): WeaponProperty {
+    this._prerequisites = this._prerequisites.filter((p: Keyed) => p.Key !== prop.Key);
     return this;
   }
   AdjustPoints(by: number) {
