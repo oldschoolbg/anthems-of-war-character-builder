@@ -1,7 +1,10 @@
+import { EquipmentProperty } from "../defs";
 import { Keyed } from "../interfaces";
+import { CanHaveProperties } from "./shared_implementations/can_have_properties";
 
-export class Armour implements Keyed  {
+export class Armour extends CanHaveProperties implements Keyed  {
   constructor(key: string, description: string, pointsCost: number) {
+    super('ARMOUR');
     this._key = key;
     this._description = description;
     this._pointsCost = pointsCost;
@@ -14,6 +17,19 @@ export class Armour implements Keyed  {
   private _pointsCost: number;
   get PointsCost(): number { return this._pointsCost; }
 
+  AddProperty(property: EquipmentProperty, ...props: any[]): Armour {
+    super.AddProperty(property, props);
+    return this;
+  }
+
+  RemoveProperty(property: EquipmentProperty, ...props: any[]): Armour {
+    super.RemoveProperty(property, props);
+    return this;
+  }
+
+  static None() : Armour {
+    return new Armour('No Armour', '', 0);
+  }
   static LightArmour() : Armour {
     return new Armour('Light Armour', '+2 to armor checks', 3);
   }
@@ -22,8 +38,5 @@ export class Armour implements Keyed  {
   }
   static HeavyArmour() : Armour {
     return new Armour('Heavy Armour', '+7 to armor checks -2 to checks involving dex (including armor checks)', 8);
-  }
-  static Shield() : Armour {
-    return new Armour('Shield', '+1 to armor checks when held. Can not use 2-Handed weapons', 2);
   }
 }

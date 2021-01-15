@@ -55,11 +55,11 @@ export class Trait {
     return new Trait(
       'Large',
       0,
-      'Add a +2 to this character’s weapon strength but also add +1 to attack rolls attempting to hit this character by characters smaller than it. Characters with this trait are usually represented on a larger base.',
+      'Add 2 to this character’s weapon strength but also add 1 to attack rolls from smaller foes. Characters with this trait are usually represented on a larger base.',
     );
   }
   static Slow() : Trait {
-    return new Trait('Slow', -2, '-1 to character MOV value. Can be applied multiple times')
+    return new Trait('Slow', -2, 'Subtract 1 tfrom character’s MOV value. Can be applied multiple times')
     .setAddEffect((char: Moveable) => {
       char.MOV.AdjustBy(-1);
     })
@@ -68,7 +68,7 @@ export class Trait {
     });
   }
   static Fast() : Trait {
-    return new Trait('Fast', 2, '+1 to character MOV value. Can be applied multiple times')
+    return new Trait('Fast', 2, 'Add 1 to character’s MOV value. Can be applied multiple times')
     .setAddEffect((char: Moveable) => {
       char.MOV.AdjustBy(1);
     })
@@ -80,7 +80,7 @@ export class Trait {
     return new Trait(
       'Flying',
       4,
-      'As part of a move action this character can choose to fly. Flying creatures ignore difficult terrain and obstructing obstacles while moving and can move in any direction, even vertically. They can not end movement over impassable terrain. +2 bonus to archers targeting this character while it is flying. Characters with this trait can choose to land at any time.',
+      'This character is able to fly as part of their move action. Flying creatures ignore difficult terrain and obstructing obstacles while moving and can move in any direction, even vertically. They cannot end movement over impassable terrain. Archers targeting this character while it is flying add 2 to their roll. Characters with this trait can choose to land at any time.',
     );
   }
   static Spellcaster() : Trait {
@@ -94,7 +94,7 @@ export class Trait {
     return new Trait(
       'Huge',
       4,
-      "Add a +4 to this character's weapon strength but also add +1 to attack rolls attempting to hit this character by characters smaller than it. Characters with this trait are usually represented on bases bigger than those with the Large trait",
+      "Add 4 to this character's weapon strength but also add 2 to attacks rolls from smaller foes. Characters with this trait are usually represented on even larger bases than those with the Large trait",
     );
   }
 }

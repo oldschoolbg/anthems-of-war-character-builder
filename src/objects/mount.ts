@@ -3,7 +3,7 @@ import {
   Trait,
   WeaponStat, 
   WeaponMatrix,
-  WeaponProperty
+  EquipmentProperty
 } from '../defs';
 import { Moveable, CanAttack, Keyed } from '../interfaces';
 
@@ -20,7 +20,7 @@ export class Mount implements Moveable, CanAttack, Keyed {
       );
     }
     const statNormalisedCost = statCost.PointsCost < 0 ? 0 : statCost.PointsCost;
-    this.BaseCost = statNormalisedCost + this.MOV.PointsCost;
+    this.BaseCost = statNormalisedCost + this.MOV.PointsCost + 2;
   }
   private _mov: Move;
   get MOV(): Move { return this._mov; }
@@ -35,12 +35,12 @@ export class Mount implements Moveable, CanAttack, Keyed {
   get PointsCost(): number {
     return this.BaseCost
     + this._traits.map((p: Trait) => p.PointsCost).reduce((a, b) => a + b, 0)
-    + this._properties.map((p: WeaponProperty) => p.PointsCost).reduce((a, b) => a + b, 0);
+    + this._properties.map((p: EquipmentProperty) => p.PointsCost).reduce((a, b) => a + b, 0);
   }
   private _traits: Trait[] = [Trait.Large()];
   get Traits(): Trait[] { return this._traits; }
-  private _properties: WeaponProperty[] = [];
-  get Properties() : WeaponProperty[] { return this._properties; }
+  private _properties: EquipmentProperty[] = [];
+  get Properties() : EquipmentProperty[] { return this._properties; }
 
   AdjustSpeed(by: number) {
     this._speed += by;
@@ -73,14 +73,14 @@ export class Mount implements Moveable, CanAttack, Keyed {
     return this;
   }
   
-  AddProperty(weaponProperty: WeaponProperty, ...props: any[]): Mount {
+  AddProperty(weaponProperty: EquipmentProperty, ...props: any[]): Mount {
     if (weaponProperty.Key === 'Ranged') {
       throw new Error('Cannot add Ranged to a Mount');
     }
-    if (!weaponProperty.MultipleAllowed && this._properties.find((p: WeaponProperty) => p.Key === weaponProperty.Key)) {
+    if (!weaponProperty.MultipleAllowed && this._properties.find((p: EquipmentProperty) => p.Key === weaponProperty.Key)) {
       return this;
     }
-    if (weaponProperty.Prerequisites.some((wp) => !this._properties.find((p: WeaponProperty) => p.Key === wp.Key))) {
+    if (weaponProperty.Prerequisites.some((wp) => !this._properties.find((p: EquipmentProperty) => p.Key === wp.Key))) {
       throw new Error(
         `Cannot add ${weaponProperty.Key} as Weapon must already have ${weaponProperty.Prerequisites.map(
           (p) => p.Key,
@@ -92,9 +92,9 @@ export class Mount implements Moveable, CanAttack, Keyed {
     return this;
   }
 
-  RemoveProperty(weaponProperty: WeaponProperty, ...props: any[]): Mount {
+  RemoveProperty(weaponProperty: EquipmentProperty, ...props: any[]): Mount {
     // TODO: is this a prerequisite for other properties? If so, remove those as well or warn? TBC
-    const index = this._properties.findIndex((p: WeaponProperty) => p.Key === weaponProperty.Key);
+    const index = this._properties.findIndex((p: EquipmentProperty) => p.Key === weaponProperty.Key);
     this._properties.splice(index, 1);
     weaponProperty.RemoveEffect(this, weaponProperty, props);
     return this;
@@ -102,16 +102,28 @@ export class Mount implements Moveable, CanAttack, Keyed {
 
   static Horse() : Mount {
     return new Mount('Horse', 2, 4)
+    .AddTrait(Trait.Large())
     .AddTrait(Trait.Fast())
+    .AddTrait(Trait.Fast());
+  }
+  static Wolf() : Mount {
+    return new Mount('Wolf', 2, 5)
+    .AddTrait(Trait.Large())
     .AddTrait(Trait.Fast());
   }
   static Griffin() : Mount {
     return new Mount('Griffin', 2, 4)
     .AddTrait(Trait.Flying())
+    .AddTrait(Trait.Large())
     .AddTrait(Trait.Fast())
   }
   static Bear() : Mount {
     return new Mount('Bear', 1, 7)
-    .AddProperty(WeaponProperty.HighCrit());
+    .AddProperty(EquipmentProperty.HighCrit());
+  }
+  static Drake() : Mount {
+    return new Mount('Drake', 3, 3)
+    .AddTrait(Trait.Large())
+    .AddTrait(Trait.Fast())
   }
 }

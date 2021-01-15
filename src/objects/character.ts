@@ -1,8 +1,21 @@
-import { Move, Physicality, Dexterity, Constitution, Mind, Trait } from '../defs';
+import { Move, Physicality, Dexterity, Constitution, Mind, Trait, CharacterStat } from '../defs';
 import { Mount } from './mount';
 import { Moveable, Keyed } from '../interfaces';
 import { MiscellaneousEquipment } from './miscellaneous_equipment';
+import { Potion } from './potion';
+import { Skill } from '../defs/skill';
+import { Weapon } from './weapon';
+import { Armour } from './armour';
+import { Shield } from './shield';
 
+/**
+ * Default character has:
+ * MOV = 4
+ * PHY = 0
+ * DEX = 0
+ * CON = 1
+ * MND = 0
+ */
 export class Character implements Moveable {
   MOV: Move = new Move();
   PHY: Physicality = new Physicality();
@@ -16,6 +29,16 @@ export class Character implements Moveable {
   get Mount(): Mount | undefined { return this._mount; };
   private _equipment: MiscellaneousEquipment[] = [];
   get Equipment(): MiscellaneousEquipment[] { return this._equipment; }
+  private _potions: Potion[] = [];
+  get Potions(): Potion[] { return this._potions; }
+  private _skills: Skill[] = [];
+  get Skills(): Skill[] { return this._skills; }
+  private _weapons: Weapon[] = [];
+  get Weapons(): Weapon[] { return this._weapons; }
+  private _armour = Armour.None();
+  get Armour(): Armour { return this._armour; }
+  private _shield = Shield.None();
+  get Shield(): Shield { return this._shield; }
 
   get PointsCost() : number {
     const mountCost : number = this.Mount !== undefined ? this.Mount.PointsCost : 0;
@@ -24,7 +47,12 @@ export class Character implements Moveable {
            + this.DEX.PointsCost
            + this.CON.PointsCost
            + this.MND.PointsCost
+           + this.Armour.PointsCost
+           + this.Shield.PointsCost
            + this.Traits.map((t: Trait) => t.PointsCost).reduce((a, b) => a + b, 0)
+           + this.Potions.map((p: Potion) => p.PointsCost).reduce((a, b) => a + b, 0)
+           + this.Weapons.map((w: Weapon) => w.PointsCost).reduce((a, b) => a + b, 0)
+           + this.Equipment.map((m: MiscellaneousEquipment) => m.PointsCost).reduce((a, b) => a + b, 0)
            + mountCost;
   }
 
@@ -73,12 +101,76 @@ export class Character implements Moveable {
     return this;
   }
 
+  AddWeapon(weapon: Weapon) : Character {
+    /*if (weapons.Prerequisites.some((wp) => !this._traits.find((p: Keyed) => p.Key === wp.Key))) {
+      throw new Error(
+        `Cannot add ${equipment.Key} as Character must have ${equipment.Prerequisites.map(
+          (p) => p.Key,
+        ).join(', ')}.`,
+      );
+    }*/
+    this._weapons.push(weapon);
+    return this;
+  }
+  RemoveWeapon(weapon: Weapon) : Character {
+    const index = this._weapons.findIndex((e: Keyed) => weapon.Key === e.Key);
+    this._weapons.splice(index, 1);
+    return this;
+  }
+
+  
+  AddSkill(skill: Skill) : Character {
+    if (skill.TraitPrerequisites.some((wp) => !this._traits.find((p: Keyed) => p.Key === wp.Key))) {
+      throw new Error(
+        `Cannot add ${skill.Key} as Character must have ${skill.TraitPrerequisites.map(
+          (p) => p.Key,
+        ).join(', ')}.`,
+      );
+    }
+    this._skills.push(skill);
+    return this;
+  }
+  RemoveSkill(skill: Skill) : Character {
+    const index = this._skills.findIndex((e: Keyed) => skill.Key === e.Key);
+    this._skills.splice(index, 1);
+    return this;
+  }
+
   AddMount(mount: Mount) : Character {
     this._mount = mount;
     return this;
   }
   RemoveMount() : Character {
     this._mount = undefined;
+    return this;
+  }
+
+  AddArmour(armour: Armour) : Character {
+    this._armour = armour;
+    return this;
+  }
+  RemoveArmour  () : Character {
+    this._armour = Armour.None();
+    return this;
+  }
+
+  AddShield(shield: Shield) : Character {
+    this._shield = shield;
+    return this;
+  }
+  RemoveShield  () : Character {
+    this._shield = Shield.None();
+    return this;
+  }
+
+  AddPotion(potion: Potion) : Character {
+    this._potions.push(potion);
+    return this;
+  }
+
+  RemovePotion(potion: Potion) : Character {
+    const index = this._potions.findIndex(p => p.Key === potion.Key);
+    this._potions.splice(index, 1);
     return this;
   }
 }

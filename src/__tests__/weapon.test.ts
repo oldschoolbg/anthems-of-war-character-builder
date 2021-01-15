@@ -15,7 +15,13 @@ test('Knife cost', () => {
   expect(Weapon.Knife().PointsCost).toBe(3);
 });
 test('Sword cost', () => {
-  expect(Weapon.OneHandedHandSwordAxeSpear().PointsCost).toBe(5);
+  expect(Weapon.OneHandededSword().PointsCost).toBe(5);
+});
+test('Axe cost', () => {
+  expect(Weapon.OneHandedAxe().PointsCost).toBe(5);
+});
+test('Spear cost', () => {
+  expect(Weapon.OneHandedSpear().PointsCost).toBe(5);
 });
 test('Staff cost', () => {
   expect(Weapon.Staff().PointsCost).toBe(5);
@@ -40,6 +46,9 @@ test('Hand Crossbow cost', () => {
 });
 test('Dagger cost', () => {
   expect(Weapon.Dagger().PointsCost).toBe(5);
+});
+test('Dual Weild Daggers cost', () => {
+  expect(Weapon.DualWeildDaggers().PointsCost).toBe(8);
 });
 test('Whip cost', () => {
   expect(Weapon.Whip().PointsCost).toBe(2);
