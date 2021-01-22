@@ -1,4 +1,4 @@
-import { Moveable } from "../interfaces";
+import { Magicable, Moveable } from "../interfaces";
 
 export class Trait {
   constructor(key: string, pointsCost: number, description: string) {
@@ -12,20 +12,20 @@ export class Trait {
   get Key(): string { return this._key; }
   private _description: string;
   get Description(): string { return this._description; }
-  private _addEffect: (char: Moveable) => void = (char: Moveable) => {
+  private _addEffect: (char: Moveable | Magicable) => void = (char: Moveable | Magicable) => {
     return;
   };
-  get AddEffect() : (char: Moveable) => void { return this._addEffect; }
-  private _removeEffect: (char: Moveable) => void = (char: Moveable) => {
+  get AddEffect() : (char: Moveable | Magicable) => void { return this._addEffect; }
+  private _removeEffect: (char: Moveable | Magicable) => void = (char: Moveable | Magicable) => {
     return;
   };
-  get RemoveEffect() : (char: Moveable) => void { return this._removeEffect; }
+  get RemoveEffect() : (char: Moveable | Magicable) => void { return this._removeEffect; }
 
-  setAddEffect(addEffect: (char: Moveable) => void): Trait {
+  setAddEffect(addEffect: (char: Moveable | Magicable) => void): Trait {
     this._addEffect = addEffect;
     return this;
   }
-  setRemoveEffect(removeEffect: (char: Moveable) => void): Trait {
+  setRemoveEffect(removeEffect: (char: Moveable | Magicable) => void): Trait {
     this._removeEffect = removeEffect;
     return this;
   }
@@ -60,20 +60,20 @@ export class Trait {
   }
   static Slow() : Trait {
     return new Trait('Slow', -2, 'Subtract 1 tfrom character’s MOV value. Can be applied multiple times')
-    .setAddEffect((char: Moveable) => {
-      char.MOV.AdjustBy(-1);
+    .setAddEffect((char: Moveable | Magicable) => {
+      (char as Moveable).MOV.AdjustBy(-1);
     })
-    .setRemoveEffect((char: Moveable) => {
-      char.MOV.AdjustBy(1);
+    .setRemoveEffect((char: Moveable | Magicable) => {
+      (char as Moveable).MOV.AdjustBy(1);
     });
   }
   static Fast() : Trait {
     return new Trait('Fast', 2, 'Add 1 to character’s MOV value. Can be applied multiple times')
-    .setAddEffect((char: Moveable) => {
-      char.MOV.AdjustBy(1);
+    .setAddEffect((char: Moveable | Magicable) => {
+      (char as Moveable).MOV.AdjustBy(1);
     })
-    .setRemoveEffect((char: Moveable) => {
-      char.MOV.AdjustBy(-1);
+    .setRemoveEffect((char: Moveable | Magicable) => {
+      (char as Moveable).MOV.AdjustBy(-1);
     });
   }
   static Flying() : Trait {
@@ -88,7 +88,13 @@ export class Trait {
       'Spellcaster',
       8,
       'This character can cast spells from one chosen school of magic.',
-    );
+    )
+    .setAddEffect((char: Moveable | Magicable) => {
+      (char as Magicable).SetSpellcastingSchoolsLimit(1);
+    })
+    .setRemoveEffect((char: Moveable | Magicable) => {
+      (char as Magicable).SetSpellcastingSchoolsLimit(0);
+    });;
   }
   static Huge() : Trait {
     return new Trait(

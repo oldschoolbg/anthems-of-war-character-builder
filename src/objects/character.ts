@@ -1,12 +1,13 @@
 import { Move, Physicality, Dexterity, Constitution, Mind, Trait, CharacterStat } from '../defs';
 import { Mount } from './mount';
-import { Moveable, Keyed } from '../interfaces';
+import { Moveable, Keyed, IsCommander } from '../interfaces';
 import { MiscellaneousEquipment } from './miscellaneous_equipment';
 import { Potion } from './potion';
 import { Skill } from '../defs/skill';
 import { Weapon } from './weapon';
 import { Armour } from './armour';
 import { Shield } from './shield';
+import { Magicable } from '../interfaces';
 
 /**
  * Default character has:
@@ -16,7 +17,8 @@ import { Shield } from './shield';
  * CON = 1
  * MND = 0
  */
-export class Character implements Moveable {
+export class Character implements Moveable, Magicable, IsCommander {
+  IsCommander: boolean = false;
   MOV: Move = new Move();
   PHY: Physicality = new Physicality();
   DEX: Dexterity = new Dexterity();
@@ -40,6 +42,15 @@ export class Character implements Moveable {
   private _shield = Shield.None();
   get Shield(): Shield { return this._shield; }
 
+  private _spellPoolLimit: number = 0;
+  public get SpellPoolLimit(): number { return this._spellPoolLimit; }
+  private _spellcastingSlotsLimit: number = 0;
+  public get SpellcastingSlotsLimit(): number { return this._spellcastingSlotsLimit; }
+  private _spellcastingSchoolsLimit: number = 0;
+  public get SpellcastingSchoolsLimit(): number { return this._spellcastingSchoolsLimit; }
+  private _spellcastingSchools: any[] = [];
+  get SpellCastingSchools(): any[] { return this._spellcastingSchools; }
+
   get PointsCost() : number {
     const mountCost : number = this.Mount !== undefined ? this.Mount.PointsCost : 0;
     return this.MOV.PointsCost
@@ -54,6 +65,19 @@ export class Character implements Moveable {
            + this.Weapons.map((w: Weapon) => w.PointsCost).reduce((a, b) => a + b, 0)
            + this.Equipment.map((m: MiscellaneousEquipment) => m.PointsCost).reduce((a, b) => a + b, 0)
            + mountCost;
+  }
+
+  SetSpellcastingSchoolsLimit(to: number): Character {
+    this._spellcastingSchoolsLimit = to;
+    return this;
+  }
+  SetSpellcastingSlotsLimit(to: number): Character {
+    this._spellcastingSlotsLimit = to;
+    return this;
+  }
+  SetSpellPoolLimit(to: number): Character {
+    this._spellPoolLimit = to;
+    return this;
   }
 
   AddTrait(trait: Trait) : Character {
