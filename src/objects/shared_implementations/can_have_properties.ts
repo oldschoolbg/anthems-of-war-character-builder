@@ -1,6 +1,6 @@
 import { EquipmentProperty } from "../../defs";
 
-export type PropertyType = 'WEAPON' | 'ARMOUR' | 'MISC';
+export type PropertyType = 'WEAPON' | 'ARMOUR' | 'MOUNT' | 'MISC';
 
 export abstract class CanHaveProperties {
   private _propertyType: PropertyType;

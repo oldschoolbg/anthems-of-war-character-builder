@@ -15,3 +15,11 @@ test('Griffin cost', () => {
 test('Bear const', () => {
   expect(Mount.Bear().PointsCost).toBe(11);
 })
+
+xtest('Drake const', () => {
+  expect(Mount.Drake().PointsCost).toBe(13);
+})
+
+xtest('Dragon const', () => {
+  expect(Mount.Drake().PointsCost).toBe(28);
+})

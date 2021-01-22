@@ -84,6 +84,10 @@ export class Character implements Moveable {
     return this;
   }
 
+  HasTrait(trait: Trait): boolean {
+    return this._traits.find(t => t.Key === trait.Key) !== undefined;
+  }
+
   AddEquipment(equipment: MiscellaneousEquipment) : Character {
     if (equipment.Prerequisites.some((wp) => !this._traits.find((p: Keyed) => p.Key === wp.Key))) {
       throw new Error(
@@ -173,4 +177,10 @@ export class Character implements Moveable {
     this._potions.splice(index, 1);
     return this;
   }
+
+  static Leader(): Character {
+    return new Character()
+    .AddTrait(Trait.Regular());
+  }
+
 }

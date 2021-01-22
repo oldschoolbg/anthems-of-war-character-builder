@@ -6,9 +6,11 @@ import {
   EquipmentProperty
 } from '../defs';
 import { Moveable, CanAttack, Keyed } from '../interfaces';
+import { CanHaveProperties } from './shared_implementations/can_have_properties';
 
-export class Mount implements Moveable, CanAttack, Keyed {
+export class Mount extends CanHaveProperties implements Moveable, CanAttack, Keyed {
   constructor (key: string, speed: number, strength: number) {
+    super('MOUNT')
     this._key = key;
     this._speed = speed;
     this._strength = strength;
@@ -39,8 +41,6 @@ export class Mount implements Moveable, CanAttack, Keyed {
   }
   private _traits: Trait[] = [Trait.Large()];
   get Traits(): Trait[] { return this._traits; }
-  private _properties: EquipmentProperty[] = [];
-  get Properties() : EquipmentProperty[] { return this._properties; }
 
   AdjustSpeed(by: number) {
     this._speed += by;
@@ -73,30 +73,15 @@ export class Mount implements Moveable, CanAttack, Keyed {
     return this;
   }
   
-  AddProperty(weaponProperty: EquipmentProperty, ...props: any[]): Mount {
-    if (weaponProperty.Key === 'Ranged') {
-      throw new Error('Cannot add Ranged to a Mount');
-    }
-    if (!weaponProperty.MultipleAllowed && this._properties.find((p: EquipmentProperty) => p.Key === weaponProperty.Key)) {
-      return this;
-    }
-    if (weaponProperty.Prerequisites.some((wp) => !this._properties.find((p: EquipmentProperty) => p.Key === wp.Key))) {
-      throw new Error(
-        `Cannot add ${weaponProperty.Key} as Weapon must already have ${weaponProperty.Prerequisites.map(
-          (p) => p.Key,
-        ).join(', ')}.`,
-      );
-    }
-    this._properties.push(weaponProperty);
-    weaponProperty.AddEffect(this, weaponProperty, props);
+  AddProperty(property: EquipmentProperty, ...props: any[]): Mount {
+    super.AddProperty(property, props);
+    property.AddEffect(this, property, props);
     return this;
   }
 
-  RemoveProperty(weaponProperty: EquipmentProperty, ...props: any[]): Mount {
-    // TODO: is this a prerequisite for other properties? If so, remove those as well or warn? TBC
-    const index = this._properties.findIndex((p: EquipmentProperty) => p.Key === weaponProperty.Key);
-    this._properties.splice(index, 1);
-    weaponProperty.RemoveEffect(this, weaponProperty, props);
+  RemoveProperty(property: EquipmentProperty, ...props: any[]): Mount {
+    super.RemoveProperty(property, props);
+    property.RemoveEffect(this, property, props);
     return this;
   }
 
@@ -125,5 +110,13 @@ export class Mount implements Moveable, CanAttack, Keyed {
     return new Mount('Drake', 3, 3)
     .AddTrait(Trait.Large())
     .AddTrait(Trait.Fast())
+    // TODO add magic!
+  }
+  static Dragon() : Mount {
+    return new Mount('Dragon', 1, 8)
+    .AddTrait(Trait.Large())
+    .AddTrait(Trait.Flying())
+    .AddTrait(Trait.Fast())
+    // TODO add magic!
   }
 }

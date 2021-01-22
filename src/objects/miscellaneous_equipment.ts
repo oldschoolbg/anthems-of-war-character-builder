@@ -115,7 +115,7 @@ export class MiscellaneousEquipment extends CanHaveProperties implements Keyed {
   static Trinkets() : MiscellaneousEquipment {
     return new MiscellaneousEquipment(
       'Trinket',
-      "Trinkets can be any size or shape. They have no special properties on their own but can be imbued with magic or the morale boosting special property for additional points cost. Trinkets can be passed to an ally in base contact or picked off a corpse, friend or foe, using a standard action. Trinkets are sometimes used as scenario objectives. Some scenarios may list additional rules for specific trinkets that may be used.",
+      "Trinkets can be any size or shape. They have no special properties on their own but can be imbued with magic or the morale boosting special property for additional points cost. Trinkets can be passed to an ally in base contact or picked off a corpse, friend or foe, using a standard action. They can also be picked up off the ground using a standard action or by sacrificing 1 from their MOV during an order. Trinkets are sometimes used as scenario objectives. Some scenarios may list additional rules for specific trinkets that may be used.",
       1
     )
   }

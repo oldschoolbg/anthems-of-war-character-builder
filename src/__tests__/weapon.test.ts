@@ -54,7 +54,7 @@ test('Whip cost', () => {
   expect(Weapon.Whip().PointsCost).toBe(2);
 });
 test('Javelin cost', () => {
-  expect(Weapon.Javelin().PointsCost).toBe(5);
+  expect(Weapon.Javelin().PointsCost).toBe(7);
 });
 test('Sling cost', () => {
   expect(Weapon.Sling().PointsCost).toBe(4);

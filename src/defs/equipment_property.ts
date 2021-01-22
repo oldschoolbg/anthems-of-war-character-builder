@@ -97,7 +97,8 @@ export class EquipmentProperty {
   }
   static HighCrit() : EquipmentProperty {
     return new EquipmentProperty('High Crit', 2, 'Critical hits with this weapon roll two armor checks.')
-    .setAllowedOn('WEAPON');
+    .setAllowedOn('WEAPON')
+    .setAllowedOn('MOUNT');
   }
   static TwoHanded() : EquipmentProperty {
     return new EquipmentProperty(
@@ -142,11 +143,30 @@ export class EquipmentProperty {
     .setAllowedOn('ARMOUR')
     .setAllowedOn('MISC');
   }
+  static Versatile() : EquipmentProperty {
+    return new EquipmentProperty(
+      'Versatile',
+      2,
+      'Ranged weapons with this property may use DEX instead of PHY when attacking and reacting in melee combat. This property only costs 1 point if the weapon also has the low ammo property.',
+    )
+      .setAllowedOn('WEAPON')
+      .setAddEffect((weapon: CanAttack, weaponProperty: EquipmentProperty, selectedWeaponStat: WeaponStat[]) => {
+        if (weapon.Properties.find((p: EquipmentProperty) => p.Key === 'Low Ammo')) {
+          weaponProperty.AdjustPoints(-1);
+        }
+      })
+      .setRemoveEffect((weapon: CanAttack, weaponProperty: EquipmentProperty, selectedWeaponStat: WeaponStat[]) => {
+        if (weapon.Properties.find((p: EquipmentProperty) => p.Key === 'Low Ammo')) {
+          weaponProperty.AdjustPoints(1);
+        }
+      })
+      .setPrerequisite(EquipmentProperty.Ranged());
+  }
   static LowAmmo() : EquipmentProperty {
     return new EquipmentProperty(
       'Low Ammo',
       0,
-      'Only a limited number of attacks can be done with this weapon. This could either be because of the quality of the weapon or that you are carrying less into battle.',
+      'This character carries a limited quantity of ammunition for this weapon into battle. Melee attacks with low ammo ranged weapons do not use its ammo; it is assumed you keep hold of the weapon you attacked with.',
     )
       .setAllowedOn('WEAPON')
       .setPrerequisite(EquipmentProperty.Ranged())
@@ -157,34 +177,20 @@ export class EquipmentProperty {
         weaponProperty.AdjustPoints(-(numberOfShots - 5));
       });
   }
-  static Melee() : EquipmentProperty {
+  static LowDurability() : EquipmentProperty {
     return new EquipmentProperty(
-      'Melee',
+      'Low Durability',
       0,
-      'Can be added to ranged weapons to grant them melee capabilities. Add the melee cost for the strength and speed to the weapon cost, and substract 1 point. If the weapon also has the low ammo property, subtract 2 points.',
+      'When applied to melee weapons this represents an improvised, fragile, or poorly made item being used with each swing reducing its overall durability until it breaks.',
     )
       .setAllowedOn('WEAPON')
-      .setAddEffect((weapon: CanAttack, weaponProperty: EquipmentProperty, selectedWeaponStat: WeaponStat[]) => {
-        if (!selectedWeaponStat || selectedWeaponStat.length === 0) {
-          throw new Error('No Weapon Stat provided');
-        }
-        let points = selectedWeaponStat[0].PointsCost - 1;
-        if (weapon.Properties.find((p: EquipmentProperty) => p.Key === 'Low Ammo')) {
-          points = points - 2;
-        }
-        weaponProperty.AdjustPoints(weaponProperty.PointsCost + points);
+      .setKryptonite(EquipmentProperty.Ranged().Key)
+      .setAddEffect((weapon: CanAttack, weaponProperty: EquipmentProperty, numberOfShots: 1 | 2 | 3 | 4) => {
+        weaponProperty.AdjustPoints(numberOfShots - 5);
       })
-      .setRemoveEffect((weapon: CanAttack, weaponProperty: EquipmentProperty, selectedWeaponStat: WeaponStat[]) => {
-        if (!selectedWeaponStat || selectedWeaponStat.length === 0) {
-          throw new Error('No Weapon Stat provided');
-        }
-        let points = selectedWeaponStat[0].PointsCost - 1;
-        if (weapon.Properties.find((p: EquipmentProperty) => p.Key === 'Low Ammo')) {
-          points = points - 2;
-        }
-        weaponProperty.AdjustPoints(-points);
-      })
-      .setPrerequisite(EquipmentProperty.Ranged());
+      .setRemoveEffect((weapon: CanAttack, weaponProperty: EquipmentProperty, numberOfShots: 1 | 2 | 3 | 4) => {
+        weaponProperty.AdjustPoints(-(numberOfShots - 5));
+      });
   }
   static SlowToLoad() : EquipmentProperty {
     return new EquipmentProperty(

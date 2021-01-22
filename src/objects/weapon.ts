@@ -116,10 +116,7 @@ export class Weapon extends CanHaveProperties implements CanAttack, Keyed {
     .AddProperty(EquipmentProperty.Ranged())
     .AddProperty(EquipmentProperty.OneHanded())
     .AddProperty(EquipmentProperty.LowAmmo(), 3)
-    .AddProperty(
-      EquipmentProperty.Melee(),
-      WeaponMatrix.find((wp) => wp.Speed === 2 && wp.Strength === 4),
-    );
+    .AddProperty(EquipmentProperty.Versatile());
   }
   static Sling() : Weapon {
     return new Weapon('Sling', 1, 3)
