@@ -411,7 +411,10 @@ export class Skill implements Keyed {
     .setKryptonite(Trait.Spellcaster().Key)
     .setKryptonite(Skill.MultiSchoolSpellcaster().Key)
     .setKryptonite(Skill.VersatileSpellcaster().Key)
-    .setAddEffect((char: Magicable | IsCommander) => (char as Magicable).SetSpellPoolLimit(1));;
+    .setAddEffect((char: Magicable | IsCommander) => {
+      (char as Magicable).SetSpellPoolLimit(1);
+      (char as Magicable).SetSpellcastingSchoolsLimit(1);
+    });;
   }
   static MultiSchoolSpellcaster(): Skill {
     return new Skill(

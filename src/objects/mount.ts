@@ -5,10 +5,12 @@ import {
   WeaponMatrix,
   EquipmentProperty
 } from '../defs';
-import { Moveable, CanAttack, Keyed } from '../interfaces';
+import { Moveable, CanAttack, Keyed, CanHaveMagicalCharges } from '../interfaces';
+import { SpellCharge } from '../interfaces/can_have_magical_charges';
+import { Spell } from './magic';
 import { CanHaveProperties } from './shared_implementations/can_have_properties';
 
-export class Mount extends CanHaveProperties implements Moveable, CanAttack, Keyed {
+export class Mount extends CanHaveProperties implements Moveable, CanAttack, Keyed, CanHaveMagicalCharges {
   constructor (key: string, speed: number, strength: number) {
     super('MOUNT')
     this._key = key;
@@ -32,12 +34,17 @@ export class Mount extends CanHaveProperties implements Moveable, CanAttack, Key
   get Speed(): number { return this._speed; };
   private _strength: number;
   get Strength(): number { return this._strength; };
+  private _spellCharges: Array<SpellCharge> = [];
+  get SpellCharges(): Array<SpellCharge> {
+    return this._spellCharges;
+  }
 
   readonly BaseCost: number = 2;
   get PointsCost(): number {
     return this.BaseCost
     + this._traits.map((p: Trait) => p.PointsCost).reduce((a, b) => a + b, 0)
-    + this._properties.map((p: EquipmentProperty) => p.PointsCost).reduce((a, b) => a + b, 0);
+    + this._properties.map((p: EquipmentProperty) => p.PointsCost).reduce((a, b) => a + b, 0)
+    + this._spellCharges.map((sc: SpellCharge) => sc.Spell.ChargeCost * sc.NumberOfCharges).reduce((a, b) => a + b, 0);
   }
   private _traits: Trait[] = [Trait.Large()];
   get Traits(): Trait[] { return this._traits; }
@@ -47,6 +54,17 @@ export class Mount extends CanHaveProperties implements Moveable, CanAttack, Key
   }
   AdjustStrength(by: number) {
     this._strength += by;
+  }
+
+  AddSpellCharge(spellCharge: SpellCharge): Mount {
+    const found = this._spellCharges.findIndex(sp => sp.Spell.Key === spellCharge.Spell.Key);
+    if (found !== -1) {
+      spellCharge.NumberOfCharges += this._spellCharges[found].NumberOfCharges;
+      this._spellCharges[found] = spellCharge;
+    } else {
+      this._spellCharges.push(spellCharge);
+    }
+    return this;
   }
 
   AddTrait(trait: Trait) : Mount {
@@ -110,13 +128,42 @@ export class Mount extends CanHaveProperties implements Moveable, CanAttack, Key
     return new Mount('Drake', 3, 3)
     .AddTrait(Trait.Large())
     .AddTrait(Trait.Fast())
-    // TODO add magic!
+    .AddSpellCharge({
+      Spell: Spell.AcidicAssault(),
+      NumberOfCharges: 2
+    });
   }
   static Dragon() : Mount {
     return new Mount('Dragon', 1, 8)
-    .AddTrait(Trait.Large())
+    .AddTrait(Trait.Huge())
     .AddTrait(Trait.Flying())
     .AddTrait(Trait.Fast())
-    // TODO add magic!
+    .AddSpellCharge({
+      Spell: Spell.BreathOfTheDragonKing(),
+      NumberOfCharges: 1
+    });
   }
+
+  /*Cobra Chicken Hydra
+
+MOV | PHY | DEX | CON | MND | PTS
+ 4     4     2     3     2    57
+
+Traits
+======
+Regular (+15)
+Flying (4)
+Large (0)
+
+Equipment
+=========
+Multi Peck (Speed 3, Strength 4) (+6)
+
+Skills
+======
+Latent Spellcaster
+
+Spells
+======
+Necromancy - Fear*/
 }

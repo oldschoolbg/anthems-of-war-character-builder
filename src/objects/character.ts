@@ -1,6 +1,6 @@
 import { Move, Physicality, Dexterity, Constitution, Mind, Trait, CharacterStat } from '../defs';
 import { Mount } from './mount';
-import { Moveable, Keyed, IsCommander } from '../interfaces';
+import { Moveable, Keyed, IsCommander, Physical } from '../interfaces';
 import { MiscellaneousEquipment } from './miscellaneous_equipment';
 import { Potion } from './potion';
 import { Skill } from '../defs/skill';
@@ -8,6 +8,7 @@ import { Weapon } from './weapon';
 import { Armour } from './armour';
 import { Shield } from './shield';
 import { Magicable } from '../interfaces';
+import { Elemental } from './magic';
 
 /**
  * Default character has:
@@ -17,7 +18,7 @@ import { Magicable } from '../interfaces';
  * CON = 1
  * MND = 0
  */
-export class Character implements Moveable, Magicable, IsCommander {
+export class Character implements Moveable, Physical, Magicable, IsCommander {
   IsCommander: boolean = false;
   MOV: Move = new Move();
   PHY: Physicality = new Physicality();
@@ -29,6 +30,10 @@ export class Character implements Moveable, Magicable, IsCommander {
   get Traits(): Trait[] { return this._traits; };
   private _mount? : Mount;
   get Mount(): Mount | undefined { return this._mount; };
+  private _elementals: Elemental[] = [];
+  get Elementals(): Elemental[] {
+    return this._elementals;
+  }
   private _equipment: MiscellaneousEquipment[] = [];
   get Equipment(): MiscellaneousEquipment[] { return this._equipment; }
   private _potions: Potion[] = [];
@@ -43,7 +48,7 @@ export class Character implements Moveable, Magicable, IsCommander {
   get Shield(): Shield { return this._shield; }
 
   private _spellPoolLimit: number = 0;
-  public get SpellPoolLimit(): number { return this._spellPoolLimit; }
+  public get SpellPoolLimit(): number { return this._spellPoolLimit + this.MND.Value + 1; }
   private _spellcastingSlotsLimit: number = 0;
   public get SpellcastingSlotsLimit(): number { return this._spellcastingSlotsLimit; }
   private _spellcastingSchoolsLimit: number = 0;
@@ -170,6 +175,18 @@ export class Character implements Moveable, Magicable, IsCommander {
   }
   RemoveMount() : Character {
     this._mount = undefined;
+    return this;
+  }
+
+  AddElemental(elemental: Elemental): Character {
+    this._elementals.push(elemental);
+    return this;
+  }
+  RemoveElemental(elemental: Elemental): Character {
+    const found = this._elementals.findIndex(e => e.Key === elemental.Key)
+    if (found !== -1) {
+      this._elementals.splice(found, 1);
+    }
     return this;
   }
 
