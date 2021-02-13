@@ -1,8 +1,8 @@
 import { EquipmentProperty } from "../defs";
-import { Keyed } from "../interfaces";
+import { CanHaveMagicalCharges, Keyed, SpellCharge } from "../interfaces";
 import { CanHaveProperties } from "./shared_implementations/can_have_properties";
 
-export class Armour extends CanHaveProperties implements Keyed  {
+export class Armour extends CanHaveProperties implements Keyed, CanHaveMagicalCharges  {
   constructor(key: string, description: string, pointsCost: number) {
     super('ARMOUR');
     this._key = key;
@@ -15,7 +15,15 @@ export class Armour extends CanHaveProperties implements Keyed  {
   private _description: string;
   get Description(): string { return this._description; }
   private _pointsCost: number;
-  get PointsCost(): number { return this._pointsCost; }
+  get PointsCost(): number {
+    return this._pointsCost
+    + this._properties.map((p: EquipmentProperty) => p.PointsCost).reduce((a, b) => a + b, 0)
+    + this._spellCharges.map((sc: SpellCharge) => sc.Spell.ChargeCost * sc.NumberOfCharges).reduce((a, b) => a + b, 0);
+  }
+  private _spellCharges: Array<SpellCharge> = [];
+  get SpellCharges(): Array<SpellCharge> {
+    return this._spellCharges;
+  }
 
   AddProperty(property: EquipmentProperty, ...props: any[]): Armour {
     super.AddProperty(property, props);
@@ -24,6 +32,16 @@ export class Armour extends CanHaveProperties implements Keyed  {
 
   RemoveProperty(property: EquipmentProperty, ...props: any[]): Armour {
     super.RemoveProperty(property, props);
+    return this;
+  }
+  AddSpellCharge(spellCharge: SpellCharge): Armour {
+    const found = this._spellCharges.findIndex(sp => sp.Spell.Key === spellCharge.Spell.Key);
+    if (found !== -1) {
+      spellCharge.NumberOfCharges += this._spellCharges[found].NumberOfCharges;
+      this._spellCharges[found] = spellCharge;
+    } else {
+      this._spellCharges.push(spellCharge);
+    }
     return this;
   }
 

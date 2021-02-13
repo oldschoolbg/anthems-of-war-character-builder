@@ -1,8 +1,8 @@
-import { Keyed } from "../interfaces";
+import { CanHaveMagicalCharges, Keyed, SpellCharge } from "../interfaces";
 import { Trait, EquipmentProperty } from "../defs";
 import { CanHaveProperties } from "./shared_implementations/can_have_properties";
 
-export class MiscellaneousEquipment extends CanHaveProperties implements Keyed {
+export class MiscellaneousEquipment extends CanHaveProperties implements Keyed, CanHaveMagicalCharges {
   constructor(key: string, description: string, pointsCost: number) {
     super('MISC');
     this._key = key;
@@ -14,10 +14,18 @@ export class MiscellaneousEquipment extends CanHaveProperties implements Keyed {
   private _description: string;
   get Description(): string  { return this._description}
   private _pointsCost: number;
-  get PointsCost(): number { return this._pointsCost; }
+  get PointsCost(): number {
+    return this._pointsCost
+    + this._properties.map((p: EquipmentProperty) => p.PointsCost).reduce((a, b) => a + b, 0)
+    + this._spellCharges.map((sc: SpellCharge) => sc.Spell.ChargeCost * sc.NumberOfCharges).reduce((a, b) => a + b, 0);
+  }
   private _prerequisites: Keyed[] = []
   // weapon must have all these properties or you cannot add this property
   get Prerequisites(): Keyed[] { return this._prerequisites; }
+  private _spellCharges: Array<SpellCharge> = [];
+  get SpellCharges(): Array<SpellCharge> {
+    return this._spellCharges;
+  }
 
   setPrerequisite(prop: Keyed): MiscellaneousEquipment {
     if (!this._prerequisites.find((p: Keyed) => p.Key === prop.Key)) {
@@ -37,6 +45,17 @@ export class MiscellaneousEquipment extends CanHaveProperties implements Keyed {
 
   RemoveProperty(property: EquipmentProperty, ...props: any[]): MiscellaneousEquipment {
     super.RemoveProperty(property, props);
+    return this;
+  }
+
+  AddSpellCharge(spellCharge: SpellCharge): MiscellaneousEquipment {
+    const found = this._spellCharges.findIndex(sp => sp.Spell.Key === spellCharge.Spell.Key);
+    if (found !== -1) {
+      spellCharge.NumberOfCharges += this._spellCharges[found].NumberOfCharges;
+      this._spellCharges[found] = spellCharge;
+    } else {
+      this._spellCharges.push(spellCharge);
+    }
     return this;
   }
 

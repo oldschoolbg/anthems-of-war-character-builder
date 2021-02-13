@@ -1,8 +1,8 @@
 import { WeaponMatrix, EquipmentProperty, WeaponStat } from '../defs';
-import { CanAttack, Keyed } from '../interfaces';
+import { CanAttack, CanHaveMagicalCharges, Keyed, SpellCharge } from '../interfaces';
 import { CanHaveProperties } from './shared_implementations/can_have_properties';
 
-export class Weapon extends CanHaveProperties implements CanAttack, Keyed {
+export class Weapon extends CanHaveProperties implements CanAttack, Keyed, CanHaveMagicalCharges {
   constructor(key: string, speed: number, strength: number) {
     super('WEAPON');
     this._key = key;
@@ -25,7 +25,13 @@ export class Weapon extends CanHaveProperties implements CanAttack, Keyed {
   
   readonly BaseCost: number = 0;
   get PointsCost(): number {
-    return this.BaseCost + this._properties.map((p: EquipmentProperty) => p.PointsCost).reduce((a, b) => a + b, 0);
+    return this.BaseCost
+    + this._properties.map((p: EquipmentProperty) => p.PointsCost).reduce((a, b) => a + b, 0)
+    + this._spellCharges.map((sc: SpellCharge) => sc.Spell.ChargeCost * sc.NumberOfCharges).reduce((a, b) => a + b, 0);
+  }
+  private _spellCharges: Array<SpellCharge> = [];
+  get SpellCharges(): Array<SpellCharge> {
+    return this._spellCharges;
   }
 
   AdjustSpeed(by: number) {
@@ -44,6 +50,16 @@ export class Weapon extends CanHaveProperties implements CanAttack, Keyed {
   RemoveProperty(weaponProperty: EquipmentProperty, ...props: any[]): Weapon {
     super.RemoveProperty(weaponProperty, props)
     weaponProperty.RemoveEffect(this, weaponProperty, props);
+    return this;
+  }
+  AddSpellCharge(spellCharge: SpellCharge): Weapon {
+    const found = this._spellCharges.findIndex(sp => sp.Spell.Key === spellCharge.Spell.Key);
+    if (found !== -1) {
+      spellCharge.NumberOfCharges += this._spellCharges[found].NumberOfCharges;
+      this._spellCharges[found] = spellCharge;
+    } else {
+      this._spellCharges.push(spellCharge);
+    }
     return this;
   }
 
