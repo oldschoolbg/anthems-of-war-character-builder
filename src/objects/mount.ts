@@ -10,6 +10,15 @@ import { SpellCharge } from '../interfaces/can_have_magical_charges';
 import { Spell } from './magic';
 import { CanHaveProperties } from './shared_implementations/can_have_properties';
 
+export enum Mounts {
+  Horse = 'Horse',
+  Wolf = 'Wolf',
+  Griffin = 'Griffin',
+  Bear = 'Bear',
+  Drake = 'Drake',
+  Dragon = 'Dragon'
+}
+
 export class Mount extends CanHaveProperties implements Moveable, CanAttack, Keyed, CanHaveMagicalCharges {
   constructor (key: string, speed: number, strength: number) {
     super('MOUNT')
@@ -101,6 +110,25 @@ export class Mount extends CanHaveProperties implements Moveable, CanAttack, Key
     super.RemoveProperty(property, props);
     property.RemoveEffect(this, property, props);
     return this;
+  }
+
+  static Get(mount: Mounts): Mount {
+    switch (mount) {
+      case Mounts.Bear:
+        return Mount.Bear();
+      case Mounts.Dragon:
+        return Mount.Dragon();
+      case Mounts.Drake:
+        return Mount.Drake();
+      case Mounts.Griffin:
+        return Mount.Griffin();
+      case Mounts.Horse:
+        return Mount.Horse();
+      case Mounts.Wolf:
+        return Mount.Wolf();
+      default:
+        throw new Error(`This is an unsupported Mount: ${mount}`);
+    }
   }
 
   static Horse() : Mount {

@@ -2,6 +2,13 @@ import { EquipmentProperty } from "../defs";
 import { CanHaveMagicalCharges, Keyed, SpellCharge } from "../interfaces";
 import { CanHaveProperties } from "./shared_implementations/can_have_properties";
 
+export enum ArmourType {
+  None = 'None',
+  LightArmour = 'Light Armour',
+  MediumArmour = 'Medium Armour',
+  HeavyArmour = 'Heavy Armour'
+}
+
 export class Armour extends CanHaveProperties implements Keyed, CanHaveMagicalCharges  {
   constructor(key: string, description: string, pointsCost: number) {
     super('ARMOUR');
@@ -43,6 +50,21 @@ export class Armour extends CanHaveProperties implements Keyed, CanHaveMagicalCh
       this._spellCharges.push(spellCharge);
     }
     return this;
+  }
+
+  static Get(armourType: ArmourType) : Armour {
+    switch (armourType) {
+      case ArmourType.None:
+        return Armour.None();
+      case ArmourType.LightArmour:
+        return Armour.LightArmour();
+      case ArmourType.MediumArmour:
+        return Armour.MediumArmour();
+      case ArmourType.HeavyArmour:
+        return Armour.HeavyArmour();
+      default:
+        throw new Error(`This is an unsupported Armour Type: ${armourType}`);
+    }
   }
 
   static None() : Armour {

@@ -2,6 +2,32 @@ import { WeaponMatrix, EquipmentProperty, WeaponStat } from '../defs';
 import { CanAttack, CanHaveMagicalCharges, Keyed, SpellCharge } from '../interfaces';
 import { CanHaveProperties } from './shared_implementations/can_have_properties';
 
+export enum Weapons {
+  Unarmed = 'Unarmed',
+  Knife = 'Knife',
+  OneHandedSword = 'One Handed Sword',
+  OneHandedAxe = 'One Handed Axe',
+  OneHandedSpear = 'One Handed Spear',
+  Staff = 'Staff',
+  TwoHandedAxe = 'Two Handed Axe',
+  TwoHandedHammer = 'Two Handed Hammer',
+  TwoHandedSword = 'Two Handed Sword',
+  TwoHandedPolearm = 'TwoHanded Polearm',
+  Longbow = 'Longbow',
+  Shortbow = 'Shortbow',
+  Crossbow = 'Crossbow',
+  HandCrossbow = 'Hand Crossbow',
+  Dagger = 'Dagger',
+  DualWeildDaggers = 'Dual Weild Daggers',
+  Whip = 'Whip',
+  Javelin = 'Javelin',
+  Sling = 'Sling',
+  ThrowingKnife = 'Throwing Knife',
+  Pike = 'Pike',
+  DoubleSword = 'Double Sword',
+  WarBanner = 'War Banner'
+}
+
 export class Weapon extends CanHaveProperties implements CanAttack, Keyed, CanHaveMagicalCharges {
   constructor(key: string, speed: number, strength: number) {
     super('WEAPON');
@@ -63,26 +89,89 @@ export class Weapon extends CanHaveProperties implements CanAttack, Keyed, CanHa
     return this;
   }
 
+  static Get(weapon: Weapons): Weapon {
+    switch (weapon) {
+      case Weapons.Crossbow:
+        return Weapon.Crossbow();
+      case Weapons.Dagger:
+        return Weapon.Dagger();
+      case Weapons.DoubleSword:
+        return Weapon.DoubleSword();
+      case Weapons.DualWeildDaggers:
+        return Weapon.DualWeildDaggers();
+      case Weapons.HandCrossbow:
+        return Weapon.HandCrossbow();
+      case Weapons.Javelin:
+        return Weapon.Javelin();
+      case Weapons.Knife:
+        return Weapon.Knife();
+      case Weapons.Longbow:
+        return Weapon.Longbow();
+      case Weapons.OneHandedAxe:
+        return Weapon.OneHandedAxe();
+      case Weapons.OneHandedSpear:
+        return Weapon.OneHandedSpear();
+      case Weapons.OneHandedSword:
+        return Weapon.OneHandedSword();
+      case Weapons.Pike:
+        return Weapon.Pike();
+      case Weapons.Shortbow:
+        return Weapon.Shortbow();
+      case Weapons.Sling:
+        return Weapon.Sling();
+      case Weapons.Staff:
+        return Weapon.Staff();
+      case Weapons.ThrowingKnife:
+        return Weapon.ThrowingKnife();
+      case Weapons.TwoHandedAxe:
+        return Weapon.TwoHandedAxe();
+      case Weapons.TwoHandedHammer:
+        return Weapon.TwoHandedHammer();
+      case Weapons.TwoHandedPolearm:
+        return Weapon.TwoHandedPolearm();
+      case Weapons.TwoHandedSword:
+        return Weapon.TwoHandedSword();
+      case Weapons.Unarmed:
+        return Weapon.Unarmed();
+      case Weapons.WarBanner:
+        return Weapon.WarBanner();
+      case Weapons.Whip:;
+      return Weapon.Whip();
+      default:
+        throw new Error(`This is an unsupported Weapon: ${weapon}`);
+    }
+  }
+
   static Unarmed() : Weapon {
     return new Weapon('Unarmed', 3, 2);
   }
   static Knife() : Weapon {
     return new Weapon('Knife', 3, 3);
   }
-  static OneHandededSword(): Weapon {
-    return new Weapon('1 Handed Sword', 2, 5);
+  static OneHandedSword(): Weapon {
+    return new Weapon('One Handed Sword', 2, 5);
   }
   static OneHandedAxe() : Weapon {
-    return new Weapon('1 Handed Axe', 2, 5);
+    return new Weapon('One Handed Axe', 2, 5);
   }
   static OneHandedSpear() : Weapon {
-    return new Weapon('1 Handed Spear', 2, 5);
+    return new Weapon('One Handed Spear', 2, 5);
   }
   static Staff(): Weapon {
     return new Weapon('Staff', 2, 5);
   }
-  static TwoHandedAxeHammerSword() : Weapon {
-    return new Weapon('2 Handed Axe / Hammer / Sword', 1, 7)
+  static TwoHandedAxe() : Weapon {
+    return new Weapon('Two Handed Axe', 1, 7)
+    .AddProperty(EquipmentProperty.TwoHanded())
+    .AddProperty(EquipmentProperty.HighCrit());
+  }
+  static TwoHandedHammer() : Weapon {
+    return new Weapon('Two Handed Hammer', 1, 7)
+    .AddProperty(EquipmentProperty.TwoHanded())
+    .AddProperty(EquipmentProperty.HighCrit());
+  }
+  static TwoHandedSword() : Weapon {
+    return new Weapon('Two Handed Sword', 1, 7)
     .AddProperty(EquipmentProperty.TwoHanded())
     .AddProperty(EquipmentProperty.HighCrit());
   }
@@ -118,7 +207,7 @@ export class Weapon extends CanHaveProperties implements CanAttack, Keyed, CanHa
     .AddProperty(EquipmentProperty.Light());
   }
   static DualWeildDaggers() : Weapon {
-    return new Weapon('Dagger', 3, 3)
+    return new Weapon('Dual Weild Daggers', 3, 3)
     .AddProperty(EquipmentProperty.Light())
     .AddProperty(EquipmentProperty.DualWield());
   }

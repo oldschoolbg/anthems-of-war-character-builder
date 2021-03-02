@@ -1,6 +1,22 @@
 import { Keyed } from "../../interfaces";
 import { Spell } from "./Spell";
 
+export enum SpellSchools {
+  Aerothurgy = "Aerothurgy",
+  Aquamancy = "Aquamancy",
+  Arcane = "Arcane",
+  Bardic = "Bardic",
+  Chronomancy = "Chronomancy",
+  Druidic = "Druidic",
+  Geomancy = "Geomancy",
+  Illusion = "Illusion",
+  Necromancy = "Necromancy",
+  Psionic = "Psionic",
+  Pyromancy = "Pyromancy",
+  Thaumaturgy = "Thaumaturgy",
+  Wild = "Wild"
+};
+
 export class SpellSchool implements Keyed {
   constructor(key: string, description: string) {
     this._key = key;
@@ -24,7 +40,40 @@ export class SpellSchool implements Keyed {
       this._spells[found] = spell;
     }
     return this;
-  } 
+  }
+
+  static Get(spellSchool: SpellSchools): SpellSchool {
+    switch (spellSchool) {
+      case SpellSchools.Aerothurgy:
+        return SpellSchool.Aerothurgy();
+      case SpellSchools.Aquamancy:
+        return SpellSchool.Aquamancy();
+      case SpellSchools.Arcane:
+        return SpellSchool.Arcane();
+      case SpellSchools.Bardic:
+        return SpellSchool.Bardic()
+      case SpellSchools.Chronomancy:
+        return SpellSchool.Chronomancy();
+      case SpellSchools.Druidic:
+        return SpellSchool.Druidic();
+      case SpellSchools.Geomancy:
+        return SpellSchool.Geomancy();
+      case SpellSchools.Illusion:
+        return SpellSchool.Illusion();
+      case SpellSchools.Necromancy:
+        return SpellSchool.Necromancy();
+      case SpellSchools.Psionic:
+        return SpellSchool.Psionic();
+      case SpellSchools.Pyromancy:
+        return SpellSchool.Pyromancy();
+      case SpellSchools.Thaumaturgy:
+        return SpellSchool.Thaumaturgy();
+      case SpellSchools.Wild:
+        return SpellSchool.Wild();
+      default:
+        throw new Error(`This is an unsupported Spell School: ${spellSchool}`);
+    }
+  }
 
   static Aerothurgy(): SpellSchool {
     return new SpellSchool(

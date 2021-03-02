@@ -2,6 +2,20 @@ import { CanHaveMagicalCharges, Keyed, SpellCharge } from "../interfaces";
 import { Trait, EquipmentProperty } from "../defs";
 import { CanHaveProperties } from "./shared_implementations/can_have_properties";
 
+export enum MiscellaneousEquipments {
+  SpellcastingImplement = 'SpellcastingImplement',
+  Torch = 'Torch',
+  Familiar = 'Familiar',
+  Spellbook = 'Spellbook',
+  Horn = 'Horn',
+  Bells = 'Bells',
+  Drums = 'Drums',
+  PortableBarricade = 'Portable Barricade',
+  MedicalSupplies = 'Medical Supplies',
+  LaddersRopes = 'Ladders / Ropes',
+  Trinkets = 'Trinkets'
+}
+
 export class MiscellaneousEquipment extends CanHaveProperties implements Keyed, CanHaveMagicalCharges {
   constructor(key: string, description: string, pointsCost: number) {
     super('MISC');
@@ -57,6 +71,35 @@ export class MiscellaneousEquipment extends CanHaveProperties implements Keyed, 
       this._spellCharges.push(spellCharge);
     }
     return this;
+  }
+
+  static Get(equipment: MiscellaneousEquipments): MiscellaneousEquipment {
+    switch (equipment) {
+      case MiscellaneousEquipments.Bells:
+        return MiscellaneousEquipment.Bells();
+      case MiscellaneousEquipments.Drums:
+        return MiscellaneousEquipment.Drums();
+      case MiscellaneousEquipments.Familiar:
+        return MiscellaneousEquipment.Familiar();
+      case MiscellaneousEquipments.Horn:
+        return MiscellaneousEquipment.Horn();
+      case MiscellaneousEquipments.LaddersRopes:
+        return MiscellaneousEquipment.LaddersRopes();
+      case MiscellaneousEquipments.MedicalSupplies:
+        return MiscellaneousEquipment.MedicalSupplies();
+      case MiscellaneousEquipments.PortableBarricade:
+        return MiscellaneousEquipment.PortableBarricade();
+      case MiscellaneousEquipments.Spellbook:
+        return MiscellaneousEquipment.Spellbook();
+      case MiscellaneousEquipments.SpellcastingImplement:
+        return MiscellaneousEquipment.SpellcastingImplement();
+      case MiscellaneousEquipments.Torch:
+        return MiscellaneousEquipment.Torch();
+      case MiscellaneousEquipments.Trinkets:
+        return MiscellaneousEquipment.Trinkets();    
+      default:
+        throw new Error(`This is an unsupported Miscellaneous Equipment: ${equipment}`);
+    }
   }
 
   static SpellcastingImplement() : MiscellaneousEquipment {

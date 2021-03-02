@@ -1,3 +1,10 @@
+export enum Potions {
+  Red = 'Red',
+  Blue = 'Blue',
+  Purple = 'Purple',
+  Green = 'Green'
+}
+
 export class Potion {
   constructor(key: string, points: number, description: string) {
     this._points = points;
@@ -10,6 +17,21 @@ export class Potion {
   get Key(): string { return this._key; }
   private _description: string;
   get Description(): string { return this._description; }
+
+  static Get(potion: Potions): Potion {
+    switch (potion) {
+      case Potions.Red:
+        return Potion.Red();
+      case Potions.Blue:
+        return Potion.Blue();
+      case Potions.Purple:
+        return Potion.Purple();
+      case Potions.Green:
+        return Potion.Green();
+      default:
+        throw new Error(`This is an unsupported Potion: ${potion}`);
+    }
+  }
 
   static Red() : Potion {
     return new Potion('Red potion - Healing', 4, 'Regain 1 CON. If used on an unconscious with 0 CON who is not gravely injured they wake up and can return to the fight. If used on a gravely injured character they do not regain 1 CON but are no longer considered gravely injured. This potion can not be thrown (well it could, but it’s not going to do much healing while smashed on the ground)');
