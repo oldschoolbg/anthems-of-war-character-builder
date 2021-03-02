@@ -88,7 +88,7 @@ test('Ratfolk Brute', () => {
   const char = new Character();
   char.PHY.SetValue(3);
   char.CON.SetValue(2);
-  char.AddWeapon(Weapon.TwoHandedAxeHammerSword());
+  char.AddWeapon(Weapon.TwoHandedAxe());
   char.AddTrait(Trait.Large());
   char.AddTrait(Trait.Strong());
   expect(char.PointsCost).toBe(33);

@@ -26,8 +26,14 @@ test('Spear cost', () => {
 test('Staff cost', () => {
   expect(Weapon.Staff().PointsCost).toBe(5);
 });
-test('Two handed weapon cost', () => {
-  expect(Weapon.TwoHandedAxeHammerSword().PointsCost).toBe(7);
+test('Two handed axe cost', () => {
+  expect(Weapon.TwoHandedAxe().PointsCost).toBe(7);
+});
+test('Two handed hammer cost', () => {
+  expect(Weapon.TwoHandedHammer().PointsCost).toBe(7);
+});
+test('Two handed sword cost', () => {
+  expect(Weapon.TwoHandedSword().PointsCost).toBe(7);
 });
 test('Two handed polearm cost', () => {
   expect(Weapon.TwoHandedPolearm().PointsCost).toBe(9);
