@@ -16,14 +16,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/oldschoolbg/songs-of-war-character-builder.git"
+    "url": "git+https://github.com/oldschoolbg/anthems-of-war-character-builder.git"
   },
   "author": "oldschool.site",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/oldschoolbg/songs-of-war-character-builder/issues"
+    "url": "https://github.com/oldschoolbg/anthems-of-war-character-builder/issues"
   },
-  "homepage": "https://github.com/oldschoolbg/songs-of-war-character-builder#readme",
+  "homepage": "https://github.com/oldschoolbg/anthems-of-war-character-builder#readme",
   "devDependencies": {
     "@types/jest": "^25.2.3",
     "jest": "^26.6.3",
