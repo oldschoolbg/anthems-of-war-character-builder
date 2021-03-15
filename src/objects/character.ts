@@ -1,13 +1,12 @@
-import { Move, Physicality, Dexterity, Constitution, Mind, Trait, CharacterStat } from '../defs';
+import { Move, Physicality, Dexterity, Constitution, Mind, Trait } from '../defs';
 import { Mount } from './mount';
-import { Moveable, Keyed, IsCommander, Physical } from '../interfaces';
+import { Moveable, Keyed, IsCommander, Physical, Magicable } from '../interfaces';
 import { MiscellaneousEquipment } from './miscellaneous_equipment';
 import { Potion } from './potion';
 import { Skill } from '../defs/skill';
 import { Weapon } from './weapon';
 import { Armour } from './armour';
 import { Shield } from './shield';
-import { Magicable } from '../interfaces';
 import { Elemental } from './magic';
 
 /**
@@ -19,6 +18,12 @@ import { Elemental } from './magic';
  * MND = 0
  */
 export class Character implements Moveable, Physical, Magicable, IsCommander {
+  constructor(isCommander?: boolean) {
+    if (isCommander) {
+      this.IsCommander = true;
+    }
+  }
+
   IsCommander: boolean = false;
   MOV: Move = new Move();
   PHY: Physicality = new Physicality();
@@ -220,7 +225,7 @@ export class Character implements Moveable, Physical, Magicable, IsCommander {
   }
 
   static Leader(): Character {
-    return new Character()
+    return new Character(true)
     .AddTrait(Trait.Regular());
   }
 

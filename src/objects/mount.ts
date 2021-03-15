@@ -5,8 +5,7 @@ import {
   WeaponMatrix,
   EquipmentProperty
 } from '../defs';
-import { Moveable, CanAttack, Keyed, CanHaveMagicalCharges } from '../interfaces';
-import { SpellCharge } from '../interfaces/can_have_magical_charges';
+import { Moveable, CanAttack, Keyed, CanHaveMagicalCharges, SpellCharge } from '../interfaces';
 import { Spell } from './magic';
 import { CanHaveProperties } from './shared_implementations/can_have_properties';
 
