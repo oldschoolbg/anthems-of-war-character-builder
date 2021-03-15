@@ -36,8 +36,8 @@ export class MiscellaneousEquipment extends CanHaveProperties implements Keyed, 
   private _prerequisites: Keyed[] = []
   // weapon must have all these properties or you cannot add this property
   get Prerequisites(): Keyed[] { return this._prerequisites; }
-  private _spellCharges: Array<SpellCharge> = [];
-  get SpellCharges(): Array<SpellCharge> {
+  private _spellCharges: SpellCharge[] = [];
+  get SpellCharges(): SpellCharge[] {
     return this._spellCharges;
   }
 

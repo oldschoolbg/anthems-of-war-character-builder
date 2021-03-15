@@ -43,8 +43,8 @@ export class Mount extends CanHaveProperties implements Moveable, CanAttack, Key
   get Speed(): number { return this._speed; };
   private _strength: number;
   get Strength(): number { return this._strength; };
-  private _spellCharges: Array<SpellCharge> = [];
-  get SpellCharges(): Array<SpellCharge> {
+  private _spellCharges: SpellCharge[] = [];
+  get SpellCharges(): SpellCharge[] {
     return this._spellCharges;
   }
 

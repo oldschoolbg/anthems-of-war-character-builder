@@ -27,8 +27,8 @@ export class Armour extends CanHaveProperties implements Keyed, CanHaveMagicalCh
     + this._properties.map((p: EquipmentProperty) => p.PointsCost).reduce((a, b) => a + b, 0)
     + this._spellCharges.map((sc: SpellCharge) => sc.Spell.ChargeCost * sc.NumberOfCharges).reduce((a, b) => a + b, 0);
   }
-  private _spellCharges: Array<SpellCharge> = [];
-  get SpellCharges(): Array<SpellCharge> {
+  private _spellCharges: SpellCharge[] = [];
+  get SpellCharges(): SpellCharge[] {
     return this._spellCharges;
   }
 

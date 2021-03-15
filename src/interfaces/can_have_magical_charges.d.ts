@@ -1,7 +1,7 @@
 import { Spell } from "../objects/magic";
 
 export interface CanHaveMagicalCharges {
-  SpellCharges: Array<SpellCharge>;
+  SpellCharges: SpellCharge[];
   AddSpellCharge(spellCharge: SpellCharge): any;
 }
 
