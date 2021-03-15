@@ -1,5 +1,5 @@
 import { Keyed } from "../../interfaces";
-import { Spell } from "./Spell";
+import { Spell } from "./spell";
 
 export enum SpellSchools {
   Aerothurgy = "Aerothurgy",
