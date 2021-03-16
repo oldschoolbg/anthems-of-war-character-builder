@@ -27,6 +27,10 @@ export class Character implements Moveable, Physical, Magicable, IsCommander {
 
   Name: string | undefined;
   IsCommander: boolean = false;
+  private _isRegular = false;
+  get IsRegular(): boolean {
+    return this._isRegular;
+  }
   MOV: Move = new Move();
   PHY: Physicality = new Physicality();
   DEX: Dexterity = new Dexterity();
@@ -97,11 +101,13 @@ export class Character implements Moveable, Physical, Magicable, IsCommander {
       if (this._traits.find((t) => t.Key === 'Regular')) {
         this._traits = this._traits.filter((t) => t.Key !== 'Regular');
       }
+      this._isRegular = false;
     }
     if (trait.Key === 'Regular') {
       if (this._traits.find((t) => t.Key === 'Instinct')) {
         this._traits = this._traits.filter((t) => t.Key !== 'Instinct');
       }
+      this._isRegular = true;
     }
     this._traits.push(trait);
     trait.AddEffect(this);
