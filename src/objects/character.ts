@@ -18,12 +18,14 @@ import { Elemental } from './magic';
  * MND = 0
  */
 export class Character implements Moveable, Physical, Magicable, IsCommander {
-  constructor(isCommander?: boolean) {
+  private constructor(isCommander?: boolean) {
     if (isCommander) {
       this.IsCommander = true;
     }
+    this.Name = undefined;
   }
 
+  Name: string | undefined;
   IsCommander: boolean = false;
   MOV: Move = new Move();
   PHY: Physicality = new Physicality();
@@ -229,4 +231,12 @@ export class Character implements Moveable, Physical, Magicable, IsCommander {
     .AddTrait(Trait.Regular());
   }
 
+  static Regular(): Character {
+    return new Character()
+    .AddTrait(Trait.Regular());
+  }
+  static Instinct(): Character {
+    return new Character()
+    .AddTrait(Trait.Instinct());
+  }
 }
