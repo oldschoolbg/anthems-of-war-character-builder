@@ -2,7 +2,7 @@ import { Army } from '../index';
 import { Character } from '../objects';
 
 test('Invalid Army', () => {
-  expect(() => { new Army(0, new Character()).PointsCost }).toThrowError('The Leader of an Army cannot have the Instinct Trait');
+  expect(() => { new Army(0, Character.Instinct()).PointsCost }).toThrowError('The Leader of an Army cannot have the Instinct Trait');
 });
 test('Empty Army', () => {
   expect(new Army(300, Character.Leader()).PointsCost).toBe(15);

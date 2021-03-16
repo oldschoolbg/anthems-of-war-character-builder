@@ -33,7 +33,7 @@ export class Character implements Moveable, Physical, Magicable, IsCommander {
   CON: Constitution = new Constitution();
   MND: Mind = new Mind();
 
-  private _traits: Trait[] = [ Trait.Instinct() ];
+  private _traits: Trait[] = [];
   get Traits(): Trait[] { return this._traits; };
   private _mount? : Mount;
   get Mount(): Mount | undefined { return this._mount; };

@@ -79,22 +79,22 @@ export class Elemental implements Moveable, Keyed {
     const result = new Elemental('Air Elemental')
     .AddArmour(new Armour('Buffetting Wind', '+2 to armor checks', 2))
     .AddWeapon(new Weapon('Windy Assualt', 4, 1));
-    result.MOV.SetValue(4);
-    result.PHY.SetValue(3);
-    result.DEX.SetValue(3);
-    result.CON.SetValue(2);
-    result.MND.SetValue(0);
+    result.MOV.Value = 4;
+    result.PHY.Value = 3;
+    result.DEX.Value = 3;
+    result.CON.Value = 2;
+    result.MND.Value = 0;
     return result;
   };
   
   static WaterElemental(): Elemental {
     const result = new Elemental('Water Elemental')
     .AddWeapon(new Weapon('Ice Shards', 2, 2).AddProperty(EquipmentProperty.Ranged()));
-    result.MOV.SetValue(4);
-    result.PHY.SetValue(3);
-    result.DEX.SetValue(3);
-    result.CON.SetValue(2);
-    result.MND.SetValue(0);
+    result.MOV.Value = 4;
+    result.PHY.Value = 3;
+    result.DEX.Value = 3;
+    result.CON.Value = 2;
+    result.MND.Value = 0;
     return result;
   };
 
@@ -104,22 +104,22 @@ export class Elemental implements Moveable, Keyed {
     .AddTrait(Trait.Slow())
     .AddWeapon(new Weapon('Rock Slam', 1, 6))
     .AddArmour(new Armour('Stone Armor', '+4 to armor checks', 5));
-    result.MOV.SetValue(4);
-    result.PHY.SetValue(3);
-    result.DEX.SetValue(2);
-    result.CON.SetValue(2);
-    result.MND.SetValue(0);
+    result.MOV.Value = 4;
+    result.PHY.Value = 3;
+    result.DEX.Value = 2;
+    result.CON.Value = 2;
+    result.MND.Value = 0;
     return result;
   };
   
   static FireElemental(): Elemental {
     const result = new Elemental('Fire Elemental')
     .AddWeapon(new Weapon('Fire Brand', 2, 5));
-    result.MOV.SetValue(4);
-    result.PHY.SetValue(3);
-    result.DEX.SetValue(2);
-    result.CON.SetValue(2);
-    result.MND.SetValue(0);
+    result.MOV.Value = 4;
+    result.PHY.Value = 3;
+    result.DEX.Value = 2;
+    result.CON.Value = 2;
+    result.MND.Value = 0;
     return result;
   };
 
@@ -127,11 +127,11 @@ export class Elemental implements Moveable, Keyed {
     const result = new Elemental('Shade Assassin')
     .AddWeapon(Weapon.Dagger())
     .AddArmour(Armour.LightArmour());
-    result.MOV.SetValue(4);
-    result.PHY.SetValue(1);
-    result.DEX.SetValue(3);
-    result.CON.SetValue(1);
-    result.MND.SetValue(0);
+    result.MOV.Value = 4;
+    result.PHY.Value = 1;
+    result.DEX.Value = 3;
+    result.CON.Value = 1;
+    result.MND.Value = 0;
     return result;
   };
 
@@ -139,11 +139,11 @@ export class Elemental implements Moveable, Keyed {
     const result = new Elemental('Undead')
     .AddWeapon(Weapon.Unarmed())
     .AddTrait(Trait.Slow());
-    result.MOV.SetValue(3);
-    result.PHY.SetValue(0);
-    result.DEX.SetValue(0);
-    result.CON.SetValue(1);
-    result.MND.SetValue(0);
+    result.MOV.Value = 3;
+    result.PHY.Value = 0;
+    result.DEX.Value = 0;
+    result.CON.Value = 1;
+    result.MND.Value = 0;
     return result;
   };
 
@@ -151,11 +151,11 @@ export class Elemental implements Moveable, Keyed {
     const result = new Elemental('Skeleton')
     .AddTrait(Trait.Regular())
     .AddWeapon(new Weapon(weaponText, 1, 3));
-    result.MOV.SetValue(4);
-    result.PHY.SetValue(1);
-    result.DEX.SetValue(1);
-    result.CON.SetValue(1);
-    result.MND.SetValue(0);
+    result.MOV.Value = 4;
+    result.PHY.Value = 1;
+    result.DEX.Value = 1;
+    result.CON.Value = 1;
+    result.MND.Value = 0;
     return result;
   }
 };
