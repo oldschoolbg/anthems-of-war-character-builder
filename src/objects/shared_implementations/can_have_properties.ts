@@ -10,6 +10,15 @@ export abstract class CanHaveProperties {
   protected _properties: EquipmentProperty[] = [];
   get Properties(): EquipmentProperty[] { return this._properties; };
 
+  get PropertiesString(): string {
+    return this._properties
+      .map(p => p.Key)
+      .filter((value, index, self) => {
+        return self.indexOf(value) === index;
+      })
+      .join(', ');
+  }
+
   constructor(propertyType: PropertyType) {
     this._propertyType = propertyType;
   }
