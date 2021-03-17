@@ -97,7 +97,7 @@ test('Ratfolk Assassin', () => {
   char.AddTrait(Trait.Regular());
   char.DEX.Value = 4;
   char.PHY.Value = 1;
-  char.AddWeapon(Weapon.DualWeildDaggers());
+  char.AddWeapon(Weapon.DualWieldDaggers());
   char.AddTrait(Trait.Fast());
   expect(char.PointsCost).toBe(36);
 });

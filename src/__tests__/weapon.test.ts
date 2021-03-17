@@ -54,7 +54,7 @@ test('Dagger cost', () => {
   expect(Weapon.Dagger().PointsCost).toBe(5);
 });
 test('Dual Weild Daggers cost', () => {
-  expect(Weapon.DualWeildDaggers().PointsCost).toBe(8);
+  expect(Weapon.DualWieldDaggers().PointsCost).toBe(8);
 });
 test('Whip cost', () => {
   expect(Weapon.Whip().PointsCost).toBe(2);
