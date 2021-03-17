@@ -8,6 +8,7 @@ export enum Weapons {
   OneHandedSword = 'One Handed Sword',
   OneHandedAxe = 'One Handed Axe',
   OneHandedSpear = 'One Handed Spear',
+  OneHandedMace = 'One Handed Mace',
   Staff = 'Staff',
   TwoHandedAxe = 'Two Handed Axe',
   TwoHandedHammer = 'Two Handed Hammer',
@@ -18,7 +19,7 @@ export enum Weapons {
   Crossbow = 'Crossbow',
   HandCrossbow = 'Hand Crossbow',
   Dagger = 'Dagger',
-  DualWeildDaggers = 'Dual Weild Daggers',
+  DualWieldDaggers = 'Dual Wield Daggers',
   Whip = 'Whip',
   Javelin = 'Javelin',
   Sling = 'Sling',
@@ -48,8 +49,12 @@ export class Weapon extends CanHaveProperties implements CanAttack, Keyed, CanHa
   get Speed(): number { return this._speed; };
   private _strength: number;
   get Strength(): number { return this._strength; };
-  get Range(): number {
-    return this.Properties.filter(p => p.Key === 'Ranged').length * 3;
+  get Range(): string {
+    const range = this.Properties.filter(p => p.Key === 'Ranged').length
+    if (range > 0) {
+      return `${range * 3}"`;
+    }
+    return 'Melee'
   }
   
   readonly BaseCost: number = 0;
@@ -100,8 +105,8 @@ export class Weapon extends CanHaveProperties implements CanAttack, Keyed, CanHa
         return Weapon.Dagger();
       case Weapons.DoubleSword:
         return Weapon.DoubleSword();
-      case Weapons.DualWeildDaggers:
-        return Weapon.DualWeildDaggers();
+      case Weapons.DualWieldDaggers:
+        return Weapon.DualWieldDaggers();
       case Weapons.HandCrossbow:
         return Weapon.HandCrossbow();
       case Weapons.Javelin:
@@ -116,6 +121,8 @@ export class Weapon extends CanHaveProperties implements CanAttack, Keyed, CanHa
         return Weapon.OneHandedSpear();
       case Weapons.OneHandedSword:
         return Weapon.OneHandedSword();
+      case Weapons.OneHandedMace:
+        return Weapon.OneHandedMace();
       case Weapons.Pike:
         return Weapon.Pike();
       case Weapons.Shortbow:
@@ -160,6 +167,9 @@ export class Weapon extends CanHaveProperties implements CanAttack, Keyed, CanHa
   static OneHandedSpear() : Weapon {
     return new Weapon('One Handed Spear', 2, 5);
   }
+  static OneHandedMace() : Weapon {
+    return new Weapon('One Handed Mace', 2, 5);
+  }
   static Staff(): Weapon {
     return new Weapon('Staff', 2, 5);
   }
@@ -201,7 +211,7 @@ export class Weapon extends CanHaveProperties implements CanAttack, Keyed, CanHa
     .AddProperty(EquipmentProperty.SlowToLoad());
   }
   static HandCrossbow() : Weapon {
-    return new Weapon('Crossbow', 1, 3)
+    return new Weapon('Hand Crossbow', 1, 3)
     .AddProperty(EquipmentProperty.Ranged())
     .AddProperty(EquipmentProperty.OneHanded());
   }
@@ -209,8 +219,8 @@ export class Weapon extends CanHaveProperties implements CanAttack, Keyed, CanHa
     return new Weapon('Dagger', 3, 3)
     .AddProperty(EquipmentProperty.Light());
   }
-  static DualWeildDaggers() : Weapon {
-    return new Weapon('Dual Weild Daggers', 3, 3)
+  static DualWieldDaggers() : Weapon {
+    return new Weapon('Dual Wield Daggers', 3, 3)
     .AddProperty(EquipmentProperty.Light())
     .AddProperty(EquipmentProperty.DualWield());
   }

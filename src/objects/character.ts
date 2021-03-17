@@ -23,6 +23,9 @@ export class Character implements Moveable, Physical, Magicable, IsCommander {
       this.IsCommander = true;
     }
     this.Name = undefined;
+    this._weapons = [
+      Weapon.Unarmed()
+    ];
   }
 
   Name: string | undefined;
@@ -155,12 +158,20 @@ export class Character implements Moveable, Physical, Magicable, IsCommander {
         ).join(', ')}.`,
       );
     }*/
+    if (this._weapons.find(t => t.Key === 'Unarmed')) {
+      this._weapons = [];
+    }
     this._weapons.push(weapon);
     return this;
   }
   RemoveWeapon(weapon: Weapon) : Character {
     const index = this._weapons.findIndex((e: Keyed) => weapon.Key === e.Key);
     this._weapons.splice(index, 1);
+    if (this._weapons.length === 0) {
+      this._weapons = [
+        Weapon.Unarmed()
+      ];
+    }
     return this;
   }
 
