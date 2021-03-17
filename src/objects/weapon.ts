@@ -48,6 +48,9 @@ export class Weapon extends CanHaveProperties implements CanAttack, Keyed, CanHa
   get Speed(): number { return this._speed; };
   private _strength: number;
   get Strength(): number { return this._strength; };
+  get Range(): number {
+    return this.Properties.filter(p => p.Key === 'Ranged').length * 3;
+  }
   
   readonly BaseCost: number = 0;
   get PointsCost(): number {
