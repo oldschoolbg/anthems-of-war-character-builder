@@ -112,6 +112,7 @@ export class Character implements Moveable, Physical, Magicable, IsCommander {
       throw new Error('You cannot set a Commander to the Instinct Character Class');
     }
     this._characterClass = characterClass;
+    this._isRegular = this._characterClass.Key === 'Regular'
     return this;
   }
 
