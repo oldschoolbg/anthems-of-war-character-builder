@@ -1,21 +1,24 @@
 import { Magicable, Moveable } from "../interfaces";
 
-export enum Traits {
-  Strong = "Strong",
-  Large = "Large",
-  Slow = "Slow",
-  Fast = "Fast",
-  Flying = "Flying",
-  Spellcaster = "Spellcaster",
-  Huge = "Huge"
-}
-
 export class Trait {
   constructor(key: string, pointsCost: number, description: string) {
     this._pointsCost = pointsCost;
     this._key = key;
     this._description = description;
   }
+
+  static get Traits(): Trait[] {
+    return [
+      Trait.Fast(),
+      Trait.Flying(),
+      Trait.Huge(),
+      Trait.Large(),
+      Trait.Slow(),
+      Trait.Spellcaster(),
+      Trait.Strong()
+    ]
+  }
+
   private _pointsCost: number;
   get PointsCost(): number { return this._pointsCost; }
   private _key: string;
@@ -40,27 +43,6 @@ export class Trait {
     return this;
   }
 
-  static Get(trait: Traits): Trait {
-    switch(trait) {
-      case Traits.Fast:
-        return Trait.Fast();
-      case Traits.Flying:
-        return Trait.Flying();
-      case Traits.Huge:
-        return Trait.Huge();
-      case Traits.Large:
-        return Trait.Large();
-      case Traits.Slow:
-        return Trait.Slow();
-      case Traits.Spellcaster:
-        return Trait.Spellcaster();
-      case Traits.Strong:
-        return Trait.Strong();
-      default:
-        throw new Error(`This is an unsupported Trait: ${trait}`);
-    }
-  }
-
   static Strong() : Trait {
     return new Trait(
       'Strong',
@@ -76,7 +58,7 @@ export class Trait {
     );
   }
   static Slow() : Trait {
-    return new Trait('Slow', -2, 'Subtract 1 tfrom character’s MOV value. Can be applied multiple times')
+    return new Trait('Slow', -2, 'Subtract 1 from character’s MOV value. Can be applied multiple times')
     .setAddEffect((char: Moveable | Magicable) => {
       (char as Moveable).MOV.AdjustBy(-1);
     })

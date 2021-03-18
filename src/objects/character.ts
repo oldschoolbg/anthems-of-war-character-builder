@@ -197,6 +197,9 @@ export class Character implements Moveable, Physical, Magicable, IsCommander {
         ).join(', ')}.`,
       );
     }
+    if (skill.OnlyCommander && !this.IsCommander) {
+      throw new Error(`Cannot add ${skill.Key} as this Character is not a Commander`)
+    }
     this._skills.push(skill);
     return this;
   }

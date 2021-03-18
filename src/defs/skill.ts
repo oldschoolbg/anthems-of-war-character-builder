@@ -2,6 +2,71 @@ import { IsCommander, Keyed, Magicable } from '../interfaces';
 import { CharacterClass } from './character_class';
 import { Trait } from './trait';
 
+export enum Skills {
+  ArmourTraining = "Armour Training",
+  Avenger = "Avenger",
+  Backstab = "Backstab",
+  BattleThrill = "Battle Thrill",
+  BeserkerRage = "Beserker Rage",
+  Bodyguard = "Bodyguard",
+  DefensivePosture = "Defensive Posture",
+  Duelist = "Duelist",
+  Eager = "Eager",
+  EscapeArtist = "Escape Artist",
+  ExpertAim = "Expert Aim",
+  Fearless = "Fearless",
+  FocusedAttacker = "Focused Attacker",
+  FormationFighter = "Formation Fighter",
+  GiantsGrip = "Giants Grip",
+  Grappler = "Grappler",
+  Interceptor = "Interceptor",
+  Jumper = "Jumper",
+  LongShot = "Long Shot",
+  Lucky = "Lucky",
+  Medic = "Medic",
+  MountedWarrior = "Mounted Warrior",
+  NeverTellMeTheOdds = "Never Tell Me The Odds",
+  NimbleAttacker = "Nimble Attacker",
+  PowerAttack = "Power Attack",
+  QuickDraw = "Quick Draw",
+  Reinforcements = "Reinforcements",
+  RendArmor = "Rend Armor",
+  Scout = "Scout",
+  SeasonedVeteran = "Seasoned Veteran",
+  ShieldSacrifice = "Shield Sacrifice",
+  Skirmisher = "Skirmisher",
+  Sniper = "Sniper",
+  Stealthy = "Stealthy",
+  Stubborn = "Stubborn",
+  Survivalist = "Survivalist",
+  Swap = "Swap",
+  TerrainExpert = "Terrain Expert",
+  ThirstForBlood = "Thirst For Blood",
+  TrainedSprinter = "Trained Sprinter",
+  Trample = "Trample",
+  TwoWeaponSpecialist = "Two Weapon Specialist",
+  UncannyReactionTime = "Uncanny Reaction Time",
+  WeaponMaster = "Weapon Master",
+  ZenDodger = "Zen Dodger"
+}
+
+export enum SpellCasterSkills {
+  Apprenticeship = "Apprenticeship",
+  LatentSpellcaster = "Latent Spellcaster",
+  MultiSchoolSpellcaster = "Multi School Spellcaster",
+  PreparedIllusions = "Prepared Illusions",
+  SpellVampire = "Spell Vampire",
+  VersatileSpellcaster = "Versatile Spellcaster"
+}
+
+export enum AdvancedSkills {
+  Ambusher = "Ambusher",
+  FearlessPresence = "Fearless Presence",
+  ForceOfWill = "Force Of Will",
+  SquadLeader = "Squad Leader",
+  WitchHunter = "Witch Hunter"
+}
+
 export class Skill implements Keyed {
   constructor(key: string, description: string) {
     this._key = key;
