@@ -1,4 +1,5 @@
 import { IsCommander, Keyed, Magicable } from '../interfaces';
+import { CharacterClass } from './character_class';
 import { Trait } from './trait';
 
 export class Skill implements Keyed {
@@ -36,6 +37,11 @@ export class Skill implements Keyed {
   // character must have all these traits or you cannot add this skill
   get TraitPrerequisites(): Keyed[] {
     return this._traitPrerequisites;
+  }
+  private _characterClassPrequisite: Keyed[] = [];
+  // character must have all these classes or you cannot add this skill
+  get CharacterClassPrerequisites(): Keyed[] {
+    return this._characterClassPrequisite;
   }
   AdjustPointsCost(by: number) {
     this._pointsCost += by;
@@ -84,6 +90,18 @@ export class Skill implements Keyed {
     this._traitPrerequisites = this._traitPrerequisites.filter((p: Keyed) => p.Key !== prop.Key);
     return this;
   }
+  
+  setCharacterClassPrerequisite(prop: Keyed): Skill {
+    if (!this._characterClassPrequisite.find((p: Keyed) => p.Key === prop.Key)) {
+      this._characterClassPrequisite.push(prop);
+    }
+    return this;
+  }
+  removeCharacterClassPrerequisite(prop: Keyed): Skill {
+    this._characterClassPrequisite = this._characterClassPrequisite.filter((p: Keyed) => p.Key !== prop.Key);
+    return this;
+  }
+
   setKryptonite(key: string): Skill {
     if (!this._kryptonite.find((p: string) => p ===key)) {
       this._kryptonite.push(key);
@@ -474,7 +492,7 @@ export class Skill implements Keyed {
       'Squad Leader',
       ''
     )
-    .setTraitPrerequisite(Trait.Regular())
+    .setCharacterClassPrerequisite(CharacterClass.Regular())
     .setAddEffect(
       (char: Magicable | IsCommander, skill?: Skill) => {
        if ((char as IsCommander).IsCommander) {

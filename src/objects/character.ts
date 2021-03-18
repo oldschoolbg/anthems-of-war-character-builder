@@ -8,7 +8,7 @@ import { Weapon } from './weapon';
 import { Armour } from './armour';
 import { Shield } from './shield';
 import { Elemental } from './magic';
-import { CharacterClass, CharacterClasses } from '../defs/character_class';
+import { CharacterClass } from '../defs/character_class';
 
 /**
  * Default character has:
@@ -178,6 +178,20 @@ export class Character implements Moveable, Physical, Magicable, IsCommander {
     if (skill.TraitPrerequisites.some((wp) => !this._traits.find((p: Keyed) => p.Key === wp.Key))) {
       throw new Error(
         `Cannot add ${skill.Key} as Character must have ${skill.TraitPrerequisites.map(
+          (p) => p.Key,
+        ).join(', ')}.`,
+      );
+    }
+    if (skill.SkillPrerequisites.some((wp) => !this._skills.find((p: Keyed) => p.Key === wp.Key))) {
+      throw new Error(
+        `Cannot add ${skill.Key} as Character must have ${skill.SkillPrerequisites.map(
+          (p) => p.Key,
+        ).join(', ')}.`,
+      );
+    }
+    if (skill.CharacterClassPrerequisites.some((wp) => this._characterClass.Key === wp.Key)) {
+      throw new Error(
+        `Cannot add ${skill.Key} as Character must be ${skill.CharacterClassPrerequisites.map(
           (p) => p.Key,
         ).join(', ')}.`,
       );
