@@ -8,6 +8,7 @@ import { Weapon } from './weapon';
 import { Armour } from './armour';
 import { Shield } from './shield';
 import { Elemental } from './magic';
+import { CharacterClass, CharacterClasses } from '../defs/character_class';
 
 /**
  * Default character has:
@@ -18,10 +19,11 @@ import { Elemental } from './magic';
  * MND = 0
  */
 export class Character implements Moveable, Physical, Magicable, IsCommander {
-  private constructor(isCommander?: boolean) {
+  private constructor(characterClass: CharacterClass, isCommander?: boolean) {
     if (isCommander) {
       this.IsCommander = true;
     }
+    this.SetCharacterClass(characterClass);
     this.Name = undefined;
     this._weapons = [
       Weapon.Unarmed()
@@ -39,6 +41,11 @@ export class Character implements Moveable, Physical, Magicable, IsCommander {
   DEX: Dexterity = new Dexterity();
   CON: Constitution = new Constitution();
   MND: Mind = new Mind();
+
+  private _characterClass = CharacterClass.Regular();
+  get CharacterClass(): CharacterClass {
+    return this._characterClass;
+  }
 
   private _traits: Trait[] = [];
   get Traits(): Trait[] { return this._traits; };
@@ -77,6 +84,7 @@ export class Character implements Moveable, Physical, Magicable, IsCommander {
            + this.DEX.PointsCost
            + this.CON.PointsCost
            + this.MND.PointsCost
+           + this.CharacterClass.PointsCost
            + this.Armour.PointsCost
            + this.Shield.PointsCost
            + this.Traits.map((t: Trait) => t.PointsCost).reduce((a, b) => a + b, 0)
@@ -99,31 +107,21 @@ export class Character implements Moveable, Physical, Magicable, IsCommander {
     return this;
   }
 
+  SetCharacterClass(characterClass: CharacterClass) : Character {
+    if (this.IsCommander && characterClass.Key === 'Instinct') {
+      throw new Error('You cannot set a Commander to the Instinct Character Class');
+    }
+    this._characterClass = characterClass;
+    return this;
+  }
+
   AddTrait(trait: Trait) : Character {
-    if (trait.Key === 'Instinct') {
-      if (this._traits.find((t) => t.Key === 'Regular')) {
-        this._traits = this._traits.filter((t) => t.Key !== 'Regular');
-      }
-      this._isRegular = false;
-    }
-    if (trait.Key === 'Regular') {
-      if (this._traits.find((t) => t.Key === 'Instinct')) {
-        this._traits = this._traits.filter((t) => t.Key !== 'Instinct');
-      }
-      this._isRegular = true;
-    }
     this._traits.push(trait);
     trait.AddEffect(this);
     return this;
   }
 
   RemoveTrait(trait: Trait) : Character {
-    if (trait.Key === 'Instinct') {
-      this._traits.push(Trait.Regular());
-    }
-    if (trait.Key === 'Regular') {
-      this._traits.push(Trait.Instinct());
-    }
     this._traits = this._traits.filter((t) => t.Key !== trait.Key);
     trait.RemoveEffect(this);
     return this;
@@ -244,16 +242,13 @@ export class Character implements Moveable, Physical, Magicable, IsCommander {
   }
 
   static Leader(): Character {
-    return new Character(true)
-    .AddTrait(Trait.Regular());
+    return new Character(CharacterClass.Regular(), true);
   }
 
   static Regular(): Character {
-    return new Character()
-    .AddTrait(Trait.Regular());
+    return new Character(CharacterClass.Regular());
   }
   static Instinct(): Character {
-    return new Character()
-    .AddTrait(Trait.Instinct());
+    return new Character(CharacterClass.Instinct());
   }
 }

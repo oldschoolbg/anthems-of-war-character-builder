@@ -6,9 +6,11 @@ import { MiscellaneousEquipment } from '../objects/miscellaneous_equipment';
 import { Shield } from '../objects/shield';
 import { EquipmentProperty } from '../defs';
 
-test('Default Character', () => {
+test('Instinct Character', () => {
   expect(Character.Instinct().PointsCost).toBe(10);
-  expect(Character.Instinct().Traits[0].Key).toBe('Instinct');
+});
+test('Regular Character', () => {
+  expect(Character.Regular().PointsCost).toBe(15);
 });
 
 test('Increase Default PHY', () => {
@@ -17,23 +19,17 @@ test('Increase Default PHY', () => {
   expect(char.PointsCost).toBe(16);
 });
 
-test('Set Character to Regular', () => {
-  const char = Character.Regular();
-  expect(char.Traits[0].Key).toBe('Regular');
-  expect(char.Traits.length).toBe(1);
-});
-
 test('Add Slow to Character', () => {
   const char = Character.Instinct();
   char.AddTrait(Trait.Slow());
-  expect(char.Traits.length).toBe(2);
+  expect(char.Traits.length).toBe(1);
   expect(char.MOV.Value).toBe(3);
 });
 
 test('Add Fast to Character', () => {
   const char = Character.Instinct();
   char.AddTrait(Trait.Fast());
-  expect(char.Traits.length).toBe(2);
+  expect(char.Traits.length).toBe(1);
   expect(char.MOV.Value).toBe(5);
 });
 
@@ -41,17 +37,17 @@ test('Add Slow and Fast to Character', () => {
   const char = Character.Instinct();
   char.AddTrait(Trait.Slow());
   char.AddTrait(Trait.Fast());
-  expect(char.Traits.length).toBe(3);
+  expect(char.Traits.length).toBe(2);
   expect(char.MOV.Value).toBe(4);
 });
 
 test('Add and remove Fast from Character', () => {
   const char = Character.Instinct();
   char.AddTrait(Trait.Fast());
-  expect(char.Traits.length).toBe(2);
+  expect(char.Traits.length).toBe(1);
   expect(char.MOV.Value).toBe(5);
   char.RemoveTrait(Trait.Fast());
-  expect(char.Traits.length).toBe(1);
+  expect(char.Traits.length).toBe(0);
   expect(char.MOV.Value).toBe(4);
 });
 
@@ -69,16 +65,14 @@ test('Default Character with a Potion', () => {
 });
 
 test('Ratfolk Slingers', () => {
-  const char = Character.Instinct();
+  const char = Character.Regular();
   char.DEX.Value = 2;
-  char.AddTrait(Trait.Regular());
   char.AddWeapon(Weapon.Sling());
   expect(char.PointsCost).toBe(22);
 });
 test('Ratfolk Warrior', () => {
-  const char = Character.Instinct();
+  const char = Character.Regular();
   char.PHY.Value = 2;
-  char.AddTrait(Trait.Regular());
   char.AddWeapon(Weapon.OneHandedSpear());
   char.AddArmour(Armour.LightArmour());
   expect(char.PointsCost).toBe(26);
@@ -93,8 +87,7 @@ test('Ratfolk Brute', () => {
   expect(char.PointsCost).toBe(33);
 });
 test('Ratfolk Assassin', () => {
-  const char = Character.Instinct();
-  char.AddTrait(Trait.Regular());
+  const char = Character.Regular();
   char.DEX.Value = 4;
   char.PHY.Value = 1;
   char.AddWeapon(Weapon.DualWieldDaggers());
@@ -117,16 +110,14 @@ test('Halfling Militia Spear', () => {
   expect(char.PointsCost).toBe(25);
 });
 test('Bandit Archer', () => {
-  const char = Character.Instinct();
-  char.AddTrait(Trait.Regular());
+  const char = Character.Regular();
   char.PHY.Value = 1;
   char.DEX.Value = 3;
   char.AddWeapon(Weapon.Shortbow());
   expect(char.PointsCost).toBe(27);
 });
 test('Bandit Warrior', () => {
-  const char = Character.Instinct();
-  char.AddTrait(Trait.Regular());
+  const char = Character.Regular();
   char.PHY.Value = 3;
   char.DEX.Value = 1;
   char.AddWeapon(Weapon.OneHandedSpear());
@@ -134,16 +125,14 @@ test('Bandit Warrior', () => {
   expect(char.PointsCost).toBe(29);
 });
 test('Bandit Cutthroat', () => {
-  const char = Character.Instinct();
-  char.AddTrait(Trait.Regular());
+  const char = Character.Regular();
   char.PHY.Value = 1;
   char.DEX.Value = 3;
   char.AddWeapon(Weapon.Dagger());
   expect(char.PointsCost).toBe(27);
 });
 test('Dark Elf Assassin', () => {
-  const char = Character.Instinct();
-  char.AddTrait(Trait.Regular());
+  const char = Character.Regular();
   char.PHY.Value = 1;
   char.DEX.Value = 4;
   char.AddWeapon(Weapon.Dagger());
@@ -151,8 +140,7 @@ test('Dark Elf Assassin', () => {
   expect(char.PointsCost).toBe(33);
 });
 test('Knight Errant', () => {
-  const char = Character.Instinct();
-  char.AddTrait(Trait.Regular());
+  const char = Character.Regular();
   char.PHY.Value = 4;
   char.DEX.Value = 2;
   char.CON.Value = 2;
@@ -162,8 +150,7 @@ test('Knight Errant', () => {
   expect(char.PointsCost).toBe(48);
 });
 test('Wooden Construct', () => {
-  const char = Character.Instinct();
-  char.AddTrait(Trait.Regular());
+  const char = Character.Regular();
   char.DEX.Value = 3;
   char.CON.Value = 2;
   const doubleHandCrossbow = new Weapon('Double Hand Crossbow', 2, 3)
@@ -175,8 +162,7 @@ test('Wooden Construct', () => {
   expect(char.PointsCost).toBe(38);
 });
 test('Wandering Seer', () => {
-  const char = Character.Instinct();
-  char.AddTrait(Trait.Regular());
+  const char = Character.Regular();
   char.AddTrait(Trait.Spellcaster());
   char.PHY.Value = 2;
   char.CON.Value = 2;

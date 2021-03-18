@@ -61,20 +61,6 @@ export class Trait {
     }
   }
 
-  static Instinct() : Trait {
-    return new Trait(
-      'Instinct',
-      10,
-      'Allows the character to generate instinct orders. This is not compatible with the Regular trait.',
-    );
-  }
-  static Regular() : Trait {
-    return new Trait(
-      'Regular',
-      15,
-      'Allows the character to generate regular orders. This is not compatible with the Instinct trait',
-    )
-  }
   static Strong() : Trait {
     return new Trait(
       'Strong',
