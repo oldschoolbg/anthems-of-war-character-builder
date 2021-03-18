@@ -1,5 +1,15 @@
 import { Magicable, Moveable } from "../interfaces";
 
+export enum Traits {
+  Strong = "Strong",
+  Large = "Large",
+  Slow = "Slow",
+  Fast = "Fast",
+  Flying = "Flying",
+  Spellcaster = "Spellcaster",
+  Huge = "Huge"
+}
+
 export class Trait {
   constructor(key: string, pointsCost: number, description: string) {
     this._pointsCost = pointsCost;
@@ -28,6 +38,27 @@ export class Trait {
   setRemoveEffect(removeEffect: (char: Moveable | Magicable) => void): Trait {
     this._removeEffect = removeEffect;
     return this;
+  }
+
+  static Get(trait: Traits): Trait {
+    switch(trait) {
+      case Traits.Fast:
+        return Trait.Fast();
+      case Traits.Flying:
+        return Trait.Flying();
+      case Traits.Huge:
+        return Trait.Huge();
+      case Traits.Large:
+        return Trait.Large();
+      case Traits.Slow:
+        return Trait.Slow();
+      case Traits.Spellcaster:
+        return Trait.Spellcaster();
+      case Traits.Strong:
+        return Trait.Strong();
+      default:
+        throw new Error(`This is an unsupported Trait: ${trait}`);
+    }
   }
 
   static Instinct() : Trait {
