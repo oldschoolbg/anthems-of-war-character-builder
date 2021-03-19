@@ -42,7 +42,7 @@ export class Armour extends CanHaveProperties implements Keyed, CanHaveMagicalCh
   }
 
   AddProperty(key: EquipmentProperties, ...props: any[]): Armour {
-    super.AddProperty(key, props) as EquipmentProperty;
+    super.AddProperty(key, props);
     return this;
   }
 
