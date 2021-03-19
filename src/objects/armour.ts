@@ -3,7 +3,6 @@ import { CanHaveMagicalCharges, Key, Keyed, SpellCharge } from "../interfaces";
 import { CanHaveProperties } from "./shared_implementations/can_have_properties";
 
 export enum ArmourType {
-  Custom = 'Custom',
   None = 'No Armour',
   LightArmour = 'Light Armour',
   MediumArmour = 'Medium Armour',
