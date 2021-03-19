@@ -18,13 +18,13 @@ export enum SpellSchools {
 };
 
 export class SpellSchool implements Keyed {
-  constructor(key: string, description: string) {
+  constructor(key: SpellSchools, description: string) {
     this._key = key;
     this._description = description;
   }
 
-  private _key: string;
-  get Key(): string { return this._key; }
+  private _key: SpellSchools;
+  get Key(): SpellSchools { return this._key; }
   private _description: string;
   get Description(): string { return this._description; }
   private _spells: Spell[] = [];
@@ -42,42 +42,27 @@ export class SpellSchool implements Keyed {
     return this;
   }
 
-  static Get(spellSchool: SpellSchools): SpellSchool {
-    switch (spellSchool) {
-      case SpellSchools.Aerothurgy:
-        return SpellSchool.Aerothurgy();
-      case SpellSchools.Aquamancy:
-        return SpellSchool.Aquamancy();
-      case SpellSchools.Arcane:
-        return SpellSchool.Arcane();
-      case SpellSchools.Bardic:
-        return SpellSchool.Bardic()
-      case SpellSchools.Chronomancy:
-        return SpellSchool.Chronomancy();
-      case SpellSchools.Druidic:
-        return SpellSchool.Druidic();
-      case SpellSchools.Geomancy:
-        return SpellSchool.Geomancy();
-      case SpellSchools.Illusion:
-        return SpellSchool.Illusion();
-      case SpellSchools.Necromancy:
-        return SpellSchool.Necromancy();
-      case SpellSchools.Psionic:
-        return SpellSchool.Psionic();
-      case SpellSchools.Pyromancy:
-        return SpellSchool.Pyromancy();
-      case SpellSchools.Thaumaturgy:
-        return SpellSchool.Thaumaturgy();
-      case SpellSchools.Wild:
-        return SpellSchool.Wild();
-      default:
-        throw new Error(`This is an unsupported Spell School: ${spellSchool}`);
-    }
+  static get Options(): SpellSchool[] {
+    return [
+      SpellSchool.Aerothurgy(),
+      SpellSchool.Aquamancy(),
+      SpellSchool.Arcane(),
+      SpellSchool.Bardic(),
+      SpellSchool.Chronomancy(),
+      SpellSchool.Druidic(),
+      SpellSchool.Geomancy(),
+      SpellSchool.Illusion(),
+      SpellSchool.Necromancy(),
+      SpellSchool.Psionic(),
+      SpellSchool.Pyromancy(),
+      SpellSchool.Thaumaturgy(),
+      SpellSchool.Wild()
+    ]
   }
 
   static Aerothurgy(): SpellSchool {
     return new SpellSchool(
-      'Aerothurgy',
+      SpellSchools.Aerothurgy,
       'Aerothurges are masters of wind and electricity. They focus on speed-ing up allies, slowing down and staggering enemies, and unleashing powerful electrical attacks. This is no soft summer breeze; the winds these spellcasters control can whip through armies like the mightiest hurricane.'
     )
     // first circle
@@ -103,7 +88,7 @@ export class SpellSchool implements Keyed {
 
   static Aquamancy(): SpellSchool {
     return new SpellSchool(
-      'Aquamancy',
+      SpellSchools.Aquamancy,
       'Aquamancers harness the power of water, ice and snow. They specialize in things such as slowing enemies and obscuring the battlefield with area of effect spells. While not as flashy as pyromancy or as terifying as necromancy, with persistence, water can cut paths through mountains. Never underestimate its strength, for this substance which gives us life can just as easily take it away.'
     )
     // first circle
@@ -128,7 +113,7 @@ export class SpellSchool implements Keyed {
 
   static Arcane(): SpellSchool {
     return new SpellSchool(
-      'Arcane',
+      SpellSchools.Arcane,
       'Arcane mages weave their spells out of the purest essence of magic. They focus on casting long-lasting spells and manipulating the fabric of reality. Arcane mages are deeply in tune with the invisible force of magic itself, sensing the subtle vibrations that allow casters to weave their spells. By tapping into and concentrating the power of this very energy, they can easily dazzle and devastate their enemies.'
     )
     // first circle
@@ -153,7 +138,7 @@ export class SpellSchool implements Keyed {
 
   static Bardic(): SpellSchool {
     return new SpellSchool(
-      'Bardic',
+      SpellSchools.Bardic,
       'Bards, sometimes called spellsingers, use their natural charisma and the power of song to manipulate the battlefield. They focus on setting the enemy off balance and boosting the abilities of their allies. They say music calms the feral beast; a bard’s songs can do this, and so much more.'
     )
     // first circle
@@ -176,7 +161,7 @@ export class SpellSchool implements Keyed {
 
   static Chronomancy(): SpellSchool {
     return new SpellSchool(
-      'Chronomancy',
+      SpellSchools.Chronomancy,
       'Chronomancers have the power to control time itself. Their spells allow them to sense future possibilities and manipulate the stream of time for friends and foes alike. Chronomancers, more than anyone, understand that linear time as we know it is an illusion, one that can be warped and bent for their own benefit. Using their ability to twist the construct of time, they can conjure what may seem like miracles, from simply slowing enemies, to banishing people from reality itself.'
     )
     // first circle
@@ -200,7 +185,7 @@ export class SpellSchool implements Keyed {
 
   static Druidic(): SpellSchool {
     return new SpellSchool(
-      'Druidic',
+      SpellSchools.Druidic,
       'Beasts that crawl, vines that creep, thorns that tear at flesh -- nature has a magic of its very own that few can tap into. Druids channel this old magic, a power granted through demonstrations of deep respect and connection to the natural world. They can request the help of plants and creatures to the benefit of their allies or the detriment of their enemies. Druids know well that every rose has its thorn, and thus their unfortunate foes will learn this truth as well.'
     )
     // first circle
@@ -224,7 +209,7 @@ export class SpellSchool implements Keyed {
 
   static Geomancy(): SpellSchool {
     return new SpellSchool(
-      'Geomancy',
+      SpellSchools.Geomancy,
       'Geomancers tap into the very substance of the planet itself, from soft loamy soil to the sharpest and strongest of stones. Their spells can dampen other magics, protect allies, or harm encroaching foes.'
     )
     // first circle
@@ -250,7 +235,7 @@ export class SpellSchool implements Keyed {
 
   static Illusion(): SpellSchool {
     return new SpellSchool(
-      'Illusion',
+      SpellSchools.Illusion,
       'Illusionists twist the minds of others, turning dreams into reality and warping others’ perception of the world around them. They are experts at misdirection, concealment, and deception, and can prepare spells ahead of battle to better misdirect the enemy.'
     )
     // first circle
@@ -276,7 +261,7 @@ export class SpellSchool implements Keyed {
 
   static Necromancy(): SpellSchool {
     return new SpellSchool(
-      'Necromancy',
+      SpellSchools.Necromancy,
       'Necromancers delve into the most forbidden of all magics: the manipulation of death itself. Anyone falling on the field against a necromancer will not stay fallen for long, as these casters will gladly make use of their flesh and bone, adding them to their army of the living dead. Through the power of rot and entropy, they weaken and conuse their enemies while bolstering themselves.'
     )
     // first circle
@@ -304,7 +289,7 @@ export class SpellSchool implements Keyed {
 
   static Psionic(): SpellSchool {
     return new SpellSchool(
-      'Psionic',
+      SpellSchools.Psionic,
       'Psionic spellcasters use their mind to manipulate their surroundings and assault the psyche of their enemies. They can move materials with a mere thought and invade the minds of their foes to achieve their goals. Though the principles are similar to other mind-altering magics, these spellcasters use surgeon-like precision to manipulate the functioning of the brain itself.'
     )
     // first circle
@@ -327,7 +312,7 @@ export class SpellSchool implements Keyed {
 
   static Pyromancy(): SpellSchool {
     return new SpellSchool(
-      'Pyromancy',
+      SpellSchools.Pyromancy,
       'Pyromancers use their magic to attack their foes with heat and flame. Their violent offensive magic strikes terror into the heart of their enemies; almost every living being fears fire’s destructive power. Pyromancy is one of the easier schools to learn, but one of the hardest to master. For this reason, there are precious few old Pyromancers. Those who survived their training often bear vicious scars as evidence of their proficiency.'
     )
     // first circle
@@ -357,7 +342,7 @@ export class SpellSchool implements Keyed {
 
   static Thaumaturgy(): SpellSchool {
     return new SpellSchool(
-      'Thaumaturgy',
+      SpellSchools.Thaumaturgy,
       'Thaumaturges take many forms, from secular scholars and doctors, to priests of the many dozen gods worshipped across the lands. Thaumaturgy is the magic of restorative miracles, focused on protecting, healing and enhancing the abilities of allies, while keeping enemies at bay. Though their offensive capabilities are not nearly as powerful as other spellcasters, these healers are nevertheless indispensable allies on the battlefield.'
     )
     // first circle
@@ -384,7 +369,7 @@ export class SpellSchool implements Keyed {
 
   static Wild(): SpellSchool {
     return new SpellSchool(
-      'Wild',
+      SpellSchools.Wild,
       'Wild magic is the magic of hedge witches, shamans, and those selftaught in ways unseen in traditional magical scholarship. This power manifests in a variety of forms, channeling the deepest and oldest magic, of growth and of instinct, of predators and prey. While both Wild and Druidic magic work with the powers of nature, Druidic magic must be earned. Wild magic is a gift, or a curse, depending on who you ask. Those who can harness this gift can make powerful allies, while others lose themselves to nature, becoming like beasts, as wild as the magic infusing their spirit.'
     )
     // first circle

@@ -1,4 +1,4 @@
-import { EquipmentProperty } from '../defs';
+import { EquipmentProperties, EquipmentProperty } from '../defs';
 import {
   Weapon,
 } from '../objects/weapon';
@@ -8,11 +8,11 @@ test('Invalid strength and speed', () => {
 });
 test('Adding Two Handed to Dual Wield', () => {
   const dualWield = new Weapon('dual wield', 2, 3)
-  .AddProperty(EquipmentProperty.DualWield());
-  expect(() => { dualWield.AddProperty(EquipmentProperty.TwoHanded()); }).toThrowError('Cannot add 2-handed as Equipment already has Dual Wield.');
+  .AddProperty(EquipmentProperties.DualWield);
+  expect(() => { dualWield.AddProperty(EquipmentProperties.TwoHanded); }).toThrowError('Cannot add Two Handed as Equipment already has Dual Wield.');
 });
 test('Adding Dual Wield to Two Handed', () => {
   const twoHanded = new Weapon('2-handed', 2, 3)
-  .AddProperty(EquipmentProperty.TwoHanded());
-  expect(() => { twoHanded.AddProperty(EquipmentProperty.DualWield()); }).toThrowError('Cannot add Dual Wield as Equipment already has 2-handed.');
+  .AddProperty(EquipmentProperties.TwoHanded);
+  expect(() => { twoHanded.AddProperty(EquipmentProperties.DualWield); }).toThrowError('Cannot add Dual Wield as Equipment already has Two Handed.');
 });

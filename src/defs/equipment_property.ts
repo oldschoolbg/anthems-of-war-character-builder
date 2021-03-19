@@ -1,18 +1,50 @@
 import { WeaponStat } from './weapons_stat';
 import { CanAttack } from '../interfaces/can_attack';
-import { Keyed } from '../interfaces';
+import { Key, Keyed } from '../interfaces';
 import { PropertyType } from '../objects/shared_implementations/can_have_properties';
 
-export class EquipmentProperty {
-  constructor(key: string, points: number, description: string) {
+export enum EquipmentProperties {
+  Ranged = "Ranged",
+  HighCrit =  "High Crit",
+  TwoHanded = "Two Handed",
+  Light = "Light",
+  Reach = "Reach",
+  DualWield = "Dual Wield",
+  MoraleBoosting = "Morale Boosting",
+  Versatile = "Versatile",
+  LowAmmo = "Low Ammo",
+  LowDurability = "Low Durability",
+  SlowToLoad = "Slow To Load",
+  OneHanded = "One Handed"
+}
+
+export class EquipmentProperty implements Keyed {
+  constructor(key: EquipmentProperties, points: number, description: string) {
     this._points = points;
     this._key = key;
     this._description = description;
   }
+
+  static get Options(): EquipmentProperty[] {
+    return [
+      EquipmentProperty.Ranged(),
+      EquipmentProperty.HighCrit(),
+      EquipmentProperty.TwoHanded(),
+      EquipmentProperty.Light(),
+      EquipmentProperty.Reach(),
+      EquipmentProperty.DualWield(),
+      EquipmentProperty.MoraleBoosting(),
+      EquipmentProperty.Versatile(),
+      EquipmentProperty.LowAmmo(),
+      EquipmentProperty.LowDurability(),
+      EquipmentProperty.SlowToLoad(),
+      EquipmentProperty.OneHanded()
+    ];
+  }
   private _points: number;
   get PointsCost(): number { return this._points; };
-  private _key: string;
-  get Key(): string { return this._key; }
+  private _key: EquipmentProperties;
+  get Key(): EquipmentProperties { return this._key; }
   private _description: string;
   get Description(): string { return this._description; }
   private _multipleAllowed: boolean = false;
@@ -34,12 +66,12 @@ export class EquipmentProperty {
     return;
   };
   get RemoveEffect() { return this._removeEffect; }
-  private _prerequisites: Keyed[] = []
+  private _prerequisites: Key[] = []
   // weapon must have all these properties or you cannot add this property
-  get Prerequisites(): Keyed[] { return this._prerequisites; } 
-  private _kryptonite: string[] = [];
+  get Prerequisites(): Key[] { return this._prerequisites; } 
+  private _kryptonite: Key[] = [];
   // weapon cannot have both self and self.Kryptonite
-  get Kryptonite(): string[] { return this._kryptonite; }
+  get Kryptonite(): Key[] { return this._kryptonite; }
 
   setAllowedOn(allowedOn: PropertyType): EquipmentProperty {
     if (!this.IsAllowed(allowedOn)) {
@@ -62,24 +94,24 @@ export class EquipmentProperty {
     this._removeEffect = removeEffect;
     return this;
   }
-  setPrerequisite(prop: Keyed): EquipmentProperty {
-    if (!this._prerequisites.find((p: Keyed) => p.Key === prop.Key)) {
-      this._prerequisites.push(prop);
+  setPrerequisite(key: Key): EquipmentProperty {
+    if (!this._prerequisites.find((p: Key) => p === key)) {
+      this._prerequisites.push(key);
     }
     return this;
   }
-  removePrerequisite(prop: Keyed): EquipmentProperty {
-    this._prerequisites = this._prerequisites.filter((p: Keyed) => p.Key !== prop.Key);
+  removePrerequisite(key: Key): EquipmentProperty {
+    this._prerequisites = this._prerequisites.filter((p: Key) => p !== key);
     return this;
   }
-  setKryptonite(key: string): EquipmentProperty {
-    if (!this._kryptonite.find((p: string) => p ===key)) {
+  setKryptonite(key: Key): EquipmentProperty {
+    if (!this._kryptonite.find((p: Key) => p === key)) {
       this._kryptonite.push(key);
     }
     return this;
   }
-  removeKryptonite(key: string): EquipmentProperty {
-    this._kryptonite = this._kryptonite.filter((p: string) => p !== key);
+  removeKryptonite(key: Key): EquipmentProperty {
+    this._kryptonite = this._kryptonite.filter((p: Key) => p !== key);
     return this;
   }
   AdjustPoints(by: number) {
@@ -88,7 +120,7 @@ export class EquipmentProperty {
 
   static Ranged() : EquipmentProperty {
     return new EquipmentProperty(
-      'Ranged',
+      EquipmentProperties.Ranged,
       2,
       'Add three inches of range for each time this is applied to the weapon. Must be applied at least once to ranged weapons',
     )
@@ -96,26 +128,26 @@ export class EquipmentProperty {
     .setMultiple();
   }
   static HighCrit() : EquipmentProperty {
-    return new EquipmentProperty('High Crit', 2, 'Critical hits with this weapon roll two armor checks.')
+    return new EquipmentProperty(EquipmentProperties.HighCrit, 2, 'Critical hits with this weapon roll two armor checks.')
     .setAllowedOn('WEAPON')
     .setAllowedOn('MOUNT');
   }
   static TwoHanded() : EquipmentProperty {
     return new EquipmentProperty(
-      '2-handed',
+      EquipmentProperties.TwoHanded,
       -2,
       'Melee weapons with this trait must be used in two hands. No other equipment may be used in the off hand.',
     )
     .setAllowedOn('WEAPON')
-    .setKryptonite('Dual Wield');
+    .setKryptonite(EquipmentProperties.DualWield);
   }
   static Light() : EquipmentProperty {
-    return new EquipmentProperty('Light', 2, 'Can use either PHY or DEX to attack with this weapon')
+    return new EquipmentProperty(EquipmentProperties.Light, 2, 'Can use either PHY or DEX to attack with this weapon')
     .setAllowedOn('WEAPON');
   }
   static Reach() : EquipmentProperty {
     return new EquipmentProperty(
-      'Reach',
+      EquipmentProperties.Reach,
       4,
       'Can attack characters up to one inch away. Can reach over allies up to the max range. This can be added to a weapon multiple times.',
     )
@@ -124,18 +156,18 @@ export class EquipmentProperty {
   }
   static DualWield() : EquipmentProperty {
     return new EquipmentProperty(
-      'Dual Wield',
+      EquipmentProperties.DualWield,
       3,
       'Add one to this weapon’s speed. Incompatible with the 2-handed property. When added to a weapon, this “doubles” the weapon. For example, a knife has a SPD of 3; a knife with Dual Wield will increase a character’s weapon SPD to 4, as well as occupy the character’s off-hand. This represents a character carrying one weapon in each hand and being trained to use them both at the same time. In addition to this, a character using dual wielded weapons can perform a defensive posture long action attack that reduces this weapon’s SPD by 1 but increases their armor against melee attacks by 1. This effect lasts until another order is spent on them or until they are knocked unconscious. Using a standard action while outside melee combat, this character can enter the same defensive state.',
     )
       .setAllowedOn('WEAPON')
       .setAddEffect((weapon) => (weapon.AdjustSpeed(1)))
       .setRemoveEffect((weapon) => (weapon.AdjustSpeed(-1)))
-      .setKryptonite('2-handed');
+      .setKryptonite(EquipmentProperties.TwoHanded);
   }
   static MoraleBoosting() : EquipmentProperty {
     return new EquipmentProperty(
-      'Morale Boosting',
+      EquipmentProperties.MoraleBoosting,
       3,
       'Adds 1 to any bravery checks performed within 3 inches. This can be added to weapons, armor or equipment. ',
     )
@@ -145,31 +177,31 @@ export class EquipmentProperty {
   }
   static Versatile() : EquipmentProperty {
     return new EquipmentProperty(
-      'Versatile',
+      EquipmentProperties.Versatile,
       2,
       'Ranged weapons with this property may use DEX instead of PHY when attacking and reacting in melee combat. This property only costs 1 point if the weapon also has the low ammo property.',
     )
       .setAllowedOn('WEAPON')
       .setAddEffect((weapon: CanAttack, weaponProperty: EquipmentProperty, selectedWeaponStat: WeaponStat[]) => {
-        if (weapon.Properties.find((p: EquipmentProperty) => p.Key === 'Low Ammo')) {
+        if (weapon.Properties.find((p: EquipmentProperty) => p.Key === EquipmentProperties.LowAmmo)) {
           weaponProperty.AdjustPoints(-1);
         }
       })
       .setRemoveEffect((weapon: CanAttack, weaponProperty: EquipmentProperty, selectedWeaponStat: WeaponStat[]) => {
-        if (weapon.Properties.find((p: EquipmentProperty) => p.Key === 'Low Ammo')) {
+        if (weapon.Properties.find((p: EquipmentProperty) => p.Key === EquipmentProperties.LowAmmo)) {
           weaponProperty.AdjustPoints(1);
         }
       })
-      .setPrerequisite(EquipmentProperty.Ranged());
+      .setPrerequisite(EquipmentProperties.Ranged);
   }
   static LowAmmo() : EquipmentProperty {
     return new EquipmentProperty(
-      'Low Ammo',
+      EquipmentProperties.LowAmmo,
       0,
       'This character carries a limited quantity of ammunition for this weapon into battle. Melee attacks with low ammo ranged weapons do not use its ammo; it is assumed you keep hold of the weapon you attacked with.',
     )
       .setAllowedOn('WEAPON')
-      .setPrerequisite(EquipmentProperty.Ranged())
+      .setPrerequisite(EquipmentProperties.Ranged)
       .setAddEffect((weapon: CanAttack, weaponProperty: EquipmentProperty, numberOfShots: 1 | 2 | 3 | 4) => {
         weaponProperty.AdjustPoints(numberOfShots - 5);
       })
@@ -179,7 +211,7 @@ export class EquipmentProperty {
   }
   static LowDurability() : EquipmentProperty {
     return new EquipmentProperty(
-      'Low Durability',
+      EquipmentProperties.LowDurability,
       0,
       'When applied to melee weapons this represents an improvised, fragile, or poorly made item being used with each swing reducing its overall durability until it breaks.',
     )
@@ -194,20 +226,20 @@ export class EquipmentProperty {
   }
   static SlowToLoad() : EquipmentProperty {
     return new EquipmentProperty(
-      'Slow to Load',
+      EquipmentProperties.SlowToLoad,
       -2,
       'Once fired the weapon is in an unloaded state. It must be loaded before being fired again. During an order the player can declare they are reloading. Move action speed is cut in half and you must subtract 2 from any dodge rolls performed in this order.',
     )
     .setAllowedOn('WEAPON')
-    .setPrerequisite(EquipmentProperty.Ranged());
+    .setPrerequisite(EquipmentProperties.Ranged);
   }
   static OneHanded() : EquipmentProperty {
     return new EquipmentProperty(
-      '1-handed',
+      EquipmentProperties.OneHanded,
       5,
       'This ranged weapon can be used one handed, freeing up the other hand.',
     )
     .setAllowedOn('WEAPON')
-    .setPrerequisite(EquipmentProperty.Ranged());
+    .setPrerequisite(EquipmentProperties.Ranged);
   }
 } 

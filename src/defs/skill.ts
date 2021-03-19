@@ -17,7 +17,7 @@ export enum Skills {
   Fearless = "Fearless",
   FocusedAttacker = "Focused Attacker",
   FormationFighter = "Formation Fighter",
-  GiantsGrip = "Giants Grip",
+  GiantsGrip = "Giant's Grip",
   Grappler = "Grappler",
   Interceptor = "Interceptor",
   Jumper = "Jumper",
@@ -46,32 +46,108 @@ export enum Skills {
   Trample = "Trample",
   TwoWeaponSpecialist = "Two Weapon Specialist",
   UncannyReactionTime = "Uncanny Reaction Time",
+  VengefulSpirit = "Vengeful Spirit",
   WeaponMaster = "Weapon Master",
-  ZenDodger = "Zen Dodger"
-}
-
-export enum SpellCasterSkills {
+  ZenDodger = "Zen Dodger",
+  // Spell Caster Skills
   Apprenticeship = "Apprenticeship",
   LatentSpellcaster = "Latent Spellcaster",
   MultiSchoolSpellcaster = "Multi School Spellcaster",
   PreparedIllusions = "Prepared Illusions",
   SpellVampire = "Spell Vampire",
-  VersatileSpellcaster = "Versatile Spellcaster"
-}
-
-export enum AdvancedSkills {
+  VersatileSpellcaster = "Versatile Spellcaster",
+  // Advanced Skills
   Ambusher = "Ambusher",
   FearlessPresence = "Fearless Presence",
   ForceOfWill = "Force Of Will",
   SquadLeader = "Squad Leader",
-  WitchHunter = "Witch Hunter"
+  WitchHunter = "Witch Hunter",
+  // Squad Skills
+  Barrage = "Barrage",
+  BattleDrills = "Battle Drills",
+  BeastMaster = "Beast Master",
+  CoordinatedCharge = "Coordinated Charge",
+  DefensiveFormation = "Defensive Formation",
+  ShieldWall = "Shield Wall"
 }
 
 export class Skill implements Keyed {
-  constructor(key: string, description: string) {
+  constructor(key: Skills, description: string) {
     this._key = key;
     this._description = description;
   }
+
+  static get Options(): Skill[] {
+    return [
+      Skill.ArmourTraining(),
+      Skill.Avenger(),
+      Skill.Backstab(),
+      Skill.BattleThrill(),
+      Skill.BeserkerRage(),
+      Skill.Bodyguard(),
+      Skill.DefensivePosture(),
+      Skill.Duelist(),
+      Skill.Eager(),
+      Skill.EscapeArtist(),
+      Skill.ExpertAim(),
+      Skill.Fearless(),
+      Skill.FocusedAttacker(),
+      Skill.FormationFighter(),
+      Skill.GiantsGrip(),
+      Skill.Grappler(),
+      Skill.Interceptor(),
+      Skill.Jumper(),
+      Skill.LongShot(),
+      Skill.Lucky(),
+      Skill.Medic(),
+      Skill.MountedWarrior(),
+      Skill.NeverTellMeTheOdds(),
+      Skill.NimbleAttacker(),
+      Skill.PowerAttack(),
+      Skill.QuickDraw(),
+      Skill.Reinforcements(),
+      Skill.RendArmor(),
+      Skill.Scout(),
+      Skill.SeasonedVeteran(),
+      Skill.ShieldSacrifice(),
+      Skill.Skirmisher(),
+      Skill.Sniper(),
+      Skill.Stealthy(),
+      Skill.Stubborn(),
+      Skill.Survivalist(),
+      Skill.Swap(),
+      Skill.TerrainExpert(),
+      Skill.ThirstForBlood(),
+      Skill.TrainedSprinter(),
+      Skill.Trample(),
+      Skill.TwoWeaponSpecialist(),
+      Skill.UncannyReactionTime(),
+      Skill.VengefulSpirit(),
+      Skill.WeaponMaster(),
+      Skill.ZenDodger(),
+  // Spell Caster Skills
+    Skill.Apprenticeship(),
+    Skill.LatentSpellcaster(),
+    Skill.MultiSchoolSpellcaster(),
+    Skill.PreparedIllusions(),
+    Skill.SpellVampire(),
+    Skill.VersatileSpellcaster(),
+  // Advanced Skills
+    Skill.Ambusher(),
+    Skill.FearlessPresence(),
+    Skill.ForceOfWill(),
+    Skill.SquadLeader(),
+    Skill.WitchHunter(),
+  // Squad Skills
+    Skill.Barrage(),
+    Skill.BattleDrills(),
+    Skill.BeastMaster(),
+    Skill.CoordinatedCharge(),
+    Skill.DefensiveFormation(),
+    Skill.ShieldWall()
+    ]
+  }
+
   private _onlyCommander: boolean = false;
   get OnlyCommander(): boolean {
     return this._onlyCommander;
@@ -84,8 +160,8 @@ export class Skill implements Keyed {
   get PointsCost(): number {
     return this._pointsCost;
   }
-  private _key: string;
-  get Key(): string {
+  private _key: Skills;
+  get Key(): Skills {
     return this._key;
   }
   private _description: string;
@@ -191,288 +267,288 @@ export class Skill implements Keyed {
 
   static ArmourTraining(): Skill {
     return new Skill(
-      'Armour Training',
+      Skills.ArmourTraining,
       ''
     );
   };
 
   static Avenger(): Skill {
     return new Skill(
-      'Avenger',
+      Skills.Avenger,
       ''
     );
   };
 
   static Backstab(): Skill {
     return new Skill(
-      'Backstab',
+      Skills.Backstab,
       ''
     );
   };
 
   static BattleThrill(): Skill {
     return new Skill(
-      'Battle Thrill', 
+      Skills.BattleThrill, 
       ''
     );
   };
 
   static BeserkerRage(): Skill {
     return new Skill(
-      'Berserker Rage',
+      Skills.BeserkerRage,
       'Add a +1 bonus to weapon strength when alone in melee combat with more than one enemy.',
     );
   }
 
   static Bodyguard(): Skill {
     return new Skill(
-      'Bodyguard',
+      Skills.Bodyguard,
       ''
     );
   };
 
   static DefensivePosture(): Skill {
     return new Skill(
-      'Defensive Posture',
+      Skills.DefensivePosture,
       ''
     );
   };
 
   static Duelist(): Skill {
     return new Skill(
-      'Duelist',
+      Skills.Duelist,
       ''
     );
   };
 
   static Eager(): Skill {
     return new Skill(
-      'Eager',
+      Skills.Eager,
       ''
     );
   };
 
   static EscapeArtist(): Skill {
     return new Skill(
-      'Escape Artist',
+      Skills.EscapeArtist,
       ''
     );
   };
 
   static ExpertAim(): Skill {
     return new Skill(
-      'Expert Aim',
+      Skills.ExpertAim,
       ''
     )
   }
 
   static Fearless(): Skill {
     return new Skill(
-      'Fearless',
+      Skills.Fearless,
       ''
     )
   }
   static FocusedAttacker(): Skill {
     return new Skill(
-      'Focused Attacker',
+      Skills.FocusedAttacker,
       ''
     )
   }
   static FormationFighter(): Skill {
     return new Skill(
-      'Formation Fighter',
+      Skills.FormationFighter,
       ''
     )
   }
   static GiantsGrip(): Skill {
     return new Skill(
-      "Giant's Grip",
+      Skills.GiantsGrip,
       ''
     )
   }
   static Grappler(): Skill {
     return new Skill(
-      'Grappler',
+      Skills.Grappler,
       ''
     )
   }
   static Interceptor(): Skill {
     return new Skill(
-      'Interceptor',
+      Skills.Interceptor,
       ''
     )
   }
   static Jumper(): Skill {
     return new Skill(
-      'Jumper',
+      Skills.Jumper,
       ''
     )
   }
   static LongShot(): Skill {
     return new Skill(
-      'Long Shot',
+      Skills.LongShot,
       ''
     )
   }
   static Lucky(): Skill {
     return new Skill(
-      'Lucky',
+      Skills.Lucky,
       ''
     )
   }
   static Medic(): Skill {
     return new Skill(
-      'Medic',
+      Skills.Medic,
       ''
     )
   }
   static MountedWarrior(): Skill {
     return new Skill(
-      'Mounted Warrior',
+      Skills.MountedWarrior,
       ''
     )
   }
   static NeverTellMeTheOdds(): Skill {
     return new Skill(
-      'Never Tell Me the Odds', 
+      Skills.NeverTellMeTheOdds,
       ''
     )
   }
   static NimbleAttacker(): Skill {
     return new Skill(
-      'Nimble Attacker',
+      Skills.NimbleAttacker,
       ''
     )
   }
   static PowerAttack(): Skill {
     return new Skill(
-      'Power Attack',
+      Skills.PowerAttack,
       ''
     )
   }
   static QuickDraw(): Skill {
     return new Skill(
-      'Quick Draw',
+      Skills.QuickDraw,
       ''
     )
   }
   static Reinforcements(): Skill {
     return new Skill(
-      'Reinforcements',
+      Skills.Reinforcements,
       ''
     )
   }
   static RendArmor(): Skill {
     return new Skill(
-      'Rend Armor',
+      Skills.RendArmor,
       ''
     )
   }
   static Scout(): Skill {
     return new Skill(
-      'Scout',
+      Skills.Scout,
       ''
     )
   }
   static SeasonedVeteran(): Skill {
     return new Skill(
-      'Seasoned Veteran',
+      Skills.SeasonedVeteran,
       ''
     )
   }
   static ShieldSacrifice(): Skill {
     return new Skill(
-      'Shield Sacrifice',
+      Skills.ShieldSacrifice,
       ''
     )
   }
   static Skirmisher(): Skill {
     return new Skill(
-      'Skirmisher',
+      Skills.Skirmisher,
       ''
     )
   }
   static Sniper(): Skill {
     return new Skill(
-      'Sniper',
+      Skills.Sniper,
       ''
     )
   }
   static Stealthy(): Skill {
     return new Skill(
-      'Stealthy',
+      Skills.Stealthy,
       ''
     )
   }
   static Stubborn(): Skill {
     return new Skill(
-      'Stubborn',
+      Skills.Stubborn,
       ''
     )
   }
   static Survivalist(): Skill {
     return new Skill(
-      'Survivalist',
+      Skills.Survivalist,
       ''
     )
   }
   static Swap(): Skill {
     return new Skill(
-      'Swap',
+      Skills.Swap,
       ''
     )
   }
   static TerrainExpert(): Skill {
     return new Skill(
-      'Terrain Expert',
+      Skills.TerrainExpert,
       ''
     )
   }
   static ThirstForBlood(): Skill {
     return new Skill(
-      'Thirst for Blood',
+      Skills.ThirstForBlood,
       ''
     )
   }
   static TrainedSprinter(): Skill {
     return new Skill(
-      'Trained Sprinter',
+      Skills.TrainedSprinter,
       ''
     )
   }
   static Trample(): Skill {
     return new Skill(
-      'Trample',
+      Skills.Trample,
       ''
     )
   }
   static TwoWeaponSpecialist(): Skill {
     return new Skill(
-      'Two-weapon Specialist',
+      Skills.TwoWeaponSpecialist,
       ''
     )
   }
   static UncannyReactionTime(): Skill {
     return new Skill(
-      'Uncanny Reaction Time',
+      Skills.UncannyReactionTime,
       ''
     )
   }
   static VengefulSpirit(): Skill {
     return new Skill(
-      'Vengeful Spirit',
+      Skills.VengefulSpirit,
       ''
     )
   }
   static WeaponMaster(): Skill {
     return new Skill(
-      'Weapon Master',
+      Skills.WeaponMaster,
       ''
     )
   }
   static ZenDodger(): Skill {
     return new Skill(
-      'Zen Dodger',
+      Skills.ZenDodger,
       ''
     )
   }
@@ -480,7 +556,7 @@ export class Skill implements Keyed {
   // SPELLCASTING SKILLS
   static Apprenticeship(): Skill {
     return new Skill(
-      'Apprenticeship',
+      Skills.Apprenticeship,
       ''
     )
     .setTraitPrerequisite(Trait.Spellcaster())
@@ -488,7 +564,7 @@ export class Skill implements Keyed {
   }
   static LatentSpellcaster(): Skill {
     return new Skill(
-      'Latent Spellcaster',
+      Skills.LatentSpellcaster,
       ''
     )
     .setKryptonite(Trait.Spellcaster().Key)
@@ -501,7 +577,7 @@ export class Skill implements Keyed {
   }
   static MultiSchoolSpellcaster(): Skill {
     return new Skill(
-      'Multi School Spellcaster',
+      Skills.MultiSchoolSpellcaster,
       'This character can pick spells from two spellcasting schools instead of one.',
     )
     .setTraitPrerequisite(Trait.Spellcaster())
@@ -509,21 +585,21 @@ export class Skill implements Keyed {
   }
   static PreparedIllusions(): Skill {
     return new Skill(
-      'Prepared Illusions',
+      Skills.PreparedIllusions,
       ''
     )
     .setTraitPrerequisite(Trait.Spellcaster());
   }
   static SpellVampire(): Skill {
     return new Skill(
-      'Spell Vampire',
+      Skills.SpellVampire,
       ''
     )
     .setTraitPrerequisite(Trait.Spellcaster());
   }
   static VersatileSpellcaster(): Skill {
     return new Skill(
-      'Versatile Spellcaster',
+      Skills.VersatileSpellcaster,
       'The character knows two extra spells.',
     )
     .setTraitPrerequisite(Trait.Spellcaster())
@@ -533,28 +609,28 @@ export class Skill implements Keyed {
   // ADVANCED SKILLS
   static Ambusher(): Skill {
     return new Skill(
-      'Ambusher',
+      Skills.Ambusher,
       ''
     )
     .setSkillPrerequisite(Skill.Scout());
   }
   static FearlessPresence(): Skill {
     return new Skill(
-      'Fearless Presence',
+      Skills.FearlessPresence,
       ''
     )
     .setOnlyCommander();
   }
   static ForceOfWill(): Skill {
     return new Skill(
-      'Force of Will',
+      Skills.ForceOfWill,
       ''
     )
     .setOnlyCommander()
   }
   static SquadLeader(): Skill {
     return new Skill(
-      'Squad Leader',
+      Skills.SquadLeader,
       ''
     )
     .setCharacterClassPrerequisite(CharacterClass.Regular())
@@ -567,7 +643,7 @@ export class Skill implements Keyed {
   }
   static WitchHunter(): Skill {
     return new Skill(
-      'Witch Hunter',
+      Skills.WitchHunter,
       ''
     )
     .setKryptonite(Trait.Spellcaster().Key)
@@ -577,38 +653,38 @@ export class Skill implements Keyed {
   // SQUAD SKILLS
   static Barrage(): Skill {
     return new Skill(
-      'Barrage',
+      Skills.Barrage,
       ''
     )
   }
   static BattleDrills(): Skill {
     return new Skill(
-      'Battle Drills',
+      Skills.BattleDrills,
       ''
     )
   }
   static BeastMaster(): Skill {
     return new Skill(
-      'Beastmaster',
+      Skills.BeastMaster,
       ''
     )
     .setSkillPrerequisite(Skill.SquadLeader());
   }
   static CoordinatedCharge(): Skill {
     return new Skill(
-      'Coordinated Charge',
+      Skills.CoordinatedCharge,
       ''
     )
   }
   static DefensiveFormation(): Skill {
     return new Skill(
-      'Defensive Formation',
+      Skills.DefensiveFormation,
       ''
     )
   }
   static ShieldWall(): Skill {
     return new Skill(
-      'Shield Wall',
+      Skills.ShieldWall,
       ''
     )
   }

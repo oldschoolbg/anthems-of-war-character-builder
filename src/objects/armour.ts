@@ -1,24 +1,34 @@
-import { EquipmentProperty } from "../defs";
-import { CanHaveMagicalCharges, Keyed, SpellCharge } from "../interfaces";
+import { EquipmentProperties, EquipmentProperty } from "../defs";
+import { CanHaveMagicalCharges, Key, Keyed, SpellCharge } from "../interfaces";
 import { CanHaveProperties } from "./shared_implementations/can_have_properties";
 
 export enum ArmourType {
-  None = 'None',
+  Custom = 'Custom',
+  None = 'No Armour',
   LightArmour = 'Light Armour',
   MediumArmour = 'Medium Armour',
   HeavyArmour = 'Heavy Armour'
 }
 
 export class Armour extends CanHaveProperties implements Keyed, CanHaveMagicalCharges  {
-  constructor(key: string, description: string, pointsCost: number) {
+  constructor(key: ArmourType | string, description: string, pointsCost: number) {
     super('ARMOUR');
     this._key = key;
     this._description = description;
     this._pointsCost = pointsCost;
   }
 
-  private _key: string;
-  get Key(): string { return this._key; }
+  static get Options(): Armour[] {
+    return [
+      Armour.None(),
+      Armour.LightArmour(),
+      Armour.MediumArmour(),
+      Armour.HeavyArmour()
+    ]
+  }
+
+  private _key: ArmourType | string;
+  get Key(): ArmourType | string { return this._key; }
   private _description: string;
   get Description(): string { return this._description; }
   private _pointsCost: number;
@@ -32,13 +42,13 @@ export class Armour extends CanHaveProperties implements Keyed, CanHaveMagicalCh
     return this._spellCharges;
   }
 
-  AddProperty(property: EquipmentProperty, ...props: any[]): Armour {
-    super.AddProperty(property, props);
+  AddProperty(key: EquipmentProperties, ...props: any[]): Armour {
+    super.AddProperty(key, props) as EquipmentProperty;
     return this;
   }
 
-  RemoveProperty(property: EquipmentProperty, ...props: any[]): Armour {
-    super.RemoveProperty(property, props);
+  RemoveProperty(key: EquipmentProperties, ...props: any[]): Armour {
+    super.RemoveProperty(key, props);
     return this;
   }
   AddSpellCharge(spellCharge: SpellCharge): Armour {
@@ -52,31 +62,16 @@ export class Armour extends CanHaveProperties implements Keyed, CanHaveMagicalCh
     return this;
   }
 
-  static Get(armourType: ArmourType) : Armour {
-    switch (armourType) {
-      case ArmourType.None:
-        return Armour.None();
-      case ArmourType.LightArmour:
-        return Armour.LightArmour();
-      case ArmourType.MediumArmour:
-        return Armour.MediumArmour();
-      case ArmourType.HeavyArmour:
-        return Armour.HeavyArmour();
-      default:
-        throw new Error(`This is an unsupported Armour Type: ${armourType}`);
-    }
-  }
-
   static None() : Armour {
-    return new Armour('No Armour', '', 0);
+    return new Armour(ArmourType.None, '', 0);
   }
   static LightArmour() : Armour {
-    return new Armour('Light Armour', '+2 to armor checks', 3);
+    return new Armour(ArmourType.LightArmour, '+2 to armor checks', 3);
   }
   static MediumArmour() : Armour {
-    return new Armour('Medium Armour', '+4 to armor checks -1 to checks involving dex (including armor checks)', 5);
+    return new Armour(ArmourType.MediumArmour, '+4 to armor checks -1 to checks involving dex (including armor checks)', 5);
   }
   static HeavyArmour() : Armour {
-    return new Armour('Heavy Armour', '+7 to armor checks -2 to checks involving dex (including armor checks)', 8);
+    return new Armour(ArmourType.HeavyArmour, '+7 to armor checks -2 to checks involving dex (including armor checks)', 8);
   }
 }

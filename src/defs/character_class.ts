@@ -6,7 +6,7 @@ export enum CharacterClasses {
 }
 
 export class CharacterClass implements Keyed {
-  constructor(key: string, pointsCost: number, description: string) {
+  constructor(key: CharacterClasses, pointsCost: number, description: string) {
     this._pointsCost = pointsCost;
     this._key = key;
     this._description = description;
@@ -14,32 +14,28 @@ export class CharacterClass implements Keyed {
 
   private _pointsCost: number;
   get PointsCost(): number { return this._pointsCost; }
-  private _key: string;
-  get Key(): string { return this._key; }
+  private _key: CharacterClasses;
+  get Key(): CharacterClasses { return this._key; }
   private _description: string;
   get Description(): string { return this._description; }
 
-  static Get(characterClass: CharacterClasses): CharacterClass {
-    switch (characterClass) {
-      case CharacterClasses.Instinct:
-        return CharacterClass.Instinct();
-      case CharacterClasses.Regular:
-        return CharacterClass.Regular();
-      default:
-        throw new Error(`This is an unsupported Character Class: ${characterClass}`);
-    }
+  static get Options(): CharacterClass[] {
+    return [
+      CharacterClass.Instinct(),
+      CharacterClass.Regular()
+    ]
   }
 
   static Instinct() : CharacterClass {
     return new CharacterClass(
-      'Instinct',
+      CharacterClasses.Instinct,
       10,
       'Allows the character to generate instinct orders.',
     );
   }
   static Regular() : CharacterClass {
     return new CharacterClass(
-      'Regular',
+      CharacterClasses.Regular,
       15,
       'Allows the character to generate regular orders.',
     )

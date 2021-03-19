@@ -1,14 +1,14 @@
-import { Move, Physicality, Dexterity, Constitution, Mind, Trait } from '../defs';
-import { Mount } from './mount';
+import { Move, Physicality, Dexterity, Constitution, Mind, Trait, Traits } from '../defs';
+import { Mount, Mounts } from './mount';
 import { Moveable, Keyed, IsCommander, Physical, Magicable } from '../interfaces';
-import { MiscellaneousEquipment } from './miscellaneous_equipment';
-import { Potion } from './potion';
-import { Skill } from '../defs/skill';
-import { Weapon } from './weapon';
+import { MiscellaneousEquipment, MiscellaneousEquipments } from './miscellaneous_equipment';
+import { Potion, Potions } from './potion';
+import { Skill, Skills } from '../defs/skill';
+import { Weapon, Weapons } from './weapon';
 import { Armour } from './armour';
 import { Shield } from './shield';
 import { Elemental } from './magic';
-import { CharacterClass } from '../defs/character_class';
+import { CharacterClass, CharacterClasses } from '../defs/character_class';
 
 /**
  * Default character has:
@@ -108,109 +108,132 @@ export class Character implements Moveable, Physical, Magicable, IsCommander {
   }
 
   SetCharacterClass(characterClass: CharacterClass) : Character {
-    if (this.IsCommander && characterClass.Key === 'Instinct') {
+    if (this.IsCommander && characterClass.Key === CharacterClasses.Instinct) {
       throw new Error('You cannot set a Commander to the Instinct Character Class');
     }
     this._characterClass = characterClass;
-    this._isRegular = this._characterClass.Key === 'Regular'
+    this._isRegular = this._characterClass.Key === CharacterClasses.Regular
     return this;
   }
 
-  AddTrait(trait: Trait) : Character {
-    this._traits.push(trait);
-    trait.AddEffect(this);
-    return this;
-  }
-
-  RemoveTrait(trait: Trait) : Character {
-    this._traits = this._traits.filter((t) => t.Key !== trait.Key);
-    trait.RemoveEffect(this);
-    return this;
-  }
-
-  HasTrait(trait: Trait): boolean {
-    return this._traits.find(t => t.Key === trait.Key) !== undefined;
-  }
-
-  AddEquipment(equipment: MiscellaneousEquipment) : Character {
-    if (equipment.Prerequisites.some((wp) => !this._traits.find((p: Keyed) => p.Key === wp.Key))) {
-      throw new Error(
-        `Cannot add ${equipment.Key} as Character must have ${equipment.Prerequisites.map(
-          (p) => p.Key,
-        ).join(', ')}.`,
-      );
+  AddTrait(key: Traits) : Character {
+    const trait = Trait.Options.find(t => t.Key === key);
+    if (trait !== undefined) {
+      this._traits.push(trait);
+      trait.AddEffect(this);
     }
-    this._equipment.push(equipment);
     return this;
   }
-  RemoveEquipment(equipment: MiscellaneousEquipment) : Character {
-    const index = this._equipment.findIndex((e: Keyed) => equipment.Key === e.Key);
+
+  RemoveTrait(key: Traits) : Character {
+    const index = this._traits.findIndex((e: Keyed) => key === e.Key);
+    if (index !== -1) {
+      this._traits[index].RemoveEffect(this);
+      this._traits.splice(index, 1);
+    }
+    return this;
+  }
+
+  HasTrait(key: Traits): boolean {
+    return this._traits.find(t => t.Key === key) !== undefined;
+  }
+
+  AddEquipment(key: MiscellaneousEquipments) : Character {
+    const equipment = MiscellaneousEquipment.Options.find(t => t.Key === key);
+    if (equipment !== undefined) {
+      if (equipment.Prerequisites.some((wp) => !this._equipment.find((p: Keyed) => p.Key === wp.Key))) {
+        throw new Error(
+          `Cannot add ${equipment.Key} as Character must have ${equipment.Prerequisites.map(
+            (p) => p.Key,
+          ).join(', ')}.`,
+        );
+      }
+      this._equipment.push(equipment);
+    }
+    return this;
+  }
+  RemoveEquipment(key: MiscellaneousEquipments) : Character {
+    const index = this._equipment.findIndex((e: Keyed) => key === e.Key);
     this._equipment.splice(index, 1);
     return this;
   }
 
-  AddWeapon(weapon: Weapon) : Character {
-    /*if (weapons.Prerequisites.some((wp) => !this._traits.find((p: Keyed) => p.Key === wp.Key))) {
-      throw new Error(
-        `Cannot add ${equipment.Key} as Character must have ${equipment.Prerequisites.map(
-          (p) => p.Key,
-        ).join(', ')}.`,
-      );
-    }*/
-    if (this._weapons.find(t => t.Key === 'Unarmed')) {
-      this._weapons = [];
+  AddWeapon(key: Weapons | Weapon) : Character {
+    let weapon: Weapon | undefined;
+    if (key instanceof Weapon) {
+      weapon = key as Weapon;
+    } else {
+      weapon = Weapon.Options.find(t => t.Key === key);
     }
-    this._weapons.push(weapon);
+    if (weapon !== undefined) {
+      if (this._weapons.find(t => t.Key === Weapons.Unarmed)) {
+        this._weapons = [];
+      }
+      this._weapons.push(weapon);
+    }
     return this;
   }
-  RemoveWeapon(weapon: Weapon) : Character {
-    const index = this._weapons.findIndex((e: Keyed) => weapon.Key === e.Key);
-    this._weapons.splice(index, 1);
-    if (this._weapons.length === 0) {
-      this._weapons = [
-        Weapon.Unarmed()
-      ];
+  RemoveWeapon(key: Weapons) : Character {
+    const index = this._weapons.findIndex((e: Keyed) => key === e.Key);
+    if (index !== -1) {
+      this._weapons.splice(index, 1);
+      if (this._weapons.length === 0) {
+        this._weapons = [
+          Weapon.Unarmed()
+        ];
+      }
     }
     return this;
   }
 
   
-  AddSkill(skill: Skill) : Character {
-    if (skill.TraitPrerequisites.some((wp) => !this._traits.find((p: Keyed) => p.Key === wp.Key))) {
-      throw new Error(
-        `Cannot add ${skill.Key} as Character must have ${skill.TraitPrerequisites.map(
-          (p) => p.Key,
-        ).join(', ')}.`,
-      );
+  AddSkill(key: Skills) : Character {
+    const skill = Skill.Options.find(t => t.Key === key);
+    if (skill !== undefined) {
+      if (skill.TraitPrerequisites.some((wp) => !this._traits.find((p: Keyed) => p.Key === wp.Key))) {
+        throw new Error(
+          `Cannot add ${skill.Key} as Character must have ${skill.TraitPrerequisites.map(
+            (p) => p.Key,
+          ).join(', ')}.`,
+        );
+      }
+      if (skill.SkillPrerequisites.some((wp) => !this._skills.find((p: Keyed) => p.Key === wp.Key))) {
+        throw new Error(
+          `Cannot add ${skill.Key} as Character must have ${skill.SkillPrerequisites.map(
+            (p) => p.Key,
+          ).join(', ')}.`,
+        );
+      }
+      if (skill.CharacterClassPrerequisites.some((wp) => this._characterClass.Key === wp.Key)) {
+        throw new Error(
+          `Cannot add ${skill.Key} as Character must be ${skill.CharacterClassPrerequisites.map(
+            (p) => p.Key,
+          ).join(', ')}.`,
+        );
+      }
+      if (skill.OnlyCommander && !this.IsCommander) {
+        throw new Error(`Cannot add ${skill.Key} as this Character is not a Commander`)
+      }
+      skill.AddEffect(this, skill);
+      this._skills.push(skill);
     }
-    if (skill.SkillPrerequisites.some((wp) => !this._skills.find((p: Keyed) => p.Key === wp.Key))) {
-      throw new Error(
-        `Cannot add ${skill.Key} as Character must have ${skill.SkillPrerequisites.map(
-          (p) => p.Key,
-        ).join(', ')}.`,
-      );
-    }
-    if (skill.CharacterClassPrerequisites.some((wp) => this._characterClass.Key === wp.Key)) {
-      throw new Error(
-        `Cannot add ${skill.Key} as Character must be ${skill.CharacterClassPrerequisites.map(
-          (p) => p.Key,
-        ).join(', ')}.`,
-      );
-    }
-    if (skill.OnlyCommander && !this.IsCommander) {
-      throw new Error(`Cannot add ${skill.Key} as this Character is not a Commander`)
-    }
-    this._skills.push(skill);
     return this;
   }
-  RemoveSkill(skill: Skill) : Character {
-    const index = this._skills.findIndex((e: Keyed) => skill.Key === e.Key);
-    this._skills.splice(index, 1);
+  RemoveSkill(key: Skills) : Character {
+    const index = this._skills.findIndex((e: Keyed) => key === e.Key);
+    if (index !== -1) {
+      
+      this._skills[index].RemoveEffect(this, this._skills[index]);
+      this._skills.splice(index, 1);
+    }
     return this;
   }
 
-  AddMount(mount: Mount) : Character {
-    this._mount = mount;
+  AddMount(key: Mounts) : Character {
+    const mount = Mount.Options.find(m => m.Key === key);
+    if (mount !== undefined) {
+      this._mount = mount;
+    }
     return this;
   }
   RemoveMount() : Character {
@@ -248,13 +271,16 @@ export class Character implements Moveable, Physical, Magicable, IsCommander {
     return this;
   }
 
-  AddPotion(potion: Potion) : Character {
-    this._potions.push(potion);
+  AddPotion(key: Potions) : Character {
+    const potion = Potion.Options.find(p => p.Key === key);
+    if (potion !== undefined) {
+      this._potions.push(potion);
+    }
     return this;
   }
 
-  RemovePotion(potion: Potion) : Character {
-    const index = this._potions.findIndex(p => p.Key === potion.Key);
+  RemovePotion(key: Potions) : Character {
+    const index = this._potions.findIndex(p => p.Key === key);
     this._potions.splice(index, 1);
     return this;
   }

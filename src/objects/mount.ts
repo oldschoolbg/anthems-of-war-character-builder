@@ -3,7 +3,9 @@ import {
   Trait,
   WeaponStat, 
   WeaponMatrix,
-  EquipmentProperty
+  EquipmentProperty,
+  Traits,
+  EquipmentProperties
 } from '../defs';
 import { Moveable, CanAttack, Keyed, CanHaveMagicalCharges, SpellCharge } from '../interfaces';
 import { Spell } from './magic';
@@ -19,7 +21,7 @@ export enum Mounts {
 }
 
 export class Mount extends CanHaveProperties implements Moveable, CanAttack, Keyed, CanHaveMagicalCharges {
-  constructor (key: string, speed: number, strength: number) {
+  constructor (key: Mounts, speed: number, strength: number) {
     super('MOUNT')
     this._key = key;
     this._speed = speed;
@@ -34,10 +36,22 @@ export class Mount extends CanHaveProperties implements Moveable, CanAttack, Key
     const statNormalisedCost = statCost.PointsCost < 0 ? 0 : statCost.PointsCost;
     this.BaseCost = statNormalisedCost + this.MOV.PointsCost + 2;
   }
+
+  static get Options(): Mount[] {
+    return [
+      Mount.Horse(),
+      Mount.Wolf(),
+      Mount.Griffin(),
+      Mount.Bear(),
+      Mount.Drake(),
+      Mount.Dragon()
+    ];
+  }
+
   private _mov: Move;
   get MOV(): Move { return this._mov; }
-  private _key: string;
-  get Key(): string { return this._key; }
+  private _key: Mounts;
+  get Key(): Mounts { return this._key; }
   private _speed: number;
   get Speed(): number { return this._speed; };
   private _strength: number;
@@ -75,39 +89,46 @@ export class Mount extends CanHaveProperties implements Moveable, CanAttack, Key
     return this;
   }
 
-  AddTrait(trait: Trait) : Mount {
-    if (trait.Key === 'Instinct' || trait.Key === 'Regular') {
-      throw new Error(`cannot add ${trait.Key} to a Mount`)
+  AddTrait(key: Traits) : Mount {
+    if (key === Traits.Huge) {
+      this._traits = this._traits.filter((t) => t.Key !== Traits.Large);
     }
-    if (trait.Key === 'Huge') {
-      this._traits = this._traits.filter((t) => t.Key !== 'Large');
+    const trait = Trait.Options.find(t => t.Key === key);
+    if (trait !== undefined) {
+      this._traits.push(trait);
+      trait.AddEffect(this);
     }
-    this._traits.push(trait);
-    trait.AddEffect(this);
     return this;
   }
 
-  RemoveTrait(trait: Trait) : Mount {
-    if (trait.Key === 'Huge') {
+  RemoveTrait(key: Traits) : Mount {
+    if (key === Traits.Huge) {
       this._traits.push(Trait.Large());
     }
-    if (trait.Key === 'Large') {
+    if (key === Traits.Large) {
       throw new Error('Cannot remove Large from a mount');
     }
-    this._traits = this._traits.filter((t) => t.Key !== trait.Key);
-    trait.RemoveEffect(this);
+    const index = this._traits.findIndex((e: Keyed) => key === e.Key);
+    if (index !== -1) {
+      this._traits[index].RemoveEffect(this);
+      this._traits.splice(index, 1);
+    }
     return this;
   }
   
-  AddProperty(property: EquipmentProperty, ...props: any[]): Mount {
-    super.AddProperty(property, props);
-    property.AddEffect(this, property, props);
+  AddProperty(key: EquipmentProperties, ...props: any[]): Mount {
+    const property = super.AddProperty(key, props) as EquipmentProperty;
+    if (property !== undefined) {
+      property.AddEffect(this, property, props);
+    }
     return this;
   }
 
-  RemoveProperty(property: EquipmentProperty, ...props: any[]): Mount {
-    super.RemoveProperty(property, props);
-    property.RemoveEffect(this, property, props);
+  RemoveProperty(key: EquipmentProperties, ...props: any[]): Mount {
+    const property = super.RemoveProperty(key, props) as EquipmentProperty;
+    if (property !== undefined) {
+      property.RemoveEffect(this, property, props);
+    }
     return this;
   }
 
@@ -131,40 +152,41 @@ export class Mount extends CanHaveProperties implements Moveable, CanAttack, Key
   }
 
   static Horse() : Mount {
-    return new Mount('Horse', 2, 4)
-    .AddTrait(Trait.Large())
-    .AddTrait(Trait.Fast())
-    .AddTrait(Trait.Fast());
+    return new Mount(Mounts.Horse, 2, 4)
+    .AddTrait(Traits.Large)
+    .AddTrait(Traits.Fast)
+    .AddTrait(Traits.Fast);
   }
   static Wolf() : Mount {
-    return new Mount('Wolf', 2, 5)
-    .AddTrait(Trait.Large())
-    .AddTrait(Trait.Fast());
+    return new Mount(Mounts.Wolf, 2, 5)
+    .AddTrait(Traits.Large)
+    .AddTrait(Traits.Fast);
   }
   static Griffin() : Mount {
-    return new Mount('Griffin', 2, 4)
-    .AddTrait(Trait.Flying())
-    .AddTrait(Trait.Large())
-    .AddTrait(Trait.Fast())
+    return new Mount(Mounts.Griffin, 2, 4)
+    .AddTrait(Traits.Flying)
+    .AddTrait(Traits.Large)
+    .AddTrait(Traits.Fast)
   }
   static Bear() : Mount {
-    return new Mount('Bear', 1, 7)
-    .AddProperty(EquipmentProperty.HighCrit());
+    return new Mount(Mounts.Bear, 1, 7)
+    .AddProperty(EquipmentProperties.HighCrit);
   }
+
   static Drake() : Mount {
-    return new Mount('Drake', 3, 3)
-    .AddTrait(Trait.Large())
-    .AddTrait(Trait.Fast())
+    return new Mount(Mounts.Drake, 3, 3)
+    .AddTrait(Traits.Large)
+    .AddTrait(Traits.Fast)
     .AddSpellCharge({
       Spell: Spell.AcidicAssault(),
       NumberOfCharges: 2
     });
   }
   static Dragon() : Mount {
-    return new Mount('Dragon', 1, 8)
-    .AddTrait(Trait.Huge())
-    .AddTrait(Trait.Flying())
-    .AddTrait(Trait.Fast())
+    return new Mount(Mounts.Dragon, 1, 8)
+    .AddTrait(Traits.Huge)
+    .AddTrait(Traits.Flying)
+    .AddTrait(Traits.Fast)
     .AddSpellCharge({
       Spell: Spell.BreathOfTheDragonKing(),
       NumberOfCharges: 1

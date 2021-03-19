@@ -1,13 +1,23 @@
-import { Armour, Weapon } from "..";
-import { Move, Physicality, Dexterity, Constitution, Mind, Trait, EquipmentProperty, CharacterClass, CharacterClasses } from "../../defs";
-import { Moveable, Keyed, Physical } from "../../interfaces";
+import { Armour, Weapon, Weapons } from "..";
+import { Move, Physicality, Dexterity, Constitution, Mind, Trait, EquipmentProperty, CharacterClass, CharacterClasses, EquipmentProperties, Traits } from "../../defs";
+import { Moveable, Keyed } from "../../interfaces";
+
+export enum Elementals {
+  AirElemental = "Air Elemental",
+  WaterElemental = "Water Elemental",
+  EarthElemental = "Earth Elemental",
+  FireElemental = "Fire Elemental",
+  ShadeAssassin = "Shade Assassin",
+  Undead = "Undead",
+  Skeleton = "Skeleton"
+}
 
 export class Elemental implements Moveable, Keyed {
-  constructor(key: string) {
+  constructor(key: Elementals) {
     this._key = key;
   }
-  private _key: string;
-  get Key(): string {
+  private _key: Elementals;
+  get Key(): Elementals {
     return this._key;
   }
   IsCommander: boolean = false;
@@ -35,25 +45,49 @@ export class Elemental implements Moveable, Keyed {
     return this;
   }
 
-  AddTrait(trait: Trait) : Elemental {
-    this._traits.push(trait);
-    trait.AddEffect(this);
+  AddTrait(key: Traits) : Elemental {
+    const trait = Trait.Options.find(t => t.Key === key);
+    if (trait !== undefined) {
+      this._traits.push(trait);
+      trait.AddEffect(this);
+    }
     return this;
   }
 
-  RemoveTrait(trait: Trait) : Elemental {
-    this._traits = this._traits.filter((t) => t.Key !== trait.Key);
-    trait.RemoveEffect(this);
+  RemoveTrait(key: Traits) : Elemental {
+    const index = this._traits.findIndex((e: Keyed) => key === e.Key);
+    if (index !== -1) {
+      this._traits[index].RemoveEffect(this);
+      this._traits.splice(index, 1);
+    }
     return this;
   }
 
-  AddWeapon(weapon: Weapon) : Elemental {
-    this._weapons.push(weapon);
+  AddWeapon(key: Weapons | Weapon) : Elemental {
+    let weapon: Weapon | undefined;
+    if (key instanceof Weapon) {
+      weapon = key as Weapon;
+    } else {
+      weapon = Weapon.Options.find(t => t.Key === key);
+    }
+    if (weapon !== undefined) {
+      if (this._weapons.find(t => t.Key === Weapons.Unarmed)) {
+        this._weapons = [];
+      }
+      this._weapons.push(weapon);
+    }
     return this;
   }
-  RemoveWeapon(weapon: Weapon) : Elemental {
-    const index = this._weapons.findIndex((e: Keyed) => weapon.Key === e.Key);
-    this._weapons.splice(index, 1);
+  RemoveWeapon(key: Weapons) : Elemental {
+    const index = this._weapons.findIndex((e: Keyed) => key === e.Key);
+    if (index !== -1) {
+      this._weapons.splice(index, 1);
+      if (this._weapons.length === 0) {
+        this._weapons = [
+          Weapon.Unarmed()
+        ];
+      }
+    }
     return this;
   }
 
@@ -67,7 +101,7 @@ export class Elemental implements Moveable, Keyed {
   }
 
   static AirElemental(): Elemental {
-    const result = new Elemental('Air Elemental')
+    const result = new Elemental(Elementals.AirElemental)
     .AddArmour(new Armour('Buffetting Wind', '+2 to armor checks', 2))
     .AddWeapon(new Weapon('Windy Assualt', 4, 1));
     result.MOV.Value = 4;
@@ -79,8 +113,8 @@ export class Elemental implements Moveable, Keyed {
   };
   
   static WaterElemental(): Elemental {
-    const result = new Elemental('Water Elemental')
-    .AddWeapon(new Weapon('Ice Shards', 2, 2).AddProperty(EquipmentProperty.Ranged()));
+    const result = new Elemental(Elementals.WaterElemental)
+    .AddWeapon(new Weapon('Ice Shards', 2, 2).AddProperty(EquipmentProperties.Ranged));
     result.MOV.Value = 4;
     result.PHY.Value = 3;
     result.DEX.Value = 3;
@@ -90,9 +124,9 @@ export class Elemental implements Moveable, Keyed {
   };
 
   static EarthElemental(): Elemental {
-    const result = new Elemental('Earth Elemental')
-    .AddTrait(Trait.Large())
-    .AddTrait(Trait.Slow())
+    const result = new Elemental(Elementals.EarthElemental)
+    .AddTrait(Traits.Large)
+    .AddTrait(Traits.Slow)
     .AddWeapon(new Weapon('Rock Slam', 1, 6))
     .AddArmour(new Armour('Stone Armor', '+4 to armor checks', 5));
     result.MOV.Value = 4;
@@ -104,7 +138,7 @@ export class Elemental implements Moveable, Keyed {
   };
   
   static FireElemental(): Elemental {
-    const result = new Elemental('Fire Elemental')
+    const result = new Elemental(Elementals.FireElemental)
     .AddWeapon(new Weapon('Fire Brand', 2, 5));
     result.MOV.Value = 4;
     result.PHY.Value = 3;
@@ -115,7 +149,7 @@ export class Elemental implements Moveable, Keyed {
   };
 
   static ShadeAssassin(): Elemental {
-    const result = new Elemental('Shade Assassin')
+    const result = new Elemental(Elementals.ShadeAssassin)
     .AddWeapon(Weapon.Dagger())
     .AddArmour(Armour.LightArmour());
     result.MOV.Value = 4;
@@ -127,9 +161,9 @@ export class Elemental implements Moveable, Keyed {
   };
 
   static Undead(): Elemental {
-    const result = new Elemental('Undead')
+    const result = new Elemental(Elementals.Undead)
     .AddWeapon(Weapon.Unarmed())
-    .AddTrait(Trait.Slow());
+    .AddTrait(Traits.Slow);
     result.MOV.Value = 3;
     result.PHY.Value = 0;
     result.DEX.Value = 0;
@@ -139,7 +173,7 @@ export class Elemental implements Moveable, Keyed {
   };
 
   static Skeleton(weaponText: string): Elemental {
-    const result = new Elemental('Skeleton')
+    const result = new Elemental(Elementals.Skeleton)
     .SetCharacterClass(CharacterClass.Regular())
     .AddWeapon(new Weapon(weaponText, 1, 3));
     result.MOV.Value = 4;

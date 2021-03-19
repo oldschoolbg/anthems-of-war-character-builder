@@ -1,5 +1,5 @@
 
-import { CharacterClass } from "../defs";
+import { CharacterClass, CharacterClasses } from "../defs";
 import { Character } from "./character";
 
 export class Army {
@@ -31,7 +31,7 @@ export class Army {
   }
 
   constructor(targetPointsCost: number, leader: Character) {
-    if (leader.CharacterClass.Key === CharacterClass.Instinct().Key) {
+    if (leader.CharacterClass.Key === CharacterClasses.Instinct) {
       throw new Error('The Leader of an Army cannot have the Instinct Trait')
     }
     this._targetPointsCost = targetPointsCost;
