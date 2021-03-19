@@ -199,6 +199,7 @@ export class Character implements Moveable, Physical, Magicable, IsCommander {
       weapon = Weapon.Options.find(t => t.Key === key);
     }
     if (weapon !== undefined) {
+      this._weapons = this._weapons.filter(e => e.Key !== Weapons.Unarmed)
       const index = this._weapons.findIndex((e: Keyed) => key === e.Key);
       if (index === -1) {
         this._weapons.push(weapon);
