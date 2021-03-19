@@ -42,11 +42,10 @@ export abstract class CanHaveProperties {
       );
     }
     const kryptonite = this._properties.filter(i => equipmentProperty.Kryptonite.includes(i.Key));
-    if (kryptonite.length > 0) {
-      for (let i = 0; i < kryptonite.length; i++) {
-        this.RemoveProperty(kryptonite[i].Key);
-      }
+    for (const k of kryptonite) {
+      this.RemoveProperty(k.Key);
     }
+
     this._properties.push(equipmentProperty);
     return equipmentProperty;
   }

@@ -121,10 +121,8 @@ export class Character implements Moveable, Physical, Magicable, IsCommander {
     if (trait !== undefined) {
       
       const kryptonite = this._traits.filter(i => trait.Kryptonite.includes(i.Key));
-      if (kryptonite.length > 0) {
-        for (let i = 0; i < kryptonite.length; i++) {
-          this.RemoveTrait(kryptonite[i].Key);
-        }
+      for (const k of kryptonite) {
+        this.RemoveTrait(k.Key);
       }
 
       const index = this._traits.findIndex((e: Keyed) => key === e.Key);
@@ -132,7 +130,7 @@ export class Character implements Moveable, Physical, Magicable, IsCommander {
         trait.AddEffect(this);
         this._traits.push(trait);
       } else {
-        let t = this._traits[index];
+        const t = this._traits[index];
         if (t.MultipleAllowed) {
           t.AddEffect(this);
           t.AddOne();
@@ -173,7 +171,7 @@ export class Character implements Moveable, Physical, Magicable, IsCommander {
       if (index === -1) {
         this._equipment.push(equipment);
       } else {
-        let e = this._equipment[index];
+        const e = this._equipment[index];
         if (e.MultipleAllowed) {
           e.AddOne();
         }
@@ -205,7 +203,7 @@ export class Character implements Moveable, Physical, Magicable, IsCommander {
       if (index === -1) {
         this._weapons.push(weapon);
       } else {
-        let w = this._weapons[index];
+        const w = this._weapons[index];
         if (w.MultipleAllowed) {
           w.AddOne();
         }
