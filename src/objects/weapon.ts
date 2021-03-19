@@ -83,9 +83,13 @@ export class Weapon extends CanHaveProperties implements CanAttack, HasRange, Ke
   get Range(): string {
     const ranged = this.Properties.find(p => p.Key === EquipmentProperties.Ranged);
     if (ranged !== undefined) {
-      return `${this._range}"`;
+      return `${this._range - 1}"`;
     }
-    return `Melee (${this._range}")`
+    const reach = this.Properties.find(p => p.Key === EquipmentProperties.Reach);
+    if (reach !== undefined) {
+      return `Melee (${this._range - 1}")`;
+    }
+    return `${this._range}"`;
   }
   get MultipleAllowed(): boolean { return true; };
   private _quantity = 1;
