@@ -31,14 +31,21 @@ test('Add Fast to Character', () => {
   char.AddTrait(Traits.Fast);
   expect(char.Traits.length).toBe(1);
   expect(char.MOV.Value).toBe(5);
+  char.AddTrait(Traits.Fast);
+  expect(char.MOV.Value).toBe(6);
+  expect(char.Traits.find(t => t.Key === Traits.Fast)?.Quantity).toBe(2);
+  char.RemoveTrait(Traits.Fast);
+  expect(char.Traits.find(t => t.Key === Traits.Fast)?.Quantity).toBe(1);
+  char.RemoveTrait(Traits.Fast);
+  expect(char.Traits.find(t => t.Key === Traits.Fast)).toBeUndefined();
 });
 
 test('Add Slow and Fast to Character', () => {
   const char = Character.Instinct();
   char.AddTrait(Traits.Slow);
   char.AddTrait(Traits.Fast);
-  expect(char.Traits.length).toBe(2);
-  expect(char.MOV.Value).toBe(4);
+  expect(char.Traits.length).toBe(1);
+  expect(char.MOV.Value).toBe(5);
 });
 
 test('Add and remove Fast from Character', () => {
@@ -171,4 +178,23 @@ test('Wandering Seer', () => {
   char.AddEquipment(MiscellaneousEquipments.MedicalSupplies);
   char.AddEquipment(MiscellaneousEquipments.Familiar);
   expect(char.PointsCost).toBe(47);
+});
+
+
+test('Wandering Seer Multiple Familiars', () => {
+  const char = Character.Regular();
+  char.AddTrait(Traits.Spellcaster);
+  char.PHY.Value = 2;
+  char.CON.Value = 2;
+  char.MND.Value = 2;
+  char.AddWeapon(Weapons.Staff);
+  char.AddEquipment(MiscellaneousEquipments.MedicalSupplies);
+  char.AddEquipment(MiscellaneousEquipments.Familiar);
+  char.AddEquipment(MiscellaneousEquipments.Familiar);
+  expect(char.PointsCost).toBe(50);
+  expect(char.Equipment.find(e => e.Key === MiscellaneousEquipments.Familiar)?.Quantity).toBe(2);
+  char.RemoveEquipment(MiscellaneousEquipments.Familiar);
+  expect(char.Equipment.find(e => e.Key === MiscellaneousEquipments.Familiar)?.Quantity).toBe(1);
+  char.RemoveEquipment(MiscellaneousEquipments.Familiar);
+  expect(char.Equipment.find(e => e.Key === MiscellaneousEquipments.Familiar)).toBeUndefined();
 });

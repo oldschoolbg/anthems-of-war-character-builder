@@ -119,17 +119,38 @@ export class Character implements Moveable, Physical, Magicable, IsCommander {
   AddTrait(key: Traits) : Character {
     const trait = Trait.Options.find(t => t.Key === key);
     if (trait !== undefined) {
-      this._traits.push(trait);
-      trait.AddEffect(this);
+      
+      const kryptonite = this._traits.filter(i => trait.Kryptonite.includes(i.Key));
+      if (kryptonite.length > 0) {
+        for (let i = 0; i < kryptonite.length; i++) {
+          this.RemoveTrait(kryptonite[i].Key);
+        }
+      }
+
+      const index = this._traits.findIndex((e: Keyed) => key === e.Key);
+      if (index === -1) {
+        trait.AddEffect(this);
+        this._traits.push(trait);
+      } else {
+        let t = this._traits[index];
+        if (t.MultipleAllowed) {
+          t.AddEffect(this);
+          t.AddOne();
+        }
+      }
     }
     return this;
   }
 
-  RemoveTrait(key: Traits) : Character {
-    const index = this._traits.findIndex((e: Keyed) => key === e.Key);
-    if (index !== -1) {
-      this._traits[index].RemoveEffect(this);
-      this._traits.splice(index, 1);
+  RemoveTrait(key: Traits) : Character {    
+    const trait = this._traits.find((e: Keyed) => key === e.Key);
+    if (trait !== undefined) {
+      trait.RemoveEffect(this)
+      if (trait.Quantity === 1) {
+        this._traits = this._traits.filter(e => e.Key !== key);
+      } else {
+        trait.RemoveOne();
+      }
     }
     return this;
   }
@@ -148,13 +169,27 @@ export class Character implements Moveable, Physical, Magicable, IsCommander {
           ).join(', ')}.`,
         );
       }
-      this._equipment.push(equipment);
+      const index = this._equipment.findIndex((e: Keyed) => key === e.Key);
+      if (index === -1) {
+        this._equipment.push(equipment);
+      } else {
+        let e = this._equipment[index];
+        if (e.MultipleAllowed) {
+          e.AddOne();
+        }
+      }
     }
     return this;
   }
   RemoveEquipment(key: MiscellaneousEquipments) : Character {
-    const index = this._equipment.findIndex((e: Keyed) => key === e.Key);
-    this._equipment.splice(index, 1);
+    const equipment = this._equipment.find((e: Keyed) => key === e.Key);
+    if (equipment !== undefined) {
+      if (equipment.Quantity === 1) {
+        this._equipment = this._equipment.filter(e => e.Key !== key);
+      } else {
+        equipment.RemoveOne();
+      }
+    }
     return this;
   }
 
@@ -166,21 +201,27 @@ export class Character implements Moveable, Physical, Magicable, IsCommander {
       weapon = Weapon.Options.find(t => t.Key === key);
     }
     if (weapon !== undefined) {
-      if (this._weapons.find(t => t.Key === Weapons.Unarmed)) {
-        this._weapons = [];
+      const index = this._weapons.findIndex((e: Keyed) => key === e.Key);
+      if (index === -1) {
+        this._weapons.push(weapon);
+      } else {
+        let w = this._weapons[index];
+        if (w.MultipleAllowed) {
+          w.AddOne();
+        }
       }
-      this._weapons.push(weapon);
     }
     return this;
   }
   RemoveWeapon(key: Weapons) : Character {
-    const index = this._weapons.findIndex((e: Keyed) => key === e.Key);
-    if (index !== -1) {
-      this._weapons.splice(index, 1);
-      if (this._weapons.length === 0) {
+    const weapon = this._weapons.find((e: Keyed) => key === e.Key);
+    if (weapon !== undefined) {
+      if (weapon.Quantity === 1) {
         this._weapons = [
           Weapon.Unarmed()
         ];
+      } else {
+        weapon.RemoveOne();
       }
     }
     return this;

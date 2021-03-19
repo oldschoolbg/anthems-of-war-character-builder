@@ -1,5 +1,5 @@
 import { WeaponMatrix, EquipmentProperty, WeaponStat, EquipmentProperties } from '../defs';
-import { CanAttack, CanHaveMagicalCharges, Keyed, SpellCharge } from '../interfaces';
+import { CanAttack, CanHaveMagicalCharges, Keyed, Multiple, SpellCharge } from '../interfaces';
 import { CanHaveProperties } from './shared_implementations/can_have_properties';
 
 export enum Weapons {
@@ -29,7 +29,7 @@ export enum Weapons {
   WarBanner = 'War Banner'
 }
 
-export class Weapon extends CanHaveProperties implements CanAttack, Keyed, CanHaveMagicalCharges {
+export class Weapon extends CanHaveProperties implements CanAttack, Keyed, CanHaveMagicalCharges, Multiple {
   constructor(key: Weapons | string, speed: number, strength: number) {
     super('WEAPON');
     this._key = key;
@@ -79,23 +79,42 @@ export class Weapon extends CanHaveProperties implements CanAttack, Keyed, CanHa
   get Speed(): number { return this._speed; };
   private _strength: number;
   get Strength(): number { return this._strength; };
+  private _range = 1;
   get Range(): string {
-    const range = this.Properties.filter(p => p.Key === EquipmentProperties.Ranged).length
-    if (range > 0) {
-      return `${range * 3}"`;
+    const ranged = this.Properties.find(p => p.Key === EquipmentProperties.Ranged);
+    if (ranged !== undefined) {
+      return `${this._range}"`;
     }
-    return 'Melee'
+    return `Melee (${this._range}")`
+  }
+  get MultipleAllowed(): boolean { return true; };
+  private _quantity = 1;
+  get Quantity(): number {
+    return this._quantity;
   }
   
   readonly BaseCost: number = 0;
   get PointsCost(): number {
-    return this.BaseCost
-    + this._properties.map((p: EquipmentProperty) => p.PointsCost).reduce((a, b) => a + b, 0)
-    + this._spellCharges.map((sc: SpellCharge) => sc.Spell.ChargeCost * sc.NumberOfCharges).reduce((a, b) => a + b, 0);
+    return (
+      this.BaseCost
+      + this._properties.map((p: EquipmentProperty) => p.PointsCost).reduce((a, b) => a + b, 0)
+      + this._spellCharges.map((sc: SpellCharge) => sc.Spell.ChargeCost * sc.NumberOfCharges).reduce((a, b) => a + b, 0)
+    ) * this._quantity;
   }
   private _spellCharges: SpellCharge[] = [];
   get SpellCharges(): SpellCharge[] {
     return this._spellCharges;
+  }
+
+  AddOne(): Weapon {
+    this._quantity += 1;
+    return this;
+  }
+  RemoveOne(): Weapon {
+    if (this._quantity > 0) {
+      this._quantity -= 1;
+    }
+    return this;
   }
 
   AdjustSpeed(by: number) {
@@ -103,6 +122,13 @@ export class Weapon extends CanHaveProperties implements CanAttack, Keyed, CanHa
   }
   AdjustStrength(by: number) {
     this._strength += by;
+  }
+  AdjustRange(by: number) {
+    this._range += by;
+  }
+  
+  AllowMultiple(): Weapon {
+    throw new Error("Multiple is always allowed for Weapons");
   }
 
   AddProperty(key: EquipmentProperties, ...props: any[]): Weapon {

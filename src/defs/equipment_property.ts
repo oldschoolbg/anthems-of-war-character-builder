@@ -2,6 +2,7 @@ import { WeaponStat } from './weapons_stat';
 import { CanAttack } from '../interfaces/can_attack';
 import { Key, Keyed } from '../interfaces';
 import { PropertyType } from '../objects/shared_implementations/can_have_properties';
+import { Multiple } from '../interfaces/multiple';
 
 export enum EquipmentProperties {
   Ranged = "Ranged",
@@ -18,7 +19,7 @@ export enum EquipmentProperties {
   OneHanded = "One Handed"
 }
 
-export class EquipmentProperty implements Keyed {
+export class EquipmentProperty implements Keyed, Multiple {
   constructor(key: EquipmentProperties, points: number, description: string) {
     this._points = points;
     this._key = key;
@@ -49,6 +50,10 @@ export class EquipmentProperty implements Keyed {
   get Description(): string { return this._description; }
   private _multipleAllowed: boolean = false;
   get MultipleAllowed(): boolean { return this._multipleAllowed; };
+  private _quantity = 1;
+  get Quantity(): number {
+    return this._quantity;
+  }
   private _allowedOn: PropertyType[] = [];
   private _addEffect: (weapon: CanAttack, property: EquipmentProperty, ...props: any[]) => void = (
     weapon: CanAttack,
@@ -67,11 +72,22 @@ export class EquipmentProperty implements Keyed {
   };
   get RemoveEffect() { return this._removeEffect; }
   private _prerequisites: Key[] = []
-  // weapon must have all these properties or you cannot add this property
+  // parent must have all these properties or you cannot add this property
   get Prerequisites(): Key[] { return this._prerequisites; } 
   private _kryptonite: Key[] = [];
-  // weapon cannot have both self and self.Kryptonite
+  // parent cannot have both self and self.Kryptonite
   get Kryptonite(): Key[] { return this._kryptonite; }
+
+  AddOne(): EquipmentProperty {
+    this._quantity += 1;
+    return this;
+  }
+  RemoveOne(): EquipmentProperty {
+    if (this._quantity > 0) {
+      this._quantity -= 1;
+    }
+    return this;
+  }
 
   setAllowedOn(allowedOn: PropertyType): EquipmentProperty {
     if (!this.IsAllowed(allowedOn)) {
@@ -82,7 +98,7 @@ export class EquipmentProperty implements Keyed {
   IsAllowed(allowedOn: PropertyType): boolean {
     return this._allowedOn.includes(allowedOn);
   }
-  setMultiple(): EquipmentProperty {
+  AllowMultiple(): EquipmentProperty {
     this._multipleAllowed = !this._multipleAllowed;
     return this;
   }
@@ -125,7 +141,10 @@ export class EquipmentProperty implements Keyed {
       'Add three inches of range for each time this is applied to the weapon. Must be applied at least once to ranged weapons',
     )
     .setAllowedOn('WEAPON')
-    .setMultiple();
+    .setAddEffect((weapon) => (weapon.AdjustRange(3)))
+    .setRemoveEffect((weapon) => (weapon.AdjustRange(-3)))
+    .setKryptonite(EquipmentProperties.LowDurability)
+    .AllowMultiple();
   }
   static HighCrit() : EquipmentProperty {
     return new EquipmentProperty(EquipmentProperties.HighCrit, 2, 'Critical hits with this weapon roll two armor checks.')
@@ -152,7 +171,9 @@ export class EquipmentProperty implements Keyed {
       'Can attack characters up to one inch away. Can reach over allies up to the max range. This can be added to a weapon multiple times.',
     )
     .setAllowedOn('WEAPON')
-    .setMultiple();
+    .setAddEffect((weapon) => (weapon.AdjustRange(1)))
+    .setRemoveEffect((weapon) => (weapon.AdjustRange(-1)))
+    .AllowMultiple();
   }
   static DualWield() : EquipmentProperty {
     return new EquipmentProperty(
@@ -216,7 +237,7 @@ export class EquipmentProperty implements Keyed {
       'When applied to melee weapons this represents an improvised, fragile, or poorly made item being used with each swing reducing its overall durability until it breaks.',
     )
       .setAllowedOn('WEAPON')
-      .setKryptonite(EquipmentProperty.Ranged().Key)
+      .setKryptonite(EquipmentProperties.Ranged)
       .setAddEffect((weapon: CanAttack, weaponProperty: EquipmentProperty, numberOfShots: 1 | 2 | 3 | 4) => {
         weaponProperty.AdjustPoints(numberOfShots - 5);
       })

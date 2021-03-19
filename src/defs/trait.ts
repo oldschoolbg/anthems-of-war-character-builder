@@ -1,4 +1,4 @@
-import { Keyed, Magicable, Moveable } from "../interfaces";
+import { Key, Keyed, Magicable, Moveable, Multiple } from "../interfaces";
 
 export enum Traits {
   Fast = "Fast",
@@ -10,7 +10,7 @@ export enum Traits {
   Strong = "Strong"
 }
 
-export class Trait implements Keyed {
+export class Trait implements Keyed, Multiple {
   constructor(key: Traits, pointsCost: number, description: string) {
     this._pointsCost = pointsCost;
     this._key = key;
@@ -30,11 +30,20 @@ export class Trait implements Keyed {
   }
 
   private _pointsCost: number;
-  get PointsCost(): number { return this._pointsCost; }
+  get PointsCost(): number { return this._pointsCost * this._quantity; }
   private _key: Traits;
   get Key(): Traits { return this._key; }
   private _description: string;
   get Description(): string { return this._description; }
+  private _multipleAllowed = false;
+  get MultipleAllowed(): boolean { return this._multipleAllowed; };
+  private _quantity = 1;
+  get Quantity(): number {
+    return this._quantity;
+  }
+  private _kryptonite: Key[] = [];
+  // parent cannot have both self and self.Kryptonite
+  get Kryptonite(): Key[] { return this._kryptonite; }
   private _addEffect: (char: Moveable | Magicable) => void = (char: Moveable | Magicable) => {
     return;
   };
@@ -44,12 +53,38 @@ export class Trait implements Keyed {
   };
   get RemoveEffect() : (char: Moveable | Magicable) => void { return this._removeEffect; }
 
+  AddOne(): Trait {
+    this._quantity += 1;
+    return this;
+  }
+  RemoveOne(): Trait {
+    if (this._quantity > 0) {
+      this._quantity -= 1;
+    }
+    return this;
+  }
+
   setAddEffect(addEffect: (char: Moveable | Magicable) => void): Trait {
     this._addEffect = addEffect;
     return this;
   }
   setRemoveEffect(removeEffect: (char: Moveable | Magicable) => void): Trait {
     this._removeEffect = removeEffect;
+    return this;
+  }
+  setKryptonite(key: Key): Trait {
+    if (!this._kryptonite.find((p: Key) => p === key)) {
+      this._kryptonite.push(key);
+    }
+    return this;
+  }
+  removeKryptonite(key: Key): Trait {
+    this._kryptonite = this._kryptonite.filter((p: Key) => p !== key);
+    return this;
+  }
+  
+  AllowMultiple(): Trait {
+    this._multipleAllowed = true;
     return this;
   }
 
@@ -74,7 +109,9 @@ export class Trait implements Keyed {
     })
     .setRemoveEffect((char: Moveable | Magicable) => {
       (char as Moveable).MOV.AdjustBy(1);
-    });
+    })
+    .setKryptonite(Traits.Fast)
+    .AllowMultiple();
   }
   static Fast() : Trait {
     return new Trait(Traits.Fast, 2, 'Add 1 to character’s MOV value. Can be applied multiple times')
@@ -83,7 +120,9 @@ export class Trait implements Keyed {
     })
     .setRemoveEffect((char: Moveable | Magicable) => {
       (char as Moveable).MOV.AdjustBy(-1);
-    });
+    })
+    .setKryptonite(Traits.Slow)
+    .AllowMultiple();
   }
   static Flying() : Trait {
     return new Trait(

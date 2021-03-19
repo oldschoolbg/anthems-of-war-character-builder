@@ -1,6 +1,6 @@
 import { IsCommander, Keyed, Magicable } from '../interfaces';
 import { CharacterClass } from './character_class';
-import { Trait } from './trait';
+import { Trait, Traits } from './trait';
 
 export enum Skills {
   ArmourTraining = "Armour Training",
@@ -567,9 +567,9 @@ export class Skill implements Keyed {
       Skills.LatentSpellcaster,
       ''
     )
-    .setKryptonite(Trait.Spellcaster().Key)
-    .setKryptonite(Skill.MultiSchoolSpellcaster().Key)
-    .setKryptonite(Skill.VersatileSpellcaster().Key)
+    .setKryptonite(Traits.Spellcaster)
+    .setKryptonite(Skills.MultiSchoolSpellcaster)
+    .setKryptonite(Skills.VersatileSpellcaster)
     .setAddEffect((char: Magicable | IsCommander) => {
       (char as Magicable).SetSpellPoolLimit(1);
       (char as Magicable).SetSpellcastingSchoolsLimit(1);

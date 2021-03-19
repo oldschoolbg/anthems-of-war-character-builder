@@ -1,4 +1,4 @@
-import { CanHaveMagicalCharges, Keyed, SpellCharge } from "../interfaces";
+import { CanHaveMagicalCharges, Keyed, Multiple, SpellCharge } from "../interfaces";
 import { Trait, EquipmentProperty, EquipmentProperties } from "../defs";
 import { CanHaveProperties } from "./shared_implementations/can_have_properties";
 
@@ -16,7 +16,7 @@ export enum MiscellaneousEquipments {
   Trinkets = 'Trinkets'
 }
 
-export class MiscellaneousEquipment extends CanHaveProperties implements Keyed, CanHaveMagicalCharges {
+export class MiscellaneousEquipment extends CanHaveProperties implements Keyed, CanHaveMagicalCharges, Multiple {
   constructor(key: MiscellaneousEquipments, description: string, pointsCost: number) {
     super('MISC');
     this._key = key;
@@ -44,11 +44,18 @@ export class MiscellaneousEquipment extends CanHaveProperties implements Keyed, 
   get Key(): MiscellaneousEquipments { return this._key }
   private _description: string;
   get Description(): string  { return this._description}
+  get MultipleAllowed(): boolean { return true; };
+  private _quantity = 1;
+  get Quantity(): number {
+    return this._quantity;
+  }
   private _pointsCost: number;
   get PointsCost(): number {
-    return this._pointsCost
-    + this._properties.map((p: EquipmentProperty) => p.PointsCost).reduce((a, b) => a + b, 0)
-    + this._spellCharges.map((sc: SpellCharge) => sc.Spell.ChargeCost * sc.NumberOfCharges).reduce((a, b) => a + b, 0);
+    return (
+      this._pointsCost
+      + this._properties.map((p: EquipmentProperty) => p.PointsCost).reduce((a, b) => a + b, 0)
+      + this._spellCharges.map((sc: SpellCharge) => sc.Spell.ChargeCost * sc.NumberOfCharges).reduce((a, b) => a + b, 0)
+    ) * this._quantity;
   }
   private _prerequisites: Keyed[] = []
   // weapon must have all these properties or you cannot add this property
@@ -58,6 +65,21 @@ export class MiscellaneousEquipment extends CanHaveProperties implements Keyed, 
     return this._spellCharges;
   }
 
+  AddOne(): MiscellaneousEquipment {
+    this._quantity += 1;
+    return this;
+  }
+  RemoveOne(): MiscellaneousEquipment {
+    if (this._quantity > 0) {
+      this._quantity -= 1;
+    }
+    return this;
+  }
+
+
+  AllowMultiple(): Trait {
+    throw new Error("Multiple is always allowed for Miscellaneous Equipment");
+  }
   setPrerequisite(prop: Keyed): MiscellaneousEquipment {
     if (!this._prerequisites.find((p: Keyed) => p.Key === prop.Key)) {
       this._prerequisites.push(prop);

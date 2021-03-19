@@ -8,11 +8,13 @@ test('Invalid strength and speed', () => {
 });
 test('Adding Two Handed to Dual Wield', () => {
   const dualWield = new Weapon('dual wield', 2, 3)
-  .AddProperty(EquipmentProperties.DualWield);
-  expect(() => { dualWield.AddProperty(EquipmentProperties.TwoHanded); }).toThrowError('Cannot add Two Handed as Equipment already has Dual Wield.');
+  .AddProperty(EquipmentProperties.DualWield)
+  .AddProperty(EquipmentProperties.TwoHanded);
+  expect(dualWield.Properties.find(p => p.Key === EquipmentProperties.DualWield)).toBeUndefined();
 });
 test('Adding Dual Wield to Two Handed', () => {
   const twoHanded = new Weapon('2-handed', 2, 3)
-  .AddProperty(EquipmentProperties.TwoHanded);
-  expect(() => { twoHanded.AddProperty(EquipmentProperties.DualWield); }).toThrowError('Cannot add Dual Wield as Equipment already has Two Handed.');
+  .AddProperty(EquipmentProperties.TwoHanded)
+  .AddProperty(EquipmentProperties.DualWield);
+  expect(twoHanded.Properties.find(p => p.Key === EquipmentProperties.TwoHanded)).toBeUndefined();
 });

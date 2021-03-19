@@ -43,11 +43,9 @@ export abstract class CanHaveProperties {
     }
     const kryptonite = this._properties.filter(i => equipmentProperty.Kryptonite.includes(i.Key));
     if (kryptonite.length > 0) {
-      throw new Error(
-        `Cannot add ${equipmentProperty.Key} as Equipment already has ${equipmentProperty.Kryptonite.map(
-          (p) => p,
-        ).join(', ')}.`,
-      );
+      for (let i = 0; i < kryptonite.length; i++) {
+        this.RemoveProperty(kryptonite[i].Key);
+      }
     }
     this._properties.push(equipmentProperty);
     return equipmentProperty;
