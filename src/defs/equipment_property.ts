@@ -1,5 +1,5 @@
 import { WeaponStat } from './weapons_stat';
-import { CanAttack } from '../interfaces/can_attack';
+import { CanAttack, HasRange } from '../interfaces/can_attack';
 import { Key, Keyed } from '../interfaces';
 import { PropertyType } from '../objects/shared_implementations/can_have_properties';
 import { Multiple } from '../interfaces/multiple';
@@ -102,11 +102,11 @@ export class EquipmentProperty implements Keyed, Multiple {
     this._multipleAllowed = !this._multipleAllowed;
     return this;
   }
-  setAddEffect(addEffect: (weapon: CanAttack, property: EquipmentProperty, ...props: any[]) => void): EquipmentProperty {
+  setAddEffect(addEffect: (weapon: CanAttack | HasRange, property: EquipmentProperty, ...props: any[]) => void): EquipmentProperty {
     this._addEffect = addEffect;
     return this;
   }
-  setRemoveEffect(removeEffect: (weapon: CanAttack, property: EquipmentProperty, ...props: any[]) => void): EquipmentProperty {
+  setRemoveEffect(removeEffect: (weapon: CanAttack | HasRange, property: EquipmentProperty, ...props: any[]) => void): EquipmentProperty {
     this._removeEffect = removeEffect;
     return this;
   }
@@ -141,8 +141,8 @@ export class EquipmentProperty implements Keyed, Multiple {
       'Add three inches of range for each time this is applied to the weapon. Must be applied at least once to ranged weapons',
     )
     .setAllowedOn('WEAPON')
-    .setAddEffect((weapon) => (weapon.AdjustRange(3)))
-    .setRemoveEffect((weapon) => (weapon.AdjustRange(-3)))
+    .setAddEffect((weapon) => ((weapon as HasRange).AdjustRange(3)))
+    .setRemoveEffect((weapon) => ((weapon as HasRange).AdjustRange(-3)))
     .setKryptonite(EquipmentProperties.LowDurability)
     .AllowMultiple();
   }
@@ -171,8 +171,8 @@ export class EquipmentProperty implements Keyed, Multiple {
       'Can attack characters up to one inch away. Can reach over allies up to the max range. This can be added to a weapon multiple times.',
     )
     .setAllowedOn('WEAPON')
-    .setAddEffect((weapon) => (weapon.AdjustRange(1)))
-    .setRemoveEffect((weapon) => (weapon.AdjustRange(-1)))
+    .setAddEffect((weapon) => ((weapon as HasRange).AdjustRange(1)))
+    .setRemoveEffect((weapon) => ((weapon as HasRange).AdjustRange(-1)))
     .AllowMultiple();
   }
   static DualWield() : EquipmentProperty {
@@ -182,8 +182,8 @@ export class EquipmentProperty implements Keyed, Multiple {
       'Add one to this weapon’s speed. Incompatible with the 2-handed property. When added to a weapon, this “doubles” the weapon. For example, a knife has a SPD of 3; a knife with Dual Wield will increase a character’s weapon SPD to 4, as well as occupy the character’s off-hand. This represents a character carrying one weapon in each hand and being trained to use them both at the same time. In addition to this, a character using dual wielded weapons can perform a defensive posture long action attack that reduces this weapon’s SPD by 1 but increases their armor against melee attacks by 1. This effect lasts until another order is spent on them or until they are knocked unconscious. Using a standard action while outside melee combat, this character can enter the same defensive state.',
     )
       .setAllowedOn('WEAPON')
-      .setAddEffect((weapon) => (weapon.AdjustSpeed(1)))
-      .setRemoveEffect((weapon) => (weapon.AdjustSpeed(-1)))
+      .setAddEffect((weapon) => ((weapon as CanAttack).AdjustSpeed(1)))
+      .setRemoveEffect((weapon) => ((weapon as CanAttack).AdjustSpeed(-1)))
       .setKryptonite(EquipmentProperties.TwoHanded);
   }
   static MoraleBoosting() : EquipmentProperty {
@@ -203,13 +203,13 @@ export class EquipmentProperty implements Keyed, Multiple {
       'Ranged weapons with this property may use DEX instead of PHY when attacking and reacting in melee combat. This property only costs 1 point if the weapon also has the low ammo property.',
     )
       .setAllowedOn('WEAPON')
-      .setAddEffect((weapon: CanAttack, weaponProperty: EquipmentProperty, selectedWeaponStat: WeaponStat[]) => {
-        if (weapon.Properties.find((p: EquipmentProperty) => p.Key === EquipmentProperties.LowAmmo)) {
+      .setAddEffect((weapon: CanAttack | HasRange, weaponProperty: EquipmentProperty, selectedWeaponStat: WeaponStat[]) => {
+        if ((weapon as CanAttack).Properties.find((p: EquipmentProperty) => p.Key === EquipmentProperties.LowAmmo)) {
           weaponProperty.AdjustPoints(-1);
         }
       })
-      .setRemoveEffect((weapon: CanAttack, weaponProperty: EquipmentProperty, selectedWeaponStat: WeaponStat[]) => {
-        if (weapon.Properties.find((p: EquipmentProperty) => p.Key === EquipmentProperties.LowAmmo)) {
+      .setRemoveEffect((weapon: CanAttack | HasRange, weaponProperty: EquipmentProperty, selectedWeaponStat: WeaponStat[]) => {
+        if ((weapon as CanAttack).Properties.find((p: EquipmentProperty) => p.Key === EquipmentProperties.LowAmmo)) {
           weaponProperty.AdjustPoints(1);
         }
       })
@@ -223,10 +223,10 @@ export class EquipmentProperty implements Keyed, Multiple {
     )
       .setAllowedOn('WEAPON')
       .setPrerequisite(EquipmentProperties.Ranged)
-      .setAddEffect((weapon: CanAttack, weaponProperty: EquipmentProperty, numberOfShots: 1 | 2 | 3 | 4) => {
+      .setAddEffect((weapon: CanAttack | HasRange, weaponProperty: EquipmentProperty, numberOfShots: 1 | 2 | 3 | 4) => {
         weaponProperty.AdjustPoints(numberOfShots - 5);
       })
-      .setRemoveEffect((weapon: CanAttack, weaponProperty: EquipmentProperty, numberOfShots: 1 | 2 | 3 | 4) => {
+      .setRemoveEffect((weapon: CanAttack | HasRange, weaponProperty: EquipmentProperty, numberOfShots: 1 | 2 | 3 | 4) => {
         weaponProperty.AdjustPoints(-(numberOfShots - 5));
       });
   }
@@ -238,10 +238,10 @@ export class EquipmentProperty implements Keyed, Multiple {
     )
       .setAllowedOn('WEAPON')
       .setKryptonite(EquipmentProperties.Ranged)
-      .setAddEffect((weapon: CanAttack, weaponProperty: EquipmentProperty, numberOfShots: 1 | 2 | 3 | 4) => {
+      .setAddEffect((weapon: CanAttack | HasRange, weaponProperty: EquipmentProperty, numberOfShots: 1 | 2 | 3 | 4) => {
         weaponProperty.AdjustPoints(numberOfShots - 5);
       })
-      .setRemoveEffect((weapon: CanAttack, weaponProperty: EquipmentProperty, numberOfShots: 1 | 2 | 3 | 4) => {
+      .setRemoveEffect((weapon: CanAttack | HasRange, weaponProperty: EquipmentProperty, numberOfShots: 1 | 2 | 3 | 4) => {
         weaponProperty.AdjustPoints(-(numberOfShots - 5));
       });
   }

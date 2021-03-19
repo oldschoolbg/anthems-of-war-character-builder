@@ -1,5 +1,5 @@
 import { WeaponMatrix, EquipmentProperty, WeaponStat, EquipmentProperties } from '../defs';
-import { CanAttack, CanHaveMagicalCharges, Keyed, Multiple, SpellCharge } from '../interfaces';
+import { CanAttack, CanHaveMagicalCharges, HasRange, Keyed, Multiple, SpellCharge } from '../interfaces';
 import { CanHaveProperties } from './shared_implementations/can_have_properties';
 
 export enum Weapons {
@@ -29,7 +29,7 @@ export enum Weapons {
   WarBanner = 'War Banner'
 }
 
-export class Weapon extends CanHaveProperties implements CanAttack, Keyed, CanHaveMagicalCharges, Multiple {
+export class Weapon extends CanHaveProperties implements CanAttack, HasRange, Keyed, CanHaveMagicalCharges, Multiple {
   constructor(key: Weapons | string, speed: number, strength: number) {
     super('WEAPON');
     this._key = key;

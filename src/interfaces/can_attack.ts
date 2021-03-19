@@ -5,8 +5,11 @@ export interface CanAttack {
   Strength: number;
   AdjustSpeed(by: number) : void;
   AdjustStrength(by: number) : void;
-  AdjustRange(bg: number): void;
   Properties: EquipmentProperty[];
   // MakeMagical(...)
+}
+
+export interface HasRange {
+  AdjustRange(bg: number): void;
 }
 
