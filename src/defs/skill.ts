@@ -72,9 +72,10 @@ export enum Skills {
 }
 
 export class Skill implements Keyed {
-  constructor(key: Skills, description: string) {
+  constructor(key: Skills, description: string, shortDescription?: string) {
     this._key = key;
     this._description = description;
+    this._shortDescription = shortDescription;
   }
 
   static get Options(): Skill[] {
@@ -168,6 +169,8 @@ export class Skill implements Keyed {
   get Description(): string {
     return this._description;
   }
+  private _shortDescription: string | undefined;
+  get ShortDescription(): string | undefined { return this._shortDescription; }
 
   private _skillPrerequisites: Keyed[] = [];
   // character must have all these skills or you cannot add this skill
