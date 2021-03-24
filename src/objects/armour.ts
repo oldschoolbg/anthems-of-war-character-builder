@@ -62,7 +62,7 @@ export class Armour extends CanHaveProperties implements Keyed, CanHaveMagicalCh
   }
 
   static None() : Armour {
-    return new Armour(ArmourType.None, '', 0);
+    return new Armour(ArmourType.None, '+0 to armor checks', 0);
   }
   static LightArmour() : Armour {
     return new Armour(ArmourType.LightArmour, '+2 to armor checks', 3);

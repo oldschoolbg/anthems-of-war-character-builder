@@ -1,7 +1,7 @@
 import { Character } from '../index';
 import { Trait, Traits } from '../defs/trait';
 import { Potion, Potions } from '../objects/potion';
-import { Armour, Weapon, Weapons } from '../objects';
+import { Armour, ArmourType, Weapon, Weapons } from '../objects';
 import { MiscellaneousEquipment, MiscellaneousEquipments } from '../objects/miscellaneous_equipment';
 import { Shield } from '../objects/shield';
 import { EquipmentProperties, EquipmentProperty } from '../defs';
@@ -81,7 +81,7 @@ test('Ratfolk Warrior', () => {
   const char = Character.Regular();
   char.PHY.Value = 2;
   char.AddWeapon(Weapons.OneHandedSpear);
-  char.AddArmour(Armour.LightArmour());
+  char.SetArmour(ArmourType.LightArmour);
   expect(char.PointsCost).toBe(26);
 });
 test('Ratfolk Brute', () => {
@@ -105,7 +105,7 @@ test('Halfling Militia Archer', () => {
   const char = Character.Instinct();
   char.DEX.Value = 3;
   char.AddWeapon(Weapons.Shortbow);
-  char.AddArmour(Armour.LightArmour());
+  char.SetArmour(ArmourType.LightArmour);
   expect(char.PointsCost).toBe(24);
 });
 test('Halfling Militia Spear', () => {
@@ -113,7 +113,7 @@ test('Halfling Militia Spear', () => {
   char.PHY.Value = 3;
   char.DEX.Value = 1;
   char.AddWeapon(Weapons.OneHandedSpear);
-  char.AddArmour(Armour.LightArmour());
+  char.SetArmour(ArmourType.LightArmour);
   expect(char.PointsCost).toBe(25);
 });
 test('Bandit Archer', () => {
@@ -152,7 +152,7 @@ test('Knight Errant', () => {
   char.DEX.Value = 2;
   char.CON.Value = 2;
   char.AddWeapon(Weapons.OneHandedSpear);
-  char.AddArmour(Armour.MediumArmour());
+  char.SetArmour(ArmourType.MediumArmour);
   char.AddShield(Shield.Shield());
   expect(char.PointsCost).toBe(48);
 });
@@ -165,7 +165,7 @@ test('Wooden Construct', () => {
     .AddProperty(EquipmentProperties.OneHanded);
   expect(doubleHandCrossbow.PointsCost).toBe(6);
   char.AddWeapon(doubleHandCrossbow);
-  char.AddArmour(Armour.LightArmour());
+  char.SetArmour(ArmourType.LightArmour);
   expect(char.PointsCost).toBe(38);
 });
 test('Wandering Seer', () => {

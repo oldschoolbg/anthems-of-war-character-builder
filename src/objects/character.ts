@@ -5,7 +5,7 @@ import { MiscellaneousEquipment, MiscellaneousEquipments } from './miscellaneous
 import { Potion, Potions } from './potion';
 import { Skill, Skills } from '../defs/skill';
 import { Weapon, Weapons } from './weapon';
-import { Armour } from './armour';
+import { Armour, ArmourType } from './armour';
 import { Shield } from './shield';
 import { Elemental } from './magic';
 import { CharacterClass, CharacterClasses } from '../defs/character_class';
@@ -293,15 +293,13 @@ export class Character implements Moveable, Physical, Magicable, IsCommander {
     return this;
   }
 
-  AddArmour(armour: Armour) : Character {
-    this._armour = armour;
+  SetArmour(key: ArmourType) : Character {
+    const armour = Armour.Options.find(m => m.Key === key);
+    if (armour !== undefined) {
+      this._armour = armour;
+    }
     return this;
   }
-  RemoveArmour  () : Character {
-    this._armour = Armour.None();
-    return this;
-  }
-
   AddShield(shield: Shield) : Character {
     this._shield = shield;
     return this;

@@ -91,7 +91,7 @@ export class Elemental implements Moveable, Keyed {
     return this;
   }
 
-  AddArmour(armour: Armour) : Elemental {
+  SetArmour(armour: Armour) : Elemental {
     this._armour = armour;
     return this;
   }
@@ -102,7 +102,7 @@ export class Elemental implements Moveable, Keyed {
 
   static AirElemental(): Elemental {
     const result = new Elemental(Elementals.AirElemental)
-    .AddArmour(new Armour('Buffetting Wind', '+2 to armor checks', 2))
+    .SetArmour(new Armour('Buffetting Wind', '+2 to armor checks', 2))
     .AddWeapon(new Weapon('Windy Assualt', 4, 1));
     result.MOV.Value = 4;
     result.PHY.Value = 3;
@@ -128,7 +128,7 @@ export class Elemental implements Moveable, Keyed {
     .AddTrait(Traits.Large)
     .AddTrait(Traits.Slow)
     .AddWeapon(new Weapon('Rock Slam', 1, 6))
-    .AddArmour(new Armour('Stone Armor', '+4 to armor checks', 5));
+    .SetArmour(new Armour('Stone Armor', '+4 to armor checks', 5));
     result.MOV.Value = 4;
     result.PHY.Value = 3;
     result.DEX.Value = 2;
@@ -151,7 +151,7 @@ export class Elemental implements Moveable, Keyed {
   static ShadeAssassin(): Elemental {
     const result = new Elemental(Elementals.ShadeAssassin)
     .AddWeapon(Weapon.Dagger())
-    .AddArmour(Armour.LightArmour());
+    .SetArmour(Armour.LightArmour());
     result.MOV.Value = 4;
     result.PHY.Value = 1;
     result.DEX.Value = 3;
