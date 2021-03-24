@@ -1,10 +1,10 @@
 import { Character } from '../index';
-import { Trait, Traits } from '../defs/trait';
-import { Potion, Potions } from '../objects/potion';
-import { Armour, ArmourType, Weapon, Weapons } from '../objects';
-import { MiscellaneousEquipment, MiscellaneousEquipments } from '../objects/miscellaneous_equipment';
-import { Shield, Shields } from '../objects/shield';
-import { EquipmentProperties, EquipmentProperty } from '../defs';
+import { Traits } from '../defs/trait';
+import { Potions } from '../objects/potion';
+import { ArmourType, Weapon, Weapons } from '../objects';
+import { MiscellaneousEquipments } from '../objects/miscellaneous_equipment';
+import { Shields } from '../objects/shield';
+import { EquipmentProperties } from '../defs';
 
 test('Instinct Character', () => {
   expect(Character.Instinct().PointsCost).toBe(10);

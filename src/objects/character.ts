@@ -213,14 +213,18 @@ export class Character implements Moveable, Physical, Magicable, IsCommander {
     return this;
   }
   RemoveWeapon(key: Weapons) : Character {
-    const weapon = this._weapons.find((e: Keyed) => key === e.Key);
-    if (weapon !== undefined) {
+    const index = this._weapons.findIndex((e: Keyed) => key === e.Key);
+    if (index !== -1) {
+      const weapon = this._weapons[index];
       if (weapon.Quantity === 1) {
+        this._weapons.splice(index, 1);
+      } else {
+        weapon.RemoveOne();
+      }
+      if (this._weapons.length === 0) {
         this._weapons = [
           Weapon.Unarmed()
         ];
-      } else {
-        weapon.RemoveOne();
       }
     }
     return this;
