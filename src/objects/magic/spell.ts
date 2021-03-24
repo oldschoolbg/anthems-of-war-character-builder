@@ -1586,7 +1586,7 @@ export class Spell implements Keyed {
       'P'
     );
   };
-  static ArmourOfTheGods(): Spell {
+  static ArmorOfTheGods(): Spell {
     return Spell.FourthCircle(
       'Armor of the Gods',
       'You touch an ally, coating them with a golden light. Until the beginning of your next turn, your target gains +6 to their armor.',

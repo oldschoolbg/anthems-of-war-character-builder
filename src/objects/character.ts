@@ -5,7 +5,7 @@ import { MiscellaneousEquipment, MiscellaneousEquipments } from './miscellaneous
 import { Potion, Potions } from './potion';
 import { Skill, Skills } from '../defs/skill';
 import { Weapon, Weapons } from './weapon';
-import { Armour, ArmourType } from './armour';
+import { Armor, ArmorType } from './armour';
 import { Shield, Shields } from './shield';
 import { Elemental } from './magic';
 import { CharacterClass, CharacterClasses } from '../defs/character_class';
@@ -63,8 +63,8 @@ export class Character implements Moveable, Physical, Magicable, IsCommander {
   get Skills(): Skill[] { return this._skills; }
   private _weapons: Weapon[] = [];
   get Weapons(): Weapon[] { return this._weapons; }
-  private _armour = Armour.None();
-  get Armour(): Armour { return this._armour; }
+  private _armour = Armor.None();
+  get Armor(): Armor { return this._armour; }
   private _shield = Shield.None();
   get Shield(): Shield { return this._shield; }
 
@@ -85,7 +85,7 @@ export class Character implements Moveable, Physical, Magicable, IsCommander {
            + this.CON.PointsCost
            + this.MND.PointsCost
            + this.CharacterClass.PointsCost
-           + this.Armour.PointsCost
+           + this.Armor.PointsCost
            + this.Shield.PointsCost
            + this.Traits.map((t: Trait) => t.PointsCost).reduce((a, b) => a + b, 0)
            + this.Potions.map((p: Potion) => p.PointsCost).reduce((a, b) => a + b, 0)
@@ -238,21 +238,21 @@ export class Character implements Moveable, Physical, Magicable, IsCommander {
         throw new Error(
           `Cannot add ${skill.Key} as Character must have ${skill.TraitPrerequisites.map(
             (p) => p.Key,
-          ).join(', ')}.`,
+          ).join(', ')}.`
         );
       }
       if (skill.SkillPrerequisites.some((wp) => !this._skills.find((p: Keyed) => p.Key === wp.Key))) {
         throw new Error(
           `Cannot add ${skill.Key} as Character must have ${skill.SkillPrerequisites.map(
             (p) => p.Key,
-          ).join(', ')}.`,
+          ).join(', ')}.`
         );
       }
-      if (skill.CharacterClassPrerequisites.some((wp) => this._characterClass.Key === wp.Key)) {
+      if (!skill.CharacterClassPrerequisites.some((wp) => this._characterClass.Key === wp.Key)) {
         throw new Error(
           `Cannot add ${skill.Key} as Character must be ${skill.CharacterClassPrerequisites.map(
             (p) => p.Key,
-          ).join(', ')}.`,
+          ).join(', ')}.`
         );
       }
       if (skill.OnlyCommander && !this.IsCommander) {
@@ -297,8 +297,8 @@ export class Character implements Moveable, Physical, Magicable, IsCommander {
     return this;
   }
 
-  SetArmour(key: ArmourType) : Character {
-    const armour = Armour.Options.find(m => m.Key === key);
+  SetArmor(key: ArmorType) : Character {
+    const armour = Armor.Options.find(m => m.Key === key);
     if (armour !== undefined) {
       this._armour = armour;
     }

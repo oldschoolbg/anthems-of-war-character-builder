@@ -3,7 +3,7 @@ import { CharacterClass } from './character_class';
 import { Trait, Traits } from './trait';
 
 export enum Skills {
-  ArmourTraining = "Armour Training",
+  ArmorTraining = "Armor Training",
   Avenger = "Avenger",
   Backstab = "Backstab",
   BattleThrill = "Battle Thrill",
@@ -80,7 +80,7 @@ export class Skill implements Keyed {
 
   static get Options(): Skill[] {
     return [
-      Skill.ArmourTraining(),
+      Skill.ArmorTraining(),
       Skill.Avenger(),
       Skill.Backstab(),
       Skill.BattleThrill(),
@@ -268,9 +268,9 @@ export class Skill implements Keyed {
     return this;
   }
 
-  static ArmourTraining(): Skill {
+  static ArmorTraining(): Skill {
     return new Skill(
-      Skills.ArmourTraining,
+      Skills.ArmorTraining,
       ''
     );
   };

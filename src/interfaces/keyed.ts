@@ -1,4 +1,4 @@
-import { ArmourType, Elementals, MiscellaneousEquipments, Mounts, Potions, Shields, SpellSchools, Weapons } from "../objects";
+import { ArmorType, Elementals, MiscellaneousEquipments, Mounts, Potions, Shields, SpellSchools, Weapons } from "../objects";
 import { CharacterClasses, EquipmentProperties, Traits } from "../defs"
 import { Skills } from "../defs/skill";
 
@@ -11,7 +11,7 @@ export type Key = Traits |
                   EquipmentProperties |
                   Elementals |
                   SpellSchools | 
-                  ArmourType |
+                  ArmorType |
                   Potions |
                   Shields |
                   string

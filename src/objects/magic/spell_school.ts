@@ -364,7 +364,7 @@ export class SpellSchool implements Keyed {
     .AddSpell(Spell.RadiantForce())
     // fourth circle
     .AddSpell(Spell.Resurrect())
-    .AddSpell(Spell.ArmourOfTheGods());
+    .AddSpell(Spell.ArmorOfTheGods());
   };
 
   static Wild(): SpellSchool {

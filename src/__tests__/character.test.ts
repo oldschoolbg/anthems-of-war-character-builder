@@ -1,7 +1,7 @@
 import { Character } from '../index';
 import { Traits } from '../defs/trait';
 import { Potions } from '../objects/potion';
-import { ArmourType, Weapon, Weapons } from '../objects';
+import { ArmorType, Weapon, Weapons } from '../objects';
 import { MiscellaneousEquipments } from '../objects/miscellaneous_equipment';
 import { Shields } from '../objects/shield';
 import { EquipmentProperties } from '../defs';
@@ -81,7 +81,7 @@ test('Ratfolk Warrior', () => {
   const char = Character.Regular();
   char.PHY.Value = 2;
   char.AddWeapon(Weapons.OneHandedSpear);
-  char.SetArmour(ArmourType.LightArmour);
+  char.SetArmor(ArmorType.LightArmor);
   expect(char.PointsCost).toBe(26);
 });
 test('Ratfolk Brute', () => {
@@ -105,7 +105,7 @@ test('Halfling Militia Archer', () => {
   const char = Character.Instinct();
   char.DEX.Value = 3;
   char.AddWeapon(Weapons.Shortbow);
-  char.SetArmour(ArmourType.LightArmour);
+  char.SetArmor(ArmorType.LightArmor);
   expect(char.PointsCost).toBe(24);
 });
 test('Halfling Militia Spear', () => {
@@ -113,7 +113,7 @@ test('Halfling Militia Spear', () => {
   char.PHY.Value = 3;
   char.DEX.Value = 1;
   char.AddWeapon(Weapons.OneHandedSpear);
-  char.SetArmour(ArmourType.LightArmour);
+  char.SetArmor(ArmorType.LightArmor);
   expect(char.PointsCost).toBe(25);
 });
 test('Bandit Archer', () => {
@@ -152,7 +152,7 @@ test('Knight Errant', () => {
   char.DEX.Value = 2;
   char.CON.Value = 2;
   char.AddWeapon(Weapons.OneHandedSpear);
-  char.SetArmour(ArmourType.MediumArmour);
+  char.SetArmor(ArmorType.MediumArmor);
   char.SetShield(Shields.Shield);
   expect(char.PointsCost).toBe(48);
 });
@@ -165,7 +165,7 @@ test('Wooden Construct', () => {
     .AddProperty(EquipmentProperties.OneHanded);
   expect(doubleHandCrossbow.PointsCost).toBe(6);
   char.AddWeapon(doubleHandCrossbow);
-  char.SetArmour(ArmourType.LightArmour);
+  char.SetArmor(ArmorType.LightArmor);
   expect(char.PointsCost).toBe(38);
 });
 test('Wandering Seer', () => {

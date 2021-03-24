@@ -1,4 +1,4 @@
-import { Armour, Weapon, Weapons } from "..";
+import { Armor, Weapon, Weapons } from "..";
 import { Move, Physicality, Dexterity, Constitution, Mind, Trait, EquipmentProperty, CharacterClass, CharacterClasses, EquipmentProperties, Traits } from "../../defs";
 import { Moveable, Keyed } from "../../interfaces";
 
@@ -32,8 +32,8 @@ export class Elemental implements Moveable, Keyed {
   get Traits(): Trait[] { return this._traits; };
   private _weapons: Weapon[] = [];
   get Weapons(): Weapon[] { return this._weapons; }
-  private _armour = Armour.None();
-  get Armour(): Armour { return this._armour; }
+  private _armour = Armor.None();
+  get Armor(): Armor { return this._armour; }
 
   get PointsCost() : number {
     return 0;
@@ -91,18 +91,18 @@ export class Elemental implements Moveable, Keyed {
     return this;
   }
 
-  SetArmour(armour: Armour) : Elemental {
+  SetArmor(armour: Armor) : Elemental {
     this._armour = armour;
     return this;
   }
-  RemoveArmour  () : Elemental {
-    this._armour = Armour.None();
+  RemoveArmor  () : Elemental {
+    this._armour = Armor.None();
     return this;
   }
 
   static AirElemental(): Elemental {
     const result = new Elemental(Elementals.AirElemental)
-    .SetArmour(new Armour('Buffetting Wind', '+2 to armor checks', 2))
+    .SetArmor(new Armor('Buffetting Wind', '+2 to armor checks', 2))
     .AddWeapon(new Weapon('Windy Assualt', 4, 1));
     result.MOV.Value = 4;
     result.PHY.Value = 3;
@@ -128,7 +128,7 @@ export class Elemental implements Moveable, Keyed {
     .AddTrait(Traits.Large)
     .AddTrait(Traits.Slow)
     .AddWeapon(new Weapon('Rock Slam', 1, 6))
-    .SetArmour(new Armour('Stone Armor', '+4 to armor checks', 5));
+    .SetArmor(new Armor('Stone Armor', '+4 to armor checks', 5));
     result.MOV.Value = 4;
     result.PHY.Value = 3;
     result.DEX.Value = 2;
@@ -151,7 +151,7 @@ export class Elemental implements Moveable, Keyed {
   static ShadeAssassin(): Elemental {
     const result = new Elemental(Elementals.ShadeAssassin)
     .AddWeapon(Weapon.Dagger())
-    .SetArmour(Armour.LightArmour());
+    .SetArmor(Armor.LightArmor());
     result.MOV.Value = 4;
     result.PHY.Value = 1;
     result.DEX.Value = 3;
