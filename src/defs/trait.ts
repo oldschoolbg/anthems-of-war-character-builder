@@ -11,10 +11,11 @@ export enum Traits {
 }
 
 export class Trait implements Keyed, Multiple {
-  constructor(key: Traits, pointsCost: number, description: string) {
+  constructor(key: Traits, pointsCost: number, description: string, shortDescription?: string) {
     this._pointsCost = pointsCost;
     this._key = key;
     this._description = description;
+    this._shortDescription = shortDescription;
   }
 
   static get Options(): Trait[] {
@@ -35,6 +36,8 @@ export class Trait implements Keyed, Multiple {
   get Key(): Traits { return this._key; }
   private _description: string;
   get Description(): string { return this._description; }
+  private _shortDescription: string | undefined;
+  get ShortDescription(): string | undefined { return this._shortDescription; }
   private _multipleAllowed = false;
   get MultipleAllowed(): boolean { return this._multipleAllowed; };
   private _quantity = 1;

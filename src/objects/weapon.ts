@@ -13,7 +13,7 @@ export enum Weapons {
   TwoHandedAxe = 'Two Handed Axe',
   TwoHandedHammer = 'Two Handed Hammer',
   TwoHandedSword = 'Two Handed Sword',
-  TwoHandedPolearm = 'TwoHanded Polearm',
+  TwoHandedPolearm = 'Two Handed Polearm',
   Longbow = 'Longbow',
   Shortbow = 'Shortbow',
   Crossbow = 'Crossbow',
