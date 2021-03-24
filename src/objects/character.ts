@@ -6,7 +6,7 @@ import { Potion, Potions } from './potion';
 import { Skill, Skills } from '../defs/skill';
 import { Weapon, Weapons } from './weapon';
 import { Armour, ArmourType } from './armour';
-import { Shield } from './shield';
+import { Shield, Shields } from './shield';
 import { Elemental } from './magic';
 import { CharacterClass, CharacterClasses } from '../defs/character_class';
 
@@ -300,12 +300,11 @@ export class Character implements Moveable, Physical, Magicable, IsCommander {
     }
     return this;
   }
-  AddShield(shield: Shield) : Character {
-    this._shield = shield;
-    return this;
-  }
-  RemoveShield  () : Character {
-    this._shield = Shield.None();
+  SetShield(key: Shields) : Character {
+    const shield = Shield.Options.find(m => m.Key === key);
+    if (shield !== undefined) {
+      this._shield = shield;
+    }
     return this;
   }
 

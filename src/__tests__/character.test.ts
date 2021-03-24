@@ -3,7 +3,7 @@ import { Trait, Traits } from '../defs/trait';
 import { Potion, Potions } from '../objects/potion';
 import { Armour, ArmourType, Weapon, Weapons } from '../objects';
 import { MiscellaneousEquipment, MiscellaneousEquipments } from '../objects/miscellaneous_equipment';
-import { Shield } from '../objects/shield';
+import { Shield, Shields } from '../objects/shield';
 import { EquipmentProperties, EquipmentProperty } from '../defs';
 
 test('Instinct Character', () => {
@@ -128,7 +128,7 @@ test('Bandit Warrior', () => {
   char.PHY.Value = 3;
   char.DEX.Value = 1;
   char.AddWeapon(Weapons.OneHandedSpear);
-  char.AddShield(Shield.Shield());
+  char.SetShield(Shields.Shield);
   expect(char.PointsCost).toBe(29);
 });
 test('Bandit Cutthroat', () => {
@@ -153,7 +153,7 @@ test('Knight Errant', () => {
   char.CON.Value = 2;
   char.AddWeapon(Weapons.OneHandedSpear);
   char.SetArmour(ArmourType.MediumArmour);
-  char.AddShield(Shield.Shield());
+  char.SetShield(Shields.Shield);
   expect(char.PointsCost).toBe(48);
 });
 test('Wooden Construct', () => {
