@@ -89,7 +89,7 @@ export class Weapon extends CanHaveProperties implements CanAttack, HasRange, Ke
     if (reach !== undefined) {
       return `Melee (${this._range}")`;
     }
-    return `${this._range}"`;
+    return `Melee`;
   }
   get MultipleAllowed(): boolean { return true; };
   private _quantity = 1;

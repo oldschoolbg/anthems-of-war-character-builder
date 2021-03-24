@@ -77,3 +77,8 @@ test('Double Sword cost', () => {
 test('War Banner cost', () => {
   expect(Weapon.WarBanner().PointsCost).toBe(5);
 });
+
+
+test('melee weapon range', () => {
+  expect(Weapon.Knife().Range).toEqual('Melee');
+})
