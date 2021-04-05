@@ -248,7 +248,8 @@ export class Character implements Moveable, Physical, Magicable, IsCommander {
           ).join(', ')}.`
         );
       }
-      if (!skill.CharacterClassPrerequisites.some((wp) => this._characterClass.Key === wp.Key)) {
+      if (skill.CharacterClassPrerequisites.length > 0 &&
+        !skill.CharacterClassPrerequisites.some((wp) => this._characterClass.Key === wp.Key)) {
         throw new Error(
           `Cannot add ${skill.Key} as Character must be ${skill.CharacterClassPrerequisites.map(
             (p) => p.Key,
