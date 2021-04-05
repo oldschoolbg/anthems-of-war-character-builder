@@ -235,7 +235,7 @@ export class Character implements Moveable, Physical, Magicable, IsCommander {
     const skill = Skill.Options.find(t => t.Key === key);
     if (skill !== undefined) {
       const index = this._skills.findIndex((e: Keyed) => key === e.Key);
-      if (index !== -1) {      
+      if (index === -1) {      
         if (skill.TraitPrerequisites.some((wp) => !this._traits.find((p: Keyed) => p.Key === wp.Key))) {
           throw new Error(
             `Cannot add ${skill.Key} as Character must have ${skill.TraitPrerequisites.map(
