@@ -234,40 +234,42 @@ export class Character implements Moveable, Physical, Magicable, IsCommander {
   AddSkill(key: Skills) : Character {
     const skill = Skill.Options.find(t => t.Key === key);
     if (skill !== undefined) {
-      if (skill.TraitPrerequisites.some((wp) => !this._traits.find((p: Keyed) => p.Key === wp.Key))) {
-        throw new Error(
-          `Cannot add ${skill.Key} as Character must have ${skill.TraitPrerequisites.map(
-            (p) => p.Key,
-          ).join(', ')}.`
-        );
+      const index = this._skills.findIndex((e: Keyed) => key === e.Key);
+      if (index !== -1) {      
+        if (skill.TraitPrerequisites.some((wp) => !this._traits.find((p: Keyed) => p.Key === wp.Key))) {
+          throw new Error(
+            `Cannot add ${skill.Key} as Character must have ${skill.TraitPrerequisites.map(
+              (p) => p.Key,
+            ).join(', ')}.`
+          );
+        }
+        if (skill.SkillPrerequisites.some((wp) => !this._skills.find((p: Keyed) => p.Key === wp.Key))) {
+          throw new Error(
+            `Cannot add ${skill.Key} as Character must have ${skill.SkillPrerequisites.map(
+              (p) => p.Key,
+            ).join(', ')}.`
+          );
+        }
+        if (skill.CharacterClassPrerequisites.length > 0 &&
+          !skill.CharacterClassPrerequisites.some((wp) => this._characterClass.Key === wp.Key)) {
+          throw new Error(
+            `Cannot add ${skill.Key} as Character must be ${skill.CharacterClassPrerequisites.map(
+              (p) => p.Key,
+            ).join(', ')}.`
+          );
+        }
+        if (skill.OnlyCommander && !this.IsCommander) {
+          throw new Error(`Cannot add ${skill.Key} as this Character is not a Commander`)
+        }
+        skill.AddEffect(this, skill);
+        this._skills.push(skill);
       }
-      if (skill.SkillPrerequisites.some((wp) => !this._skills.find((p: Keyed) => p.Key === wp.Key))) {
-        throw new Error(
-          `Cannot add ${skill.Key} as Character must have ${skill.SkillPrerequisites.map(
-            (p) => p.Key,
-          ).join(', ')}.`
-        );
-      }
-      if (skill.CharacterClassPrerequisites.length > 0 &&
-        !skill.CharacterClassPrerequisites.some((wp) => this._characterClass.Key === wp.Key)) {
-        throw new Error(
-          `Cannot add ${skill.Key} as Character must be ${skill.CharacterClassPrerequisites.map(
-            (p) => p.Key,
-          ).join(', ')}.`
-        );
-      }
-      if (skill.OnlyCommander && !this.IsCommander) {
-        throw new Error(`Cannot add ${skill.Key} as this Character is not a Commander`)
-      }
-      skill.AddEffect(this, skill);
-      this._skills.push(skill);
     }
     return this;
   }
   RemoveSkill(key: Skills) : Character {
     const index = this._skills.findIndex((e: Keyed) => key === e.Key);
-    if (index !== -1) {
-      
+    if (index !== -1) {      
       this._skills[index].RemoveEffect(this, this._skills[index]);
       this._skills.splice(index, 1);
     }
