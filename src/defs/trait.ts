@@ -1,4 +1,5 @@
 import { Key, Keyed, Magicable, Moveable, Multiple } from "../interfaces";
+import { Skills } from "./skill";
 
 export enum Traits {
   Fast = "Fast",
@@ -140,6 +141,8 @@ export class Trait implements Keyed, Multiple {
       8,
       'This character can cast spells from one chosen school of magic.',
     )
+    .setKryptonite(Skills.LatentSpellcaster)
+    .setKryptonite(Skills.WitchHunter)
     .setAddEffect((char: Moveable | Magicable) => {
       (char as Magicable).SetSpellcastingSchoolsLimit(1);
     })

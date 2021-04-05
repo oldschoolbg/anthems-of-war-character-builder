@@ -120,9 +120,28 @@ export class Character implements Moveable, Physical, Magicable, IsCommander {
     const trait = Trait.Options.find(t => t.Key === key);
     if (trait !== undefined) {
       
-      const kryptonite = this._traits.filter(i => trait.Kryptonite.includes(i.Key));
-      for (const k of kryptonite) {
-        this.RemoveTrait(k.Key);
+
+      if (trait.Kryptonite.length > 0) {
+        const skillKrptonite = this.Skills.filter((s: Keyed) => {
+          return trait.Kryptonite.find(k => k === s.Key) !== undefined;
+        });
+        if (skillKrptonite.length > 0) {
+          throw new Error(
+            `Cannot add ${trait.Key} as Character has the ${skillKrptonite.map(
+              (p) => p.Key,
+            ).join(', ')} Skill.`
+          );
+        }
+        const traitKryptonite = this.Traits.filter((s: Keyed) => {
+          return trait.Kryptonite.find(k => k === s.Key) !== undefined;
+        });
+        if (traitKryptonite.length > 0) {
+          throw new Error(
+            `Cannot add ${trait.Key} as Character has the ${traitKryptonite.map(
+              (p) => p.Key,
+            ).join(', ')} Trait.`
+          );
+        }
       }
 
       const index = this._traits.findIndex((e: Keyed) => key === e.Key);
@@ -260,6 +279,28 @@ export class Character implements Moveable, Physical, Magicable, IsCommander {
         }
         if (skill.OnlyCommander && !this.IsCommander) {
           throw new Error(`Cannot add ${skill.Key} as this Character is not a Commander`)
+        }
+        if (skill.Kryptonite.length > 0) {
+          const skillKrptonite = this.Skills.filter((s: Keyed) => {
+            return skill.Kryptonite.find(k => k === s.Key) !== undefined;
+          });
+          if (skillKrptonite.length > 0) {
+            throw new Error(
+              `Cannot add ${skill.Key} as Character has the ${skillKrptonite.map(
+                (p) => p.Key,
+              ).join(', ')} Skill.`
+            );
+          }
+          const traitKryptonite = this.Traits.filter((s: Keyed) => {
+            return skill.Kryptonite.find(k => k === s.Key) !== undefined;
+          });
+          if (traitKryptonite.length > 0) {
+            throw new Error(
+              `Cannot add ${skill.Key} as Character has the ${traitKryptonite.map(
+                (p) => p.Key,
+              ).join(', ')} Trait.`
+            );
+          }
         }
         skill.AddEffect(this, skill);
         this._skills.push(skill);

@@ -40,14 +40,6 @@ test('Add Fast to Character', () => {
   expect(char.Traits.find(t => t.Key === Traits.Fast)).toBeUndefined();
 });
 
-test('Add Slow and Fast to Character', () => {
-  const char = Character.Instinct();
-  char.AddTrait(Traits.Slow);
-  char.AddTrait(Traits.Fast);
-  expect(char.Traits.length).toBe(1);
-  expect(char.MOV.Value).toBe(5);
-});
-
 test('Add and remove Fast from Character', () => {
   const char = Character.Instinct();
   char.AddTrait(Traits.Fast);
