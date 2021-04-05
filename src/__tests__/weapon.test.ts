@@ -1,3 +1,4 @@
+import { EquipmentProperties } from '../defs';
 import {
   Weapon,
 } from '../objects/weapon';
@@ -81,4 +82,19 @@ test('War Banner cost', () => {
 
 test('melee weapon range', () => {
   expect(Weapon.Knife().Range).toEqual('Melee');
-})
+});
+
+test('reach weapon range', () => {
+  expect(Weapon.TwoHandedPolearm().Range).toEqual('Melee (1")');
+});
+test('long reach weapon range', () => {
+  expect(Weapon.TwoHandedPolearm().AddProperty(EquipmentProperties.Reach).Range).toEqual('Melee (2")');
+});
+
+
+test('range weapon range', () => {
+  expect(Weapon.HandCrossbow().Range).toEqual('3"');
+});
+test('long range weapon range', () => {
+  expect(Weapon.Longbow().Range).toEqual('9"');
+});

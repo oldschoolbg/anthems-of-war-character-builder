@@ -79,11 +79,11 @@ export class Weapon extends CanHaveProperties implements CanAttack, HasRange, Ke
   get Speed(): number { return this._speed; };
   private _strength: number;
   get Strength(): number { return this._strength; };
-  private _range = 1;
+  private _range = 0;
   get Range(): string {
     const ranged = this.Properties.find(p => p.Key === EquipmentProperties.Ranged);
     if (ranged !== undefined) {
-      return `${this._range - 1}"`;
+      return `${this._range}"`;
     }
     const reach = this.Properties.find(p => p.Key === EquipmentProperties.Reach);
     if (reach !== undefined) {
