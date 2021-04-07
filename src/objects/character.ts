@@ -152,10 +152,6 @@ export class Character implements Moveable, Physical, Magicable, IsCommander {
     return this;
   }
 
-  HasTrait(key: Traits): boolean {
-    return this._traits.find(t => t.Key === key) !== undefined;
-  }
-
   AddEquipment(key: MiscellaneousEquipments) : Character {
     const equipment = MiscellaneousEquipment.Options.find(t => t.Key === key);
     if (equipment !== undefined) {

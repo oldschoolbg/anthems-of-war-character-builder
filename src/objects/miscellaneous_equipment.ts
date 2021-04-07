@@ -67,7 +67,7 @@ export class MiscellaneousEquipment extends CanHaveProperties implements Keyed, 
   }
 
   private _checkValidity(character: Character): string | undefined {
-    if (this._prerequisites.some((wp) => !character.Equipment.find((p: Keyed) => p.Key === wp.Key))) {
+    if (this._prerequisites.some((wp) => !character.Traits.find((p: Keyed) => p.Key === wp.Key))) {
       return `Cannot add ${this.Key} as Character must have ${this._prerequisites.map(
           (p) => p.Key,
         ).join(', ')}.`;
