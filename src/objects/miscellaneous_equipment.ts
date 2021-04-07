@@ -141,7 +141,6 @@ export class MiscellaneousEquipment extends CanHaveProperties implements Keyed, 
       'Spellcasters who have this item may add 1 to a single die roll in an order spent casting spells. You may choose to apply this bonus after you roll any spellcasting dice.',
       2
     )
-    .setPrerequisite(Trait.Spellcaster())
   }
   static Torch() : MiscellaneousEquipment {
     return  new MiscellaneousEquipment(
@@ -163,7 +162,6 @@ export class MiscellaneousEquipment extends CanHaveProperties implements Keyed, 
       'A spellcaster can choose one extra spell from their chosen Spell School for each instance of this item taken into battle.',
       2
     )
-    .setPrerequisite(Trait.Spellcaster())
   }
   static Horn() : MiscellaneousEquipment {
     return new MiscellaneousEquipment(

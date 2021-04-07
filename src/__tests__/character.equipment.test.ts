@@ -13,5 +13,5 @@ test('Add Spellcasting Implement to Character without Spellcaster Trait', () => 
   expect(() => { 
     Character.Regular()
     .AddEquipment(MiscellaneousEquipments.SpellcastingImplement)
-    }).toThrowError('Cannot add Spellcasting Implement as Character must have Spellcaster.');
+    }).not.toThrowError('Cannot add Spellcasting Implement as Character must have Spellcaster.');
 });
