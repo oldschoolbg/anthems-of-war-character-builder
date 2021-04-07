@@ -61,6 +61,9 @@ export class Character implements Moveable, Physical, Magicable, IsCommander {
   get Potions(): Potion[] { return this._potions; }
   private _skills: Skill[] = [];
   get Skills(): Skill[] { return this._skills; }
+  get AvailableSkills(): Skill[] {
+    return Skill.Options.filter(s => !this._skills.find(i => i.Key === s.Key));
+  }
   private _weapons: Weapon[] = [];
   get Weapons(): Weapon[] { return this._weapons; }
   private _armour = Armor.None();
@@ -119,40 +122,17 @@ export class Character implements Moveable, Physical, Magicable, IsCommander {
   AddTrait(key: Traits) : Character {
     const trait = Trait.Options.find(t => t.Key === key);
     if (trait !== undefined) {
-      
-
-      if (trait.Kryptonite.length > 0) {
-        const skillKrptonite = this.Skills.filter((s: Keyed) => {
-          return trait.Kryptonite.find(k => k === s.Key) !== undefined;
-        });
-        if (skillKrptonite.length > 0) {
-          throw new Error(
-            `Cannot add ${trait.Key} as Character has the ${skillKrptonite.map(
-              (p) => p.Key,
-            ).join(', ')} Skill.`
-          );
-        }
-        const traitKryptonite = this.Traits.filter((s: Keyed) => {
-          return trait.Kryptonite.find(k => k === s.Key) !== undefined;
-        });
-        if (traitKryptonite.length > 0) {
-          throw new Error(
-            `Cannot add ${trait.Key} as Character has the ${traitKryptonite.map(
-              (p) => p.Key,
-            ).join(', ')} Trait.`
-          );
-        }
-      }
-
-      const index = this._traits.findIndex((e: Keyed) => key === e.Key);
-      if (index === -1) {
-        trait.AddEffect(this);
-        this._traits.push(trait);
-      } else {
-        const t = this._traits[index];
-        if (t.MultipleAllowed) {
-          t.AddEffect(this);
-          t.AddOne();
+      if (trait.CanAdd(this)) {
+        const index = this._traits.findIndex((e: Keyed) => key === e.Key);
+        if (index === -1) {
+          trait.AddEffect(this);
+          this._traits.push(trait);
+        } else {
+          const t = this._traits[index];
+          if (t.MultipleAllowed) {
+            t.AddEffect(this);
+            t.AddOne();
+          }
         }
       }
     }
@@ -179,20 +159,15 @@ export class Character implements Moveable, Physical, Magicable, IsCommander {
   AddEquipment(key: MiscellaneousEquipments) : Character {
     const equipment = MiscellaneousEquipment.Options.find(t => t.Key === key);
     if (equipment !== undefined) {
-      if (equipment.Prerequisites.some((wp) => !this._equipment.find((p: Keyed) => p.Key === wp.Key))) {
-        throw new Error(
-          `Cannot add ${equipment.Key} as Character must have ${equipment.Prerequisites.map(
-            (p) => p.Key,
-          ).join(', ')}.`,
-        );
-      }
-      const index = this._equipment.findIndex((e: Keyed) => key === e.Key);
-      if (index === -1) {
-        this._equipment.push(equipment);
-      } else {
-        const e = this._equipment[index];
-        if (e.MultipleAllowed) {
-          e.AddOne();
+      if (equipment.CanAdd(this)) {
+        const index = this._equipment.findIndex((e: Keyed) => key === e.Key);
+        if (index === -1) {
+          this._equipment.push(equipment);
+        } else {
+          const e = this._equipment[index];
+          if (e.MultipleAllowed) {
+            e.AddOne();
+          }
         }
       }
     }
@@ -248,60 +223,11 @@ export class Character implements Moveable, Physical, Magicable, IsCommander {
     }
     return this;
   }
-
   
   AddSkill(key: Skills) : Character {
     const skill = Skill.Options.find(t => t.Key === key);
     if (skill !== undefined) {
-      const index = this._skills.findIndex((e: Keyed) => key === e.Key);
-      if (index === -1) {      
-        if (skill.TraitPrerequisites.some((wp) => !this._traits.find((p: Keyed) => p.Key === wp.Key))) {
-          throw new Error(
-            `Cannot add ${skill.Key} as Character must have ${skill.TraitPrerequisites.map(
-              (p) => p.Key,
-            ).join(', ')}.`
-          );
-        }
-        if (skill.SkillPrerequisites.some((wp) => !this._skills.find((p: Keyed) => p.Key === wp.Key))) {
-          throw new Error(
-            `Cannot add ${skill.Key} as Character must have ${skill.SkillPrerequisites.map(
-              (p) => p.Key,
-            ).join(', ')}.`
-          );
-        }
-        if (skill.CharacterClassPrerequisites.length > 0 &&
-          !skill.CharacterClassPrerequisites.some((wp) => this._characterClass.Key === wp.Key)) {
-          throw new Error(
-            `Cannot add ${skill.Key} as Character must be ${skill.CharacterClassPrerequisites.map(
-              (p) => p.Key,
-            ).join(', ')}.`
-          );
-        }
-        if (skill.OnlyCommander && !this.IsCommander) {
-          throw new Error(`Cannot add ${skill.Key} as this Character is not a Commander`)
-        }
-        if (skill.Kryptonite.length > 0) {
-          const skillKrptonite = this.Skills.filter((s: Keyed) => {
-            return skill.Kryptonite.find(k => k === s.Key) !== undefined;
-          });
-          if (skillKrptonite.length > 0) {
-            throw new Error(
-              `Cannot add ${skill.Key} as Character has the ${skillKrptonite.map(
-                (p) => p.Key,
-              ).join(', ')} Skill.`
-            );
-          }
-          const traitKryptonite = this.Traits.filter((s: Keyed) => {
-            return skill.Kryptonite.find(k => k === s.Key) !== undefined;
-          });
-          if (traitKryptonite.length > 0) {
-            throw new Error(
-              `Cannot add ${skill.Key} as Character has the ${traitKryptonite.map(
-                (p) => p.Key,
-              ).join(', ')} Trait.`
-            );
-          }
-        }
+      if (skill.CanAdd(this)) {
         skill.AddEffect(this, skill);
         this._skills.push(skill);
       }

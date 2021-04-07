@@ -1,3 +1,4 @@
+import { Character } from '..';
 import { IsCommander, Keyed, Magicable } from '../interfaces';
 import { CharacterClass } from './character_class';
 import { Trait, Traits } from './trait';
@@ -266,6 +267,63 @@ export class Skill implements Keyed {
   setCommanderOverride(): Skill {
     this._commanderOverride = !this._commanderOverride;
     return this;
+  }
+
+  private _checkValidity(character: Character): string | undefined {
+    const index = character.Skills.findIndex((e: Keyed) => this.Key === e.Key);
+    if (index !== -1) {
+      return `Cannot add ${this.Key} as this Character already has it`;
+    }
+    if (this._traitPrerequisites.some((wp) => !character.Traits.find((p: Keyed) => p.Key === wp.Key))) {
+      return `Cannot add ${this.Key} as Character must have ${this._traitPrerequisites.map(
+          (p) => p.Key,
+        ).join(', ')}.`;
+    }
+    if (this._skillPrerequisites.some((wp) => !character.Skills.find((p: Keyed) => p.Key === wp.Key))) {
+      return `Cannot add ${this.Key} as Character must have ${this._skillPrerequisites.map(
+          (p) => p.Key,
+        ).join(', ')}.`;
+    }
+    if (this._characterClassPrequisite.length > 0 &&
+      !this._characterClassPrequisite.some((wp) => character.CharacterClass.Key === wp.Key)) {
+      return `Cannot add ${this.Key} as Character must be ${this._characterClassPrequisite.map(
+          (p) => p.Key,
+        ).join(', ')}.`;
+    }
+    if (this.OnlyCommander && !character.IsCommander) {
+      return `Cannot add ${this.Key} as this Character is not a Commander`;
+    }
+    if (this.Kryptonite.length > 0) {
+      const skillKrptonite = character.Skills.filter((s: Keyed) => {
+        return this.Kryptonite.find(k => k === s.Key) !== undefined;
+      });
+      if (skillKrptonite.length > 0) {
+        return `Cannot add ${this.Key} as Character has the ${skillKrptonite.map(
+            (p) => p.Key,
+          ).join(', ')} Skill.`;
+      }
+      const traitKryptonite = character.Traits.filter((s: Keyed) => {
+        return this.Kryptonite.find(k => k === s.Key) !== undefined;
+      });
+      if (traitKryptonite.length > 0) {
+        return `Cannot add ${this.Key} as Character has the ${traitKryptonite.map(
+            (p) => p.Key,
+          ).join(', ')} Trait.`;
+      }
+    }
+    return undefined;
+  }
+
+  ValidFor(character: Character): boolean {
+    return this._checkValidity(character) === undefined;
+  }
+
+  CanAdd(character: Character): boolean {
+    const errorMessage = this._checkValidity(character);
+    if (errorMessage !== undefined) {
+      throw new Error(errorMessage);
+    }
+    return true;
   }
 
   static ArmorTraining(): Skill {

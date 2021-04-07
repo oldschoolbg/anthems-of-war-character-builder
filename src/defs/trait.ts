@@ -1,4 +1,5 @@
 import { Key, Keyed, Magicable, Moveable, Multiple } from "../interfaces";
+import { Character } from "../objects";
 import { Skills } from "./skill";
 
 export enum Traits {
@@ -90,6 +91,40 @@ export class Trait implements Keyed, Multiple {
   AllowMultiple(): Trait {
     this._multipleAllowed = true;
     return this;
+  }
+
+  private _checkValidity(character: Character): string | undefined {
+    if (this._kryptonite.length > 0) {
+      const skillKrptonite = character.Skills.filter((s: Keyed) => {
+        return this._kryptonite.find(k => k === s.Key) !== undefined;
+      });
+      if (skillKrptonite.length > 0) {
+        return `Cannot add ${this.Key} as Character has the ${skillKrptonite.map(
+            (p) => p.Key,
+          ).join(', ')} Skill.`;
+      }
+      const traitKryptonite = character.Traits.filter((s: Keyed) => {
+        return this._kryptonite.find(k => k === s.Key) !== undefined;
+      });
+      if (traitKryptonite.length > 0) {
+        return `Cannot add ${this.Key} as Character has the ${traitKryptonite.map(
+            (p) => p.Key,
+          ).join(', ')} Trait.`;
+      }
+    }
+    return undefined;
+  }
+
+  ValidFor(character: Character): boolean {
+    return this._checkValidity(character) === undefined;
+  }
+
+  CanAdd(character: Character): boolean {
+    const errorMessage = this._checkValidity(character);
+    if (errorMessage !== undefined) {
+      throw new Error(errorMessage);
+    }
+    return true;
   }
 
   static Strong() : Trait {

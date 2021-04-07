@@ -1,6 +1,7 @@
 import { CanHaveMagicalCharges, Keyed, Multiple, SpellCharge } from "../interfaces";
 import { Trait, EquipmentProperty, EquipmentProperties } from "../defs";
 import { CanHaveProperties } from "./shared_implementations/can_have_properties";
+import { Character } from ".";
 
 export enum MiscellaneousEquipments {
   SpellcastingImplement = 'Spellcasting Implement',
@@ -63,6 +64,27 @@ export class MiscellaneousEquipment extends CanHaveProperties implements Keyed, 
   private _spellCharges: SpellCharge[] = [];
   get SpellCharges(): SpellCharge[] {
     return this._spellCharges;
+  }
+
+  private _checkValidity(character: Character): string | undefined {
+    if (this._prerequisites.some((wp) => !character.Equipment.find((p: Keyed) => p.Key === wp.Key))) {
+      return `Cannot add ${this.Key} as Character must have ${this._prerequisites.map(
+          (p) => p.Key,
+        ).join(', ')}.`;
+    }
+    return undefined;
+  }
+
+  ValidFor(character: Character): boolean {
+    return this._checkValidity(character) === undefined;
+  }
+
+  CanAdd(character: Character): boolean {
+    const errorMessage = this._checkValidity(character);
+    if (errorMessage !== undefined) {
+      throw new Error(errorMessage);
+    }
+    return true;
   }
 
   AddOne(): MiscellaneousEquipment {
