@@ -1,6 +1,6 @@
 import { Character } from "..";
 import { Traits } from "../defs";
-import { Skills } from "../defs/skill";
+import { Skills } from "../defs";
 
 test('Add Squad Leader to Instinct Character', () => {
   expect(() => { Character.Instinct().AddSkill(Skills.SquadLeader) }).toThrowError('Cannot add Squad Leader as Character must be Regular');
