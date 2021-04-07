@@ -8,13 +8,11 @@ export enum MiscellaneousEquipments {
   TorchLantern = 'Torch / Lantern',
   Familiar = 'Familiar',
   Spellbook = 'Spellbook / Scrolls',
-  Horn = 'Horn',
-  Bells = 'Bells',
-  Drums = 'Drums',
+  HornBellsDrums = 'Horn / Bells / Drums',
   PortableBarricade = 'Portable Barricade',
   MedicalSupplies = 'Medical Supplies',
   LaddersRopes = 'Ladders / Ropes',
-  Trinkets = 'Trinkets'
+  Trinket = 'Trinket'
 }
 
 export class MiscellaneousEquipment extends CanHaveProperties implements Keyed, CanHaveMagicalCharges, Multiple {
@@ -31,9 +29,7 @@ export class MiscellaneousEquipment extends CanHaveProperties implements Keyed, 
       MiscellaneousEquipment.Torch(),
       MiscellaneousEquipment.Familiar(),
       MiscellaneousEquipment.Spellbook(),
-      MiscellaneousEquipment.Horn(),
-      MiscellaneousEquipment.Bells(),
-      MiscellaneousEquipment.Drums(),
+      MiscellaneousEquipment.HornBellsDrums(),
       MiscellaneousEquipment.PortableBarricade(),
       MiscellaneousEquipment.MedicalSupplies(),
       MiscellaneousEquipment.LaddersRopes(),
@@ -163,23 +159,9 @@ export class MiscellaneousEquipment extends CanHaveProperties implements Keyed, 
       2
     )
   }
-  static Horn() : MiscellaneousEquipment {
+  static HornBellsDrums() : MiscellaneousEquipment {
     return new MiscellaneousEquipment(
-      MiscellaneousEquipments.Horn,
-      "By reducing the character's MOV value by half, or as a reaction, this character can use this item to allow all allies within twelve inches of the holder to turn towards their chosen target. This cannot be performed on hidden characters.",
-      2
-    )
-  }
-  static Bells() : MiscellaneousEquipment {
-    return new MiscellaneousEquipment(
-      MiscellaneousEquipments.Bells,
-      "By reducing the character's MOV value by half, or as a reaction, this character can use this item to allow all allies within twelve inches of the holder to turn towards their chosen target. This cannot be performed on hidden characters.",
-      2
-    )
-  }
-  static Drums() : MiscellaneousEquipment {
-    return new MiscellaneousEquipment(
-      MiscellaneousEquipments.Drums,
+      MiscellaneousEquipments.HornBellsDrums,
       "By reducing the character's MOV value by half, or as a reaction, this character can use this item to allow all allies within twelve inches of the holder to turn towards their chosen target. This cannot be performed on hidden characters.",
       2
     )
@@ -207,7 +189,7 @@ export class MiscellaneousEquipment extends CanHaveProperties implements Keyed, 
   }
   static Trinkets() : MiscellaneousEquipment {
     return new MiscellaneousEquipment(
-      MiscellaneousEquipments.Trinkets,
+      MiscellaneousEquipments.Trinket,
       "Trinkets can be any size or shape. They have no special properties on their own but can be imbued with magic or the morale boosting special property for additional points cost. Trinkets can be passed to an ally in base contact or picked off a corpse, friend or foe, using a standard action. They can also be picked up off the ground using a standard action or by sacrificing 1 from their MOV during an order. Trinkets are sometimes used as scenario objectives. Some scenarios may list additional rules for specific trinkets that may be used.",
       1
     )
