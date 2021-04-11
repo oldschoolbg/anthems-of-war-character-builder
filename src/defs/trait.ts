@@ -118,13 +118,13 @@ export class Trait implements Keyed, Multiple, Addable {
     }
     const index = character.Traits.findIndex((e: Keyed) => this.Key === e.Key);
     return ValidityResponse.Checked(
-      this.MultipleAllowed || index === -1,
+      (this.MultipleAllowed === true) || (index === -1),
       index
     );
   }
 
   ValidFor(character: Character): boolean {
-    return this._checkValidity(character) === undefined;
+    return this._checkValidity(character).IsValid;
   }
 
   CanAdd(character: Character): ValidityResponse {
