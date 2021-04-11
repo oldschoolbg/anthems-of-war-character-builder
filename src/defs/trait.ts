@@ -1,4 +1,4 @@
-import { Key, Keyed, Magicable, Moveable, Multiple } from "../interfaces";
+import { Addable, Key, Keyed, Magicable, Moveable, Multiple, ValidityResponse } from "../interfaces";
 import { Character } from "../objects";
 import { Skills } from "./skill";
 
@@ -12,7 +12,7 @@ export enum Traits {
   Strong = "Strong"
 }
 
-export class Trait implements Keyed, Multiple {
+export class Trait implements Keyed, Multiple, Addable {
   constructor(key: Traits, pointsCost: number, description: string, shortDescription?: string) {
     this._pointsCost = pointsCost;
     this._key = key;
@@ -93,38 +93,46 @@ export class Trait implements Keyed, Multiple {
     return this;
   }
 
-  private _checkValidity(character: Character): string | undefined {
+  private _checkValidity(character: Character): ValidityResponse {
     if (this._kryptonite.length > 0) {
-      const skillKrptonite = character.Skills.filter((s: Keyed) => {
+      const skillKryptonite = character.Skills.filter((s: Keyed) => {
         return this._kryptonite.find(k => k === s.Key) !== undefined;
       });
-      if (skillKrptonite.length > 0) {
-        return `Cannot add ${this.Key} as Character has the ${skillKrptonite.map(
+      if (skillKryptonite.length > 0) {
+        return ValidityResponse.Errored(
+          `Cannot add ${this.Key} as Character has the ${skillKryptonite.map(
             (p) => p.Key,
-          ).join(', ')} Skill.`;
+          ).join(', ')} Skill.`
+        );
       }
       const traitKryptonite = character.Traits.filter((s: Keyed) => {
         return this._kryptonite.find(k => k === s.Key) !== undefined;
       });
       if (traitKryptonite.length > 0) {
-        return `Cannot add ${this.Key} as Character has the ${traitKryptonite.map(
+        return ValidityResponse.Errored(
+          `Cannot add ${this.Key} as Character has the ${traitKryptonite.map(
             (p) => p.Key,
-          ).join(', ')} Trait.`;
+          ).join(', ')} Trait.`
+        );
       }
     }
-    return undefined;
+    const index = character.Traits.findIndex((e: Keyed) => this.Key === e.Key);
+    return ValidityResponse.Checked(
+      this.MultipleAllowed || index === -1,
+      index
+    );
   }
 
   ValidFor(character: Character): boolean {
     return this._checkValidity(character) === undefined;
   }
 
-  CanAdd(character: Character): boolean {
-    const errorMessage = this._checkValidity(character);
-    if (errorMessage !== undefined) {
-      throw new Error(errorMessage);
+  CanAdd(character: Character): ValidityResponse {
+    const result = this._checkValidity(character);
+    if (result.ErrorMessage !== undefined) {
+      throw new Error(result.ErrorMessage);
     }
-    return true;
+    return result;
   }
 
   static Strong() : Trait {

@@ -122,17 +122,15 @@ export class Character implements Moveable, Physical, Magicable, IsCommander {
   AddTrait(key: Traits) : Character {
     const trait = Trait.Options.find(t => t.Key === key);
     if (trait !== undefined) {
-      if (trait.CanAdd(this)) {
-        const index = this._traits.findIndex((e: Keyed) => key === e.Key);
-        if (index === -1) {
+      const canAdd = trait.CanAdd(this);
+      if (canAdd.IsValid) {
+        if (canAdd.PreexistingIndex === -1) {
           trait.AddEffect(this);
           this._traits.push(trait);
         } else {
-          const t = this._traits[index];
-          if (t.MultipleAllowed) {
-            t.AddEffect(this);
-            t.AddOne();
-          }
+          const t = this._traits[canAdd.PreexistingIndex];
+          t.AddEffect(this);
+          t.AddOne();
         }
       }
     }
