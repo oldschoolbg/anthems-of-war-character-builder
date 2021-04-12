@@ -269,7 +269,7 @@ export class Skill implements Keyed, Addable {
     return this;
   }
 
-  private _checkValidity(character: Character): ValidityResponse {
+  private _checkAddValidity(character: Character): ValidityResponse {
     const index = character.Skills.findIndex((e: Keyed) => this.Key === e.Key);
     if (index !== -1) {
       return ValidityResponse.Errored(
@@ -328,12 +328,36 @@ export class Skill implements Keyed, Addable {
     return ValidityResponse.Checked(true);
   }
 
-  ValidFor(character: Character): boolean {
-    return this._checkValidity(character).IsValid;
+  ValidForAdding(character: Character): boolean {
+    return this._checkAddValidity(character).IsValid;
   }
 
   CanAdd(character: Character): ValidityResponse {
-    const result = this._checkValidity(character);
+    const result = this._checkAddValidity(character);
+    if (result.ErrorMessage !== undefined) {
+      throw new Error(result.ErrorMessage);
+    }
+    return result;
+  }
+
+  private _checkRemoveValidity(character: Character): ValidityResponse {
+    const skillsThatDependOnThis = character.Skills.filter(s => s.SkillPrerequisites.find(sp => sp.Key === this.Key) !== undefined);
+    if (skillsThatDependOnThis.length > 0) {
+      return ValidityResponse.Errored(
+        `Cannot remove ${this.Key} as Character has the following skills that depend on it: ${skillsThatDependOnThis.map(
+          (p) => p.Key,
+        ).join(', ')}.`
+      );
+    }
+    return ValidityResponse.Checked(true);
+  }
+  
+  ValidForRemoving(character: Character): boolean {
+    return this._checkRemoveValidity(character).IsValid;
+  }
+
+  CanRemove(character: Character): ValidityResponse {
+    const result = this._checkRemoveValidity(character);
     if (result.ErrorMessage !== undefined) {
       throw new Error(result.ErrorMessage);
     }

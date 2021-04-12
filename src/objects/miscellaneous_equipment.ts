@@ -1,5 +1,5 @@
 import { Addable, CanHaveMagicalCharges, Keyed, Multiple, SpellCharge, ValidityResponse } from "../interfaces";
-import { Trait, EquipmentProperty, EquipmentProperties } from "../defs";
+import { Trait, EquipmentProperty, EquipmentProperties, CharacterClass } from "../defs";
 import { CanHaveProperties } from "./shared_implementations/can_have_properties";
 import { Character } from ".";
 
@@ -62,7 +62,7 @@ export class MiscellaneousEquipment extends CanHaveProperties implements Keyed, 
     return this._spellCharges;
   }
 
-  private _checkValidity(character: Character): ValidityResponse {
+  private _checkAddValidity(character: Character): ValidityResponse {
     if (this._prerequisites.some((wp) => !character.Traits.find((p: Keyed) => p.Key === wp.Key))) {
       return ValidityResponse.Errored(
         `Cannot add ${this.Key} as Character must have ${this._prerequisites.map(
@@ -78,16 +78,24 @@ export class MiscellaneousEquipment extends CanHaveProperties implements Keyed, 
   }
 
 
-  ValidFor(character: Character): boolean {
-    return this._checkValidity(character).IsValid;
+  ValidForAdding(character: Character): boolean {
+    return this._checkAddValidity(character).IsValid;
   }
 
   CanAdd(character: Character): ValidityResponse {
-    const result = this._checkValidity(character);
+    const result = this._checkAddValidity(character);
     if (result.ErrorMessage !== undefined) {
       throw new Error(result.ErrorMessage);
     }
     return result;
+  }
+
+  ValidForRemoving(character: Character): boolean {
+    return true;
+  }
+
+  CanRemove(character: Character): ValidityResponse {
+    return ValidityResponse.Checked(true);
   }
 
   AddOne(): MiscellaneousEquipment {

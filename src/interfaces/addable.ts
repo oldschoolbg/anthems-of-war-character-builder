@@ -2,7 +2,10 @@ import { Character } from "..";
 
 export interface Addable {
   CanAdd(character: Character): ValidityResponse;
-  ValidFor(character: Character): boolean;
+  ValidForAdding(character: Character): boolean;
+
+  CanRemove(character: Character): ValidityResponse;
+  ValidForRemoving(character: Character): boolean;
 }
 
 export class ValidityResponse {

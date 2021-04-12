@@ -93,7 +93,7 @@ export class Trait implements Keyed, Multiple, Addable {
     return this;
   }
 
-  private _checkValidity(character: Character): ValidityResponse {
+  private _checkAddValidity(character: Character): ValidityResponse {
     if (this._kryptonite.length > 0) {
       const skillKryptonite = character.Skills.filter((s: Keyed) => {
         return this._kryptonite.find(k => k === s.Key) !== undefined;
@@ -123,12 +123,38 @@ export class Trait implements Keyed, Multiple, Addable {
     );
   }
 
-  ValidFor(character: Character): boolean {
-    return this._checkValidity(character).IsValid;
+  ValidForAdding(character: Character): boolean {
+    return this._checkAddValidity(character).IsValid;
   }
 
   CanAdd(character: Character): ValidityResponse {
-    const result = this._checkValidity(character);
+    const result = this._checkAddValidity(character);
+    if (result.ErrorMessage !== undefined) {
+      throw new Error(result.ErrorMessage);
+    }
+    return result;
+  }
+
+  private _checkRemoveValidity(character: Character): ValidityResponse {
+    if (this.Quantity === 1) {
+      const skillsThatDependOnThis = character.Skills.filter(s => s.TraitPrerequisites.find(sp => sp.Key === this.Key) !== undefined);
+      if (skillsThatDependOnThis.length > 0) {
+        return ValidityResponse.Errored(
+          `Cannot remove ${this.Key} as Character has the following skills that depend on it: ${skillsThatDependOnThis.map(
+            (p) => p.Key,
+          ).join(', ')}.`
+        );
+      }
+    }
+    return ValidityResponse.Checked(true);
+  }
+  
+  ValidForRemoving(character: Character): boolean {
+    return this._checkRemoveValidity(character).IsValid;
+  }
+
+  CanRemove(character: Character): ValidityResponse {
+    const result = this._checkRemoveValidity(character);
     if (result.ErrorMessage !== undefined) {
       throw new Error(result.ErrorMessage);
     }

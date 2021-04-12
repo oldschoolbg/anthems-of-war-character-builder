@@ -19,7 +19,7 @@ import { CharacterClass, CharacterClasses } from '../defs/character_class';
  * MND = 0
  */
 export class Character implements Moveable, Physical, Magicable, IsCommander {
-  private constructor(characterClass: CharacterClass, isCommander?: boolean) {
+  private constructor(characterClass: CharacterClasses, isCommander?: boolean) {
     if (isCommander) {
       this.IsCommander = true;
     }
@@ -31,7 +31,23 @@ export class Character implements Moveable, Physical, Magicable, IsCommander {
   }
 
   Name: string | undefined;
-  IsCommander: boolean = false;
+  private _isCommander: boolean = false;
+  get IsCommander(): boolean {
+    return this._isCommander;
+  }
+  set IsCommander(value: boolean) {
+    if (value === false) {
+      const onlyCommanderSkills = this.Skills.filter(s => s.OnlyCommander);
+      if (onlyCommanderSkills.length > 0) {
+        throw new Error(
+          `Cannot remove Commander from this Character as it has these Commander only Skills: ${onlyCommanderSkills.map(
+            (p) => p.Key,
+          ).join(', ')}.`
+        );
+      }
+    }
+    this._isCommander = value;
+  }
   private _isRegular = false;
   get IsRegular(): boolean {
     return this._isRegular;
@@ -110,12 +126,27 @@ export class Character implements Moveable, Physical, Magicable, IsCommander {
     return this;
   }
 
-  SetCharacterClass(characterClass: CharacterClass) : Character {
-    if (this.IsCommander && characterClass.Key === CharacterClasses.Instinct) {
-      throw new Error('You cannot set a Commander to the Instinct Character Class');
+  SetCharacterClass(key: CharacterClasses) : Character {
+    const characterClass = CharacterClass.Options.find(cc => cc.Key === key);
+    if (characterClass !== undefined) {
+      if (this.IsCommander && characterClass.Key === CharacterClasses.Instinct) {
+        throw new Error('You cannot set a Commander to the Instinct Character Class');
+      }
+      const skillPrerequisitesForCharacterClass = this.Skills.filter(
+        s => s.CharacterClassPrerequisites.find(ccp => ccp.Key === this._characterClass.Key) !== undefined
+      ).filter(
+        s => s.CharacterClassPrerequisites.find(ccp => ccp.Key === characterClass.Key) === undefined
+      );
+      if (skillPrerequisitesForCharacterClass.length > 0) {
+        throw new Error(
+          `You cannot set this character to ${characterClass.Key} as it has the following Skills that require ${this._characterClass.Key}: ${skillPrerequisitesForCharacterClass.map(
+            (p) => p.Key,
+          ).join(', ')}.`
+        )
+      }
+      this._characterClass = characterClass;
+      this._isRegular = this._characterClass.Key === CharacterClasses.Regular
     }
-    this._characterClass = characterClass;
-    this._isRegular = this._characterClass.Key === CharacterClasses.Regular
     return this;
   }
 
@@ -140,11 +171,14 @@ export class Character implements Moveable, Physical, Magicable, IsCommander {
   RemoveTrait(key: Traits) : Character {    
     const trait = this._traits.find((e: Keyed) => key === e.Key);
     if (trait !== undefined) {
-      trait.RemoveEffect(this)
-      if (trait.Quantity === 1) {
-        this._traits = this._traits.filter(e => e.Key !== key);
-      } else {
-        trait.RemoveOne();
+      const canRemove = trait.CanRemove(this);
+      if (canRemove.IsValid) {
+        trait.RemoveEffect(this)
+        if (trait.Quantity === 1) {
+          this._traits = this._traits.filter(e => e.Key !== key);
+        } else {
+          trait.RemoveOne();
+        }
       }
     }
     return this;
@@ -291,13 +325,13 @@ export class Character implements Moveable, Physical, Magicable, IsCommander {
   }
 
   static Leader(): Character {
-    return new Character(CharacterClass.Regular(), true);
+    return new Character(CharacterClasses.Regular, true);
   }
 
   static Regular(): Character {
-    return new Character(CharacterClass.Regular());
+    return new Character(CharacterClasses.Regular);
   }
   static Instinct(): Character {
-    return new Character(CharacterClass.Instinct());
+    return new Character(CharacterClasses.Instinct);
   }
 }
