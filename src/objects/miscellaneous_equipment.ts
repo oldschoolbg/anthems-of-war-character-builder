@@ -25,14 +25,14 @@ export class MiscellaneousEquipment extends CanHaveProperties implements Keyed, 
 
   static get Options(): MiscellaneousEquipment[] {
     return [
+      MiscellaneousEquipment.Familiar(),
+      MiscellaneousEquipment.HornBellsDrums(),
+      MiscellaneousEquipment.LaddersRopes(),
+      MiscellaneousEquipment.MedicalSupplies(),
+      MiscellaneousEquipment.PortableBarricade(),
+      MiscellaneousEquipment.Spellbook(),
       MiscellaneousEquipment.SpellcastingImplement(),
       MiscellaneousEquipment.Torch(),
-      MiscellaneousEquipment.Familiar(),
-      MiscellaneousEquipment.Spellbook(),
-      MiscellaneousEquipment.HornBellsDrums(),
-      MiscellaneousEquipment.PortableBarricade(),
-      MiscellaneousEquipment.MedicalSupplies(),
-      MiscellaneousEquipment.LaddersRopes(),
       MiscellaneousEquipment.Trinkets()
     ];
   }
