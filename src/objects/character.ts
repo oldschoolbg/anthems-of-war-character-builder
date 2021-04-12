@@ -30,6 +30,9 @@ export class Character implements Moveable, Physical, Magicable, IsCommander {
     ];
   }
 
+  get IsValid(): boolean {
+    return this.Name !== undefined;
+  }
   Name: string | undefined;
   private _isCommander: boolean = false;
   get IsCommander(): boolean {
