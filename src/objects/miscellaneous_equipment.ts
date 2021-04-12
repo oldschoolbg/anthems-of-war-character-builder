@@ -1,4 +1,4 @@
-import { CanHaveMagicalCharges, Keyed, Multiple, SpellCharge } from "../interfaces";
+import { Addable, CanHaveMagicalCharges, Keyed, Multiple, SpellCharge, ValidityResponse } from "../interfaces";
 import { Trait, EquipmentProperty, EquipmentProperties } from "../defs";
 import { CanHaveProperties } from "./shared_implementations/can_have_properties";
 import { Character } from ".";
@@ -15,7 +15,7 @@ export enum MiscellaneousEquipments {
   Trinket = 'Trinket'
 }
 
-export class MiscellaneousEquipment extends CanHaveProperties implements Keyed, CanHaveMagicalCharges, Multiple {
+export class MiscellaneousEquipment extends CanHaveProperties implements Keyed, CanHaveMagicalCharges, Multiple, Addable {
   constructor(key: MiscellaneousEquipments, description: string, pointsCost: number) {
     super('MISC');
     this._key = key;
@@ -62,25 +62,32 @@ export class MiscellaneousEquipment extends CanHaveProperties implements Keyed, 
     return this._spellCharges;
   }
 
-  private _checkValidity(character: Character): string | undefined {
+  private _checkValidity(character: Character): ValidityResponse {
     if (this._prerequisites.some((wp) => !character.Traits.find((p: Keyed) => p.Key === wp.Key))) {
-      return `Cannot add ${this.Key} as Character must have ${this._prerequisites.map(
+      return ValidityResponse.Errored(
+        `Cannot add ${this.Key} as Character must have ${this._prerequisites.map(
           (p) => p.Key,
-        ).join(', ')}.`;
+        ).join(', ')}.`
+      );
     }
-    return undefined;
+    const index = character.Equipment.findIndex((e: Keyed) => this.Key === e.Key);
+    return ValidityResponse.Checked(
+      (this.MultipleAllowed === true) || (index === -1),
+      index
+    );
   }
+
 
   ValidFor(character: Character): boolean {
-    return this._checkValidity(character) === undefined;
+    return this._checkValidity(character).IsValid;
   }
 
-  CanAdd(character: Character): boolean {
-    const errorMessage = this._checkValidity(character);
-    if (errorMessage !== undefined) {
-      throw new Error(errorMessage);
+  CanAdd(character: Character): ValidityResponse {
+    const result = this._checkValidity(character);
+    if (result.ErrorMessage !== undefined) {
+      throw new Error(result.ErrorMessage);
     }
-    return true;
+    return result;
   }
 
   AddOne(): MiscellaneousEquipment {

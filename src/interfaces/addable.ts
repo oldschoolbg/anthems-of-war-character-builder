@@ -26,9 +26,11 @@ export class ValidityResponse {
     result._isValid = false;
     return result;
   }
-  public static Checked(isValid: boolean, index: number): ValidityResponse {
+  public static Checked(isValid: boolean, index?: number): ValidityResponse {
     const result = new ValidityResponse();
-    result._preexistingIndex = index;
+    if (index !== undefined) {
+      result._preexistingIndex = index;
+    }
     result._isValid = isValid;
     return result;
   }

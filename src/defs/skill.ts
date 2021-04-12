@@ -1,5 +1,5 @@
 import { Character } from '..';
-import { IsCommander, Keyed, Magicable } from '../interfaces';
+import { Addable, IsCommander, Keyed, Magicable, ValidityResponse } from '../interfaces';
 import { CharacterClass } from './character_class';
 import { Trait, Traits } from './trait';
 
@@ -72,7 +72,7 @@ export enum Skills {
   ShieldWall = "Shield Wall"
 }
 
-export class Skill implements Keyed {
+export class Skill implements Keyed, Addable {
   constructor(key: Skills, description: string, shortDescription?: string) {
     this._key = key;
     this._description = description;
@@ -269,61 +269,75 @@ export class Skill implements Keyed {
     return this;
   }
 
-  private _checkValidity(character: Character): string | undefined {
+  private _checkValidity(character: Character): ValidityResponse {
     const index = character.Skills.findIndex((e: Keyed) => this.Key === e.Key);
     if (index !== -1) {
-      return `Cannot add ${this.Key} as this Character already has it`;
+      return ValidityResponse.Errored(
+        `Cannot add ${this.Key} as this Character already has it`
+      );
     }
     if (this._traitPrerequisites.some((wp) => !character.Traits.find((p: Keyed) => p.Key === wp.Key))) {
-      return `Cannot add ${this.Key} as Character must have ${this._traitPrerequisites.map(
+      return ValidityResponse.Errored(
+        `Cannot add ${this.Key} as Character must have ${this._traitPrerequisites.map(
           (p) => p.Key,
-        ).join(', ')}.`;
+        ).join(', ')}.`
+      );
     }
     if (this._skillPrerequisites.some((wp) => !character.Skills.find((p: Keyed) => p.Key === wp.Key))) {
-      return `Cannot add ${this.Key} as Character must have ${this._skillPrerequisites.map(
+      return ValidityResponse.Errored(
+        `Cannot add ${this.Key} as Character must have ${this._skillPrerequisites.map(
           (p) => p.Key,
-        ).join(', ')}.`;
+        ).join(', ')}.`
+      );
     }
     if (this._characterClassPrequisite.length > 0 &&
       !this._characterClassPrequisite.some((wp) => character.CharacterClass.Key === wp.Key)) {
-      return `Cannot add ${this.Key} as Character must be ${this._characterClassPrequisite.map(
+      return ValidityResponse.Errored(
+        `Cannot add ${this.Key} as Character must be ${this._characterClassPrequisite.map(
           (p) => p.Key,
-        ).join(', ')}.`;
+        ).join(', ')}.`
+      );
     }
     if (this.OnlyCommander && !character.IsCommander) {
-      return `Cannot add ${this.Key} as this Character is not a Commander`;
+      return ValidityResponse.Errored(
+        `Cannot add ${this.Key} as this Character is not a Commander`
+      );
     }
     if (this.Kryptonite.length > 0) {
       const skillKrptonite = character.Skills.filter((s: Keyed) => {
         return this.Kryptonite.find(k => k === s.Key) !== undefined;
       });
       if (skillKrptonite.length > 0) {
-        return `Cannot add ${this.Key} as Character has the ${skillKrptonite.map(
+        return ValidityResponse.Errored(
+          `Cannot add ${this.Key} as Character has the ${skillKrptonite.map(
             (p) => p.Key,
-          ).join(', ')} Skill.`;
+          ).join(', ')} Skill.`
+        );
       }
       const traitKryptonite = character.Traits.filter((s: Keyed) => {
         return this.Kryptonite.find(k => k === s.Key) !== undefined;
       });
       if (traitKryptonite.length > 0) {
-        return `Cannot add ${this.Key} as Character has the ${traitKryptonite.map(
+        return ValidityResponse.Errored(
+          `Cannot add ${this.Key} as Character has the ${traitKryptonite.map(
             (p) => p.Key,
-          ).join(', ')} Trait.`;
+          ).join(', ')} Trait.`
+        );
       }
     }
-    return undefined;
+    return ValidityResponse.Checked(true);
   }
 
   ValidFor(character: Character): boolean {
-    return this._checkValidity(character) === undefined;
+    return this._checkValidity(character).IsValid;
   }
 
-  CanAdd(character: Character): boolean {
-    const errorMessage = this._checkValidity(character);
-    if (errorMessage !== undefined) {
-      throw new Error(errorMessage);
+  CanAdd(character: Character): ValidityResponse {
+    const result = this._checkValidity(character);
+    if (result.ErrorMessage !== undefined) {
+      throw new Error(result.ErrorMessage);
     }
-    return true;
+    return result;
   }
 
   static ArmorTraining(): Skill {
