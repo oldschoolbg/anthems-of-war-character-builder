@@ -7,7 +7,7 @@ import { Skill, Skills } from '../defs/skill';
 import { Weapon, Weapons } from './weapon';
 import { Armor, ArmorType } from './armour';
 import { Shield, Shields } from './shield';
-import { Elemental } from './magic';
+import { Elemental, Elementals, SpellSchools } from './magic';
 import { CharacterClass, CharacterClasses } from '../defs/character_class';
 
 /**
@@ -327,6 +327,61 @@ export class Character implements Moveable, Physical, Magicable, IsCommander {
     return this;
   }
 
+  ToFile(): string {
+    return JSON.stringify({
+      Name: this.Name,
+      IsCommander: this.IsCommander,
+      Move: this.MOV.Value,
+      Physicality: this.PHY.Value,
+      Dexterity: this.DEX.Value,
+      Constitution: this.CON.Value,
+      Mind: this.MND.Value,
+      CharacterClass: this.CharacterClass.Key,
+      Traits: this.Traits.map(t => t.Key), // TODO what about custom traits?
+      Mount: this.Mount?.Key,  // TODO what about custom mounts?
+      // Elementals: this.Elementals.map(t => t.Key), // TODO what about custom elementals?
+      Equipment: this.Equipment.map(t => t.Key),
+      Potions: this.Potions.map(t => t.Key),
+      Skills: this.Skills.map(t => t.Key),
+      Weapons: this.Weapons.map(t => t.Key),
+      Armor: this.Armor.Key,
+      Shield: this.Shield.Key,
+      SpellPoolLimit: this.SpellPoolLimit,
+      SpellcastingSlotsLimit: this.SpellcastingSlotsLimit,
+      SpellcastingSchoolsLimit: this.SpellcastingSchoolsLimit,
+      SpellCastingSchools: this.SpellCastingSchools.map(t => t.Key)
+    });
+  }
+
+  static FromFile(stringInput: string): Character {
+    const input = JSON.parse(stringInput);
+    const characterClass = CharacterClass.Options.find(cc => cc.Key === input.CharacterClass);
+    if (characterClass === undefined) {
+      throw new Error(`Cannot regenerate this character - Invalid Character Class: ${input.CharacterClass}`);
+    }
+    const result = new Character(characterClass.Key, input.IsCommander);
+    result.Name = input.Name;
+    result.MOV = new Move(input.Move);
+    result.DEX = new Dexterity(input.Dexterity);
+    result.PHY = new Physicality(input.Physicality);
+    result.CON = new Constitution(input.Constitution);
+    result.MND = new Mind(input.Mind);
+    input.Traits.map((t: Traits) => result.AddTrait(t));
+    result.AddMount(input.Mount);
+    // input.Elementals.map((e: Elementals) => result.AddElemental(e));
+    input.Equipment.map((e: MiscellaneousEquipments) => result.AddEquipment(e));
+    input.Potions.map((p: Potions) => result.AddPotion(p));
+    input.Skills.map((s: Skills) => result.AddSkill(s));
+    input.Weapons.map((w: Weapons) => result.AddWeapon(w));
+    result.SetArmor(input.Armour);
+    result.SetShield(input.Shield);
+    result.SetSpellPoolLimit(input.SpellPoolLimit);
+    result.SetSpellcastingSlotsLimit(input.SpellcastingSlotsLimit);
+    result.SetSpellcastingSchoolsLimit(input.SpellcastingSchoolsLimit);
+    // input.map((ss: SpellSchools) => result.Ad)
+    return result;
+  }
+
   static Leader(): Character {
     return new Character(CharacterClasses.Regular, true);
   }
@@ -337,4 +392,5 @@ export class Character implements Moveable, Physical, Magicable, IsCommander {
   static Instinct(): Character {
     return new Character(CharacterClasses.Instinct);
   }
+
 }

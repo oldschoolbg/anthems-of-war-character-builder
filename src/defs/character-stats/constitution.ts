@@ -2,7 +2,10 @@ import { CharacterStat } from './character-stat';
 import { conPointcost } from '../point_costs';
 
 export class Constitution extends CharacterStat {
-  constructor() {
-    super('CON', 1, conPointcost);
+  constructor(initalValue?: number) {
+    if (initalValue === undefined) {
+      initalValue = 1;
+    }
+    super('CON', initalValue, conPointcost);
   }
 }

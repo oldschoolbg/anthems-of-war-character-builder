@@ -2,7 +2,10 @@ import { CharacterStat } from './character-stat';
 import { phyDexMndPointcost } from '../point_costs';
 
 export class Physicality extends CharacterStat {
-  constructor() {
-    super('PHY', 0, phyDexMndPointcost)
+  constructor(initalValue?: number) {
+    if (initalValue === undefined) {
+      initalValue = 0;
+    }
+    super('PHY', initalValue, phyDexMndPointcost)
   }
 }
