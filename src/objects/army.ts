@@ -3,10 +3,19 @@ import { CharacterClasses } from "../defs";
 import { Character } from "./character";
 
 export class Army {
+  get IsValid(): boolean {
+    return this.Name !== undefined;
+  }
   Name: string | undefined;
-  private _leader: Character;
+  private _leader!: Character;
   public get Leader(): Character {
     return this._leader;
+  }
+  public set Leader(value: Character) {
+    if (!value.IsCommander) {
+      throw new Error('This Character cannot be your leader')
+    }
+    this._leader = value;
   }
 
   private _members: Character[] = [];
@@ -17,6 +26,9 @@ export class Army {
   private _targetPointsCost: number;
   public get TargetPointsCost(): number {
     return this._targetPointsCost;
+  }
+  public set TargetPointsCost(value: number) {
+    this._targetPointsCost = value;
   }
 
   public get PointsCost(): number {
@@ -31,14 +43,13 @@ export class Army {
     return this._members.map(m => m.Skills.length).reduce((a, b) => a + b, 0);
   }
 
-  constructor(targetPointsCost: number, leader: Character) {
-    if (leader.CharacterClass.Key === CharacterClasses.Instinct) {
-      throw new Error('The Leader of an Army cannot have the Instinct Trait')
-    }
-    this._targetPointsCost = targetPointsCost;
-    this._leader = leader;
+  public addMember(character: Character): Army {
+    this._members.push(character);
+    return this;
   }
-  get IsValid(): boolean {
-    return this.Name !== undefined;
+
+  constructor(targetPointsCost: number, leader: Character) {
+    this.Leader = leader;
+    this._targetPointsCost = targetPointsCost;
   }
 }
