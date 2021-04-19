@@ -355,6 +355,10 @@ export class Character implements Moveable, Physical, Magicable, IsCommander {
 
   static FromFile(stringInput: string): Character {
     const input = JSON.parse(stringInput);
+    return Character.FromJson(input);
+  }
+
+  static FromJson(input: any): Character {
     const characterClass = CharacterClass.Options.find(cc => cc.Key === input.CharacterClass);
     if (characterClass === undefined) {
       throw new Error(`Cannot regenerate this character - Invalid Character Class: ${input.CharacterClass}`);

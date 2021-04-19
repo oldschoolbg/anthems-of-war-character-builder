@@ -43,7 +43,7 @@ export class Army {
     return this._members.map(m => m.Skills.length).reduce((a, b) => a + b, 0);
   }
 
-  public addMember(character: Character): Army {
+  public AddMember(character: Character): Army {
     this._members.push(character);
     return this;
   }
@@ -54,5 +54,22 @@ export class Army {
 
   static create(targetPointsCost: number): Army {
     return new Army(targetPointsCost);
+  }
+
+  static FromFile(stringInput: string): Army {
+    const input = JSON.parse(stringInput);
+    const result = Army.create(input.TargetPointsCost);
+    result.Name = input.Name;
+    result.Leader = Character.FromJson(input.Leader);
+    input.Members.map((m: string) => result.AddMember(Character.FromJson(m)))
+    return result;
+  }
+  ToFile(): string {
+    return JSON.stringify({
+      Name: this.Name,
+      Leader: this.Leader,
+      TargetPointsCost: this.TargetPointsCost,
+      Members: this.Members
+    });
   }
 }
