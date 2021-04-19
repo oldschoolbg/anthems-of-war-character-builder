@@ -1,8 +1,9 @@
 
-import { CharacterClass, CharacterClasses } from "../defs";
+import { CharacterClasses } from "../defs";
 import { Character } from "./character";
 
 export class Army {
+  Name: string | undefined;
   private _leader: Character;
   public get Leader(): Character {
     return this._leader;
@@ -36,5 +37,8 @@ export class Army {
     }
     this._targetPointsCost = targetPointsCost;
     this._leader = leader;
+  }
+  get IsValid(): boolean {
+    return this.Name !== undefined;
   }
 }
