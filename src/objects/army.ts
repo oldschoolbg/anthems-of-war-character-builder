@@ -48,8 +48,11 @@ export class Army {
     return this;
   }
 
-  constructor(targetPointsCost: number, leader: Character) {
-    this.Leader = leader;
+  private constructor(targetPointsCost: number) {
     this._targetPointsCost = targetPointsCost;
+  }
+
+  static create(targetPointsCost: number): Army {
+    return new Army(targetPointsCost);
   }
 }
