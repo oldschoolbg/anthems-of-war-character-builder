@@ -1,5 +1,5 @@
 export * from './armour';
-export * from './army';
+export * from './list';
 export * from './character';
 export * from './weapon';
 export * from './miscellaneous_equipment';

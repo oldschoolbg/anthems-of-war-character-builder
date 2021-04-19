@@ -1,8 +1,7 @@
 
-import { CharacterClasses } from "../defs";
 import { Character } from "./character";
 
-export class Army {
+export class List {
   get IsValid(): boolean {
     return this.Name !== undefined;
   }
@@ -43,7 +42,7 @@ export class Army {
     return this._members.map(m => m.Skills.length).reduce((a, b) => a + b, 0);
   }
 
-  public AddMember(character: Character): Army {
+  public AddMember(character: Character): List {
     this._members.push(character);
     return this;
   }
@@ -52,13 +51,13 @@ export class Army {
     this._targetPointsCost = targetPointsCost;
   }
 
-  static create(targetPointsCost: number): Army {
-    return new Army(targetPointsCost);
+  static create(targetPointsCost: number): List {
+    return new List(targetPointsCost);
   }
 
-  static FromFile(stringInput: string): Army {
+  static FromFile(stringInput: string): List {
     const input = JSON.parse(stringInput);
-    const result = Army.create(input.TargetPointsCost);
+    const result = List.create(input.TargetPointsCost);
     result.Name = input.Name;
     result.Leader = Character.FromJson(input.Leader);
     input.Members.map((m: string) => result.AddMember(Character.FromJson(m)))
