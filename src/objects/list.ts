@@ -11,7 +11,8 @@ export class List {
     return this._leader;
   }
   public set Leader(value: Character) {
-    if (!value.IsCommander) {
+    if (value !== undefined &&
+      !value.IsCommander) {
       throw new Error('This Character cannot be your leader')
     }
     this._leader = value;
@@ -53,7 +54,7 @@ export class List {
   public RemoveMember(character: Character): List {
     const index = this._members.findIndex(m => m.Name === character.Name);
     if (index !== -1) {
-      this._members = this._members.splice(index, 1);
+      this._members.splice(index, 1);
     }
     return this;
   }
