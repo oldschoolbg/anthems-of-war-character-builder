@@ -31,7 +31,11 @@ export class List {
   }
 
   public get PointsCost(): number {
-    return this._leader.PointsCost
+    let leaderCost = 0;
+    if (this._members !== undefined) {
+      leaderCost = this._leader.PointsCost;
+    }
+    return leaderCost
           + this._members.map(m => m.PointsCost).reduce((a, b) => a + b, 0);
   }
 
@@ -44,6 +48,13 @@ export class List {
 
   public AddMember(character: Character): List {
     this._members.push(character);
+    return this;
+  }
+  public RemoveMember(character: Character): List {
+    const index = this._members.findIndex(m => m.Name === character.Name);
+    if (index !== -1) {
+      this._members = this._members.splice(index, 1);
+    }
     return this;
   }
 
