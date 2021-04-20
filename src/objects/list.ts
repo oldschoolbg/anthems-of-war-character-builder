@@ -32,7 +32,7 @@ export class List {
 
   public get PointsCost(): number {
     let leaderCost = 0;
-    if (this._members !== undefined) {
+    if (this._leader !== undefined) {
       leaderCost = this._leader.PointsCost;
     }
     return leaderCost
