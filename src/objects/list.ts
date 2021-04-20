@@ -6,11 +6,11 @@ export class List {
     return this.Name !== undefined;
   }
   Name: string | undefined;
-  private _leader!: Character;
-  public get Leader(): Character {
+  private _leader: Character | undefined;
+  public get Leader(): Character | undefined {
     return this._leader;
   }
-  public set Leader(value: Character) {
+  public set Leader(value: Character | undefined) {
     if (value !== undefined &&
       !value.IsCommander) {
       throw new Error('This Character cannot be your leader')
@@ -58,7 +58,6 @@ export class List {
     }
     return this;
   }
-
   private constructor(targetPointsCost: number) {
     this._targetPointsCost = targetPointsCost;
   }
