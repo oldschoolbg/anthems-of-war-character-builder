@@ -73,6 +73,11 @@ export enum Skills {
   ShieldWall = "Shield Wall"
 }
 
+export interface GroupedSkill {
+  Key: string;
+  Skills: Skill[];
+}
+
 export class Skill implements Keyed, Addable {
   constructor(key: Skills, description: string, shortDescription?: string) {
     this._key = key;
@@ -80,74 +85,91 @@ export class Skill implements Keyed, Addable {
     this._shortDescription = shortDescription;
   }
 
-  static get Options(): Skill[] {
+  static get Options(): GroupedSkill[] {
     return [
-      Skill.ArmorTraining(),
-      Skill.Avenger(),
-      Skill.Backstab(),
-      Skill.BattleThrill(),
-      Skill.BeserkerRage(),
-      Skill.Bodyguard(),
-      Skill.DefensivePosture(),
-      Skill.Duelist(),
-      Skill.Eager(),
-      Skill.EscapeArtist(),
-      Skill.ExpertAim(),
-      Skill.Fearless(),
-      Skill.FocusedAttacker(),
-      Skill.FormationFighter(),
-      Skill.GiantsGrip(),
-      Skill.Grappler(),
-      Skill.Interceptor(),
-      Skill.Jumper(),
-      Skill.LongShot(),
-      Skill.Lucky(),
-      Skill.Medic(),
-      Skill.MountedWarrior(),
-      Skill.NeverTellMeTheOdds(),
-      Skill.NimbleAttacker(),
-      Skill.PowerAttack(),
-      Skill.QuickDraw(),
-      Skill.Reinforcements(),
-      Skill.RendArmor(),
-      Skill.Scout(),
-      Skill.SeasonedVeteran(),
-      Skill.ShieldSacrifice(),
-      Skill.Skirmisher(),
-      Skill.Sniper(),
-      Skill.Stealthy(),
-      Skill.Stubborn(),
-      Skill.Survivalist(),
-      Skill.Swap(),
-      Skill.TerrainExpert(),
-      Skill.ThirstForBlood(),
-      Skill.TrainedSprinter(),
-      Skill.Trample(),
-      Skill.TwoWeaponSpecialist(),
-      Skill.UncannyReactionTime(),
-      Skill.VengefulSpirit(),
-      Skill.WeaponMaster(),
-      Skill.ZenDodger(),
-  // Spell Caster Skills
-    Skill.Apprenticeship(),
-    Skill.LatentSpellcaster(),
-    Skill.MultiSchoolSpellcaster(),
-    Skill.PreparedIllusions(),
-    Skill.SpellVampire(),
-    Skill.VersatileSpellcaster(),
-  // Advanced Skills
-    Skill.Ambusher(),
-    Skill.FearlessPresence(),
-    Skill.ForceOfWill(),
-    Skill.SquadLeader(),
-    Skill.WitchHunter(),
-  // Squad Skills
-    Skill.Barrage(),
-    Skill.BattleDrills(),
-    Skill.BeastMaster(),
-    Skill.CoordinatedCharge(),
-    Skill.DefensiveFormation(),
-    Skill.ShieldWall()
+      {
+        Key: "Basic",
+        Skills: [
+          Skill.ArmorTraining(),
+          Skill.Avenger(),
+          Skill.Backstab(),
+          Skill.BattleThrill(),
+          Skill.BeserkerRage(),
+          Skill.Bodyguard(),
+          Skill.DefensivePosture(),
+          Skill.Duelist(),
+          Skill.Eager(),
+          Skill.EscapeArtist(),
+          Skill.ExpertAim(),
+          Skill.Fearless(),
+          Skill.FocusedAttacker(),
+          Skill.FormationFighter(),
+          Skill.GiantsGrip(),
+          Skill.Grappler(),
+          Skill.Interceptor(),
+          Skill.Jumper(),
+          Skill.LongShot(),
+          Skill.Lucky(),
+          Skill.Medic(),
+          Skill.MountedWarrior(),
+          Skill.NeverTellMeTheOdds(),
+          Skill.NimbleAttacker(),
+          Skill.PowerAttack(),
+          Skill.QuickDraw(),
+          Skill.Reinforcements(),
+          Skill.RendArmor(),
+          Skill.Scout(),
+          Skill.SeasonedVeteran(),
+          Skill.ShieldSacrifice(),
+          Skill.Skirmisher(),
+          Skill.Sniper(),
+          Skill.Stealthy(),
+          Skill.Stubborn(),
+          Skill.Survivalist(),
+          Skill.Swap(),
+          Skill.TerrainExpert(),
+          Skill.ThirstForBlood(),
+          Skill.TrainedSprinter(),
+          Skill.Trample(),
+          Skill.TwoWeaponSpecialist(),
+          Skill.UncannyReactionTime(),
+          Skill.VengefulSpirit(),
+          Skill.WeaponMaster(),
+          Skill.ZenDodger()
+        ]
+      },
+      {
+        Key: "Spell Caster",
+        Skills: [
+          Skill.Apprenticeship(),
+          Skill.LatentSpellcaster(),
+          Skill.MultiSchoolSpellcaster(),
+          Skill.PreparedIllusions(),
+          Skill.SpellVampire(),
+          Skill.VersatileSpellcaster()
+        ]
+      },
+      {
+        Key: "Advanced",
+        Skills: [
+          Skill.Ambusher(),
+          Skill.FearlessPresence(),
+          Skill.ForceOfWill(),
+          Skill.SquadLeader(),
+          Skill.WitchHunter()
+        ]
+      },
+      {
+        Key: "Squad",
+        Skills: [
+          Skill.Barrage(),
+          Skill.BattleDrills(),
+          Skill.BeastMaster(),
+          Skill.CoordinatedCharge(),
+          Skill.DefensiveFormation(),
+          Skill.ShieldWall()
+        ]
+      }
     ]
   }
 

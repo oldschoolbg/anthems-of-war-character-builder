@@ -81,7 +81,7 @@ export class Character implements Moveable, Physical, Magicable, IsCommander {
   private _skills: Skill[] = [];
   get Skills(): Skill[] { return this._skills; }
   get AvailableSkills(): Skill[] {
-    return Skill.Options.filter(s => !this._skills.find(i => i.Key === s.Key));
+    return Skill.Options.map(o => o.Skills).reduce((a, b) => a.concat(b)).filter(s => !this._skills.find(i => i.Key === s.Key));
   }
   private _weapons: Weapon[] = [];
   get Weapons(): Weapon[] { return this._weapons; }
@@ -256,7 +256,7 @@ export class Character implements Moveable, Physical, Magicable, IsCommander {
   }
   
   AddSkill(key: Skills) : Character {
-    const skill = Skill.Options.find(t => t.Key === key);
+    const skill = Skill.Options.map(o => o.Skills).reduce((a, b) => a.concat(b)).find(t => t.Key === key);
     if (skill !== undefined) {
       if (skill.CanAdd(this)) {
         skill.AddEffect(this, skill);
