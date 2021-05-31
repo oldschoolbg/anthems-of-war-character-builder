@@ -97,7 +97,6 @@ export class Skill implements Keyed, Addable {
       Skill.FocusedAttacker(),
       Skill.FormationFighter(),
       Skill.GiantsGrip(),
-      Skill.GiantsGrip(),
       Skill.Grappler(),
       Skill.Interceptor(),
       Skill.Jumper(),
