@@ -492,7 +492,7 @@ export class Skill implements Keyed, Addable {
   static FormationFighter(): Skill {
     return new Skill(
       Skills.FormationFighter,
-      'Add 1 to melee attack rolls when in base contact with another ally or when in this character and another ally are both in base contact with the same enemy.',
+      'Add 1 to melee attack rolls when in base contact with another ally or when this character and another ally are both in base contact with the same enemy.',
       'Bonuses to melee attack rolls while in combat with allies'
     )
   }
